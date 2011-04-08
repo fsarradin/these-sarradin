@@ -1,0 +1,1777 @@
+% interp.tex - Rapport sur les interprétations
+%
+% Copyright (C) 2004 - François Sarradin
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \title{Interprétation des squelettes de formes de ciel}
+\author{François Sarradin}
+\laboratory{
+  CNRS -- CERMA UMR 1563 \\
+  \'Ecole d'Architecture de Nantes \\
+  Rue Massenet -- BP 81\,931 \\
+  44\,319 NANTES CEDEX 3}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sloppy
+\makeheader
+
+\label{chap:interp}
+
+\begin{reflexion}
+\begin{otherlanguage}{english}\emph{
+  It may be that we are puppets-puppets controlled by the strings of
+  society.  But at least we are puppets with perception, with
+  awareness.  And perhaps our awareness is the first step to our
+  liberation.}\par
+\raggedleft Stanley Milgram\par
+\end{otherlanguage}
+\end{reflexion}
+
+\begin{intropar}
+  {L}\textsc{es} espaces ouverts urbains et les variations de leur
+  morphologie le long d'un parcours peuvent être caractérisés au moyen
+  de projections sphériques et de la squelettisation
+  \cite{sarradin:2003,teller:2003}.  Pour ce faire, une succession de
+  projections sphériques est d'abord calculée dans un espace ouvert
+  urbain ou le long d'un parcours urbain.  Puis, nous utilisons la
+  squelettisation pour décrire la forme du ciel.  Définie par Blum
+  \cite{blum:1967}, la squelettisation est un outil d'analyse d'images
+  couramment utilisé, qui consiste à convertir une forme en un ensemble
+  de lignes centrées.  Dans le chapitre précédent, nous avons étudié
+  différentes mesures qui permettent de caractériser la forme du ciel
+  par les squelettes et d'en déduire des caractéristiques sur les
+  espaces ouverts urbains.  Dans ce chapitre, nous allons nous
+  intéresser à l'application de ces mesures à différents cas.
+\end{intropar}
+
+Afin de détailler les conditions dans lesquelles les tests ont été
+réalisés, nous commencerons par décrire succinctement l'environnement
+informatique qui a été utilisé pour les calculs.  Puis nous nous
+intéresserons aux résultats des mesures sur une simple rue droite.  Nous
+en profiterons pour vérifier si les indices visuels de mouvement peuvent
+être détectés par nos mesures.  Ensuite, nous verrons le comportement
+des mesures dans des configurations comportant une ouverture sur une
+autre rue.  Nous verrons l'effet d'un rétrécissement dans une rue
+simple, puis de deux types de croisements.  Enfin, nous appliquerons nos
+mesures sur un cas concret, avant de conclure par une étude de la rue
+Xavier-Neujean à Liège en Belgique et une étude d'un parcours à Nantes
+en France.
+
+
+\section{Environnement informatique}
+
+Notre méthode est divisée en trois parties: calcul d'une série de
+projections sphériques le long d'un parcours, squelettisation des formes
+du ciel et mesure des squelettes.  Comme nous l'avons vu au
+chapitre~\ref{chap:skel-cmp}, pour la squelettisation nous avons utilisé
+la méthode de Siddiqi \emph{et al.} \cite{siddiqi:2000}.  \`A cette
+occasion, une implémentation de cette méthode réalisée par Dimitrov et
+développée en C++ nous a été fournie.  Cette implémentation est encore
+expérimentale et ne permet pas de prendre en compte les trous à
+l'intérieur des formes discrètes.  Dans ce cas, le comportement actuel
+de l'implémentation est de remplir simplement les trous.  Autre
+particularité, l'implémentation n'est absolument pas gourmande en
+mémoire, par contre le temps de calcul est très long.  Pour une image de
+400$\times$400~pixels et un processeur cadencé à 2,6~GHz, le temps de
+calcul est d'environ une demi-heure, soit deux jours de calculs pour un
+parcours de cent images.  Nous avons apporté de légères modifications à
+l'implémentation de Dimitrov afin que les images soient gérées avec
+l'API \emph{(Application Programming Interface)} ImageMagick
+\cite{imagemagick} qui permet une meilleure manipulation des images dans
+divers formats.
+
+Pour les projections sphériques, nous avons créé notre propre
+implémentation en Java, afin prendre en compte l'orientation de
+l'observateur\footnote{Les projections sphériques de Teller sont
+  implémentées dans un logiciel appelé Townscope~II \cite{teller:2001}.
+  Cependant, la méthode ne prend pas en compte l'orientation de
+  l'observateur.}  et de permettre une meilleure interaction avec les
+autres composantes de notre méthode.  Pour créer les projections
+sphériques, nous avons réutilisé l'algorithme proposé par Teller
+(algorithme~\ref{algo:projseg-rec}) pour le calcul et nous nous sommes
+servis de l'API Java2D qui fournit tout un ensemble de routines de
+dessin \cite{java2d}.  Aussi, la manière dont les projections sphériques
+sont transformées dans l'espace discret est entièrement dépendante de
+l'API Java2D.  Pour réaliser les projections sphériques, nous avons
+besoin de deux informations: l'environnement urbain et le parcours.
+L'environnement urbain est représenté par un ensemble de faces formées
+par un ensemble de points dans l'espace.  Le parcours est représenté
+comme une suite de segments connexes par une série de points dans
+l'espace.  Les informations sont contenues dans des documents XML
+\cite{xml} que Java permet de gérer aisément.  L'implémentation est peu
+gourmande en mémoire et en temps de calcul.  Pour produire cent
+projections de 400~pixels de diamètre avec un processeur cadencé à
+2,6~GHz, l'implémentation s'exécute en moins d'une minute.  Les mesures
+des squelettes sont aussi réalisées en langage Java et sont aussi peu
+gourmandes en mémoire et en temps de calcul.
+
+Pour ce qui concerne la communication entre les composantes, nous
+utilisons des images au format PNG \emph{(Portable Network Graphics)}
+\cite{png} noir et blanc de 400$\times$400~pixels pour les projections
+sphériques.  Ces images sont lues par le logiciel de squelettisation et
+sont transformées en squelettes qui sont conservés à la fois dans des
+documents XML pour les mesures et dans des documents PostScript
+\cite{postscript:plrm} pour la visualisation.  Les documents XML
+contenant les squelettes sont organisés comme des ensembles de branches
+squelettales contenant chacune une suite de points squelettaux.  Ces
+documents sont ensuite récupérés par le composant de notre méthode dédié
+à la mesure des squelettes.
+
+
+\section{Notation des mesures}
+
+Dans ce chapitre, nous commencerons par étudier un ensemble
+d'environnements urbains de base que nous appellerons configuration.
+Chaque configuration est associée à un code aisé à reconnaître, comme
+\textsf{Droit} pour indiquer une rue droite ou \textsf{Retr} pour
+indiquer un rétrécissement.  Cela nous permet de faciliter l'écriture de
+notre discours.
+
+Nous avons aussi codé le nom des mesures.  Ici, nous utilisons la
+convention donnée dans le tableau~\ref{tab:interp:notation}
+
+\begin{table}[htbp]
+\begin{center}
+  \begin{tabular}{ll}
+\textbf{Code} & \textbf{Mesure} \\
+\hline
+\hline
+\textsf{GMDSize} & taille du $\mathbf{GMD_V}$ \\
+\hline
+\textsf{GMDPos} & position relative du $\mathbf{GMD_V}$ \\
+\hline
+\textsf{HH} & distance de Hausdorff hyperbolique \\
+\hline
+\textsf{AHCD} & distance de Hausdorff modifiée \\
+\hline
+  \end{tabular}
+\end{center}
+  \caption[Notation des mesures]%
+  {Notation des mesures.}
+  \label{tab:interp:notation}
+\end{table}
+
+Sauf indication contraire, les mesures que nous avons testées dans les
+différentes configurations qui suivent ont été faites à partir de
+100~projections sphériques prises le long du parcours.  Les parcours
+pour les cas simples ont tous une longueur de 110~mètres de long, pour
+la raison que les tests sur certains exemples ont été réalisés sur des
+environnements qui nous ont été fournis avec cette longueur.
+
+
+\section{Caractère d'une rue simple}
+\label{sec:interp:droit}
+
+Nos premiers tests ont été réalisés sur une configuration simple, notée
+\textsf{Droit}, constituée d'une seule rue de 110~mètres de long et de
+10~mètres de large (figure~\ref{fig:measure:droit-conf}).  La rue est
+bordée de deux murs de 10~mètres de haut et le reste de l'environnement
+est vide.  Dans cette rue, nous basons nos calculs sur un observateur
+dont la hauteur des yeux est située à 1,60~mètres du sol et qui parcourt
+la rue de la gauche sur le schéma vers la droite à mi-distance des murs.
+
+\begin{figure}[ht]
+  \begin{center}
+  \includegraphics[width=.33\linewidth]{img/interp/droit/droit-conf.eps}
+  \end{center}
+  \caption[Configuration d'espace simple]%
+          {Configuration d'espace simple.}
+  \label{fig:measure:droit-conf}
+\end{figure}
+
+\subsection{Évolution des mesures dans la rue}
+
+L'évolution des mesures autour du $\mathbf{GMD_V}$ apparaissent dans les
+figures~\ref{fig:measure:droit-gmd-size}
+et~\ref{fig:measure:droit-gmd-rpos}.  Elles sont comparées avec une
+configuration constituée d'une rue s'étendant à un kilomètre avant et
+après le point de départ.  Cette configuration est notée
+\textsf{LDroit}.  Dans cette configuration, nous effectuons le même
+parcours que dans la configuration \textsf{Droit}.
+
+Dans le cas de la taille du $\mathbf{GMD_V}$ (qui est comparée avec le
+rayon du disque de la projection), la configuration \textsf{LDroit} est
+caractérisée par une droite horizontale à 26,5~\%.  En réalité, si nous
+calculons nous même ce minimum, nous obtenons une valeur théorique de
+25~\%.  La qualité des images et de la squelettisation produit ici une
+erreur de 1,5~\%.  La courbe de \textsf{LDroit} est rejointe par la
+courbe de la configuration \textsf{Droit} entre les mètres~13,33
+et~96,97.  Dans cette zone, le $\mathbf{GMD_V}$ ne varie pas pour les
+deux configurations.  Par contre, en dehors de cette zone, la courbe de
+la configuration \textsf{Droit} varie.  Ceci est dû à l'entrée et la
+sortie de la rue qui se fait entre un espace très ouvert et un espace
+renfermé.  Par la suite, les résultats dans les configurations de test
+seront considérés pertinents dans l'intervalle entre 15 et 95~mètres,
+pour les mesures basées sur le $\mathbf{GMD_V}$.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/droit/droit-gmd-size.eps}
+  \end{center}
+  \caption[Variation de la taille du $\mathbf{GMD_V}$ dans les
+           configurations \textsf{Droit} et \textsf{LDroit}]%
+           {Variation de la taille du $\mathbf{GMD_V}$ dans les
+             configurations \textsf{Droit} et \textsf{LDroit}.}
+  \label{fig:measure:droit-gmd-size}
+\end{figure}
+
+Pour ce qui concerne la position relative du $\mathbf{GMD_V}$
+(figure~\ref{fig:measure:droit-gmd-rpos}), nous remarquons un grand
+nombre de variations entre +10~\% et -10~\% pour la configuration
+\textsf{LDroit}.  En principe, nous devrions obtenir une droite à 0~\%
+car dans cette configuration le $\mathbf{GMD_V}$ doit être situé au
+zénith.  Sachant que la squelettisation dans l'espace discret n'est pas
+un descripteur précis, nous attribuerons ces variations à des
+perturbations.  Aussi, nous n'en tiendrons aucun compte et nous
+considérerons que les courbes dans cette zone indiquent que le
+$\mathbf{GMD_V}$ est situé au zénith.  Aux mêmes distances que pour les
+courbes de la taille du $\mathbf{GMD_V}$, le $\mathbf{GMD_V}$ atteint le
+zénith pour la configuration \textsf{Droit}.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/droit/droit-gmd-rpos.eps}
+  \end{center}
+  \caption[Variation de la position du $\mathbf{GMD_V}$ dans les
+           configurations \textsf{Droit} et \textsf{LDroit}]%
+           {Variation de la position du $\mathbf{GMD_V}$ dans les
+             configurations \textsf{Droit} et \textsf{LDroit}.}
+  \label{fig:measure:droit-gmd-rpos}
+\end{figure}
+
+L'évolution de la distance de Hausdorff hyperbolique apparaît dans le
+graphique de la figure~\ref{fig:measure:droit-hh}.  Au début et à la fin
+du parcours dans \textsf{Droit}, la courbe monte assez haut.  Ces pentes
+fortes sont dues l'une à l'entrée dans la rue, où l'espace visible se
+restreint, et l'autre à la sortie de la rue, où l'espace visible
+s'étend.  Hormis le début et la fin du parcours dans la configuration
+\textsf{Droit}, ce graphique est principalement caractérisé par une
+courbe quasiment rectiligne située à 0,31~\% de l'axe des abscisses
+entre les mètres 30 et 80.  Cette légère différence est due à de petites
+perturbations dans les squelettes qui peuvent être négligées.  En effet,
+dans la configuration \textsf{LDroit}, l'aspect de l'espace est
+quasiment identique tout le long du parcours: il ne devrait pas y avoir
+de différence entre les squelettes dans ce parcours.  Toutefois, des
+perturbations font que la courbe est comparable à un segment horizontal
+situé à 0,31~\%.  L'aspect des courbes est identique avec la distance de
+Hausdorff modifiée avec un minimum autour de 0,04~\%
+(figure~\ref{fig:measure:droit-ahcd}).
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/droit/droit-hh.eps}
+  \end{center}
+  \caption[Variation de la distance de Hausdorff hyperbolique dans les
+           configurations \textsf{Droit} et \textsf{LDroit}]%
+           {Variation de la distance de Hausdorff hyperbolique dans les
+             configurations \textsf{Droit} et \textsf{LDroit}.}
+  \label{fig:measure:droit-hh}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/droit/droit-ahcd.eps}
+  \end{center}
+  \caption[Variation de la distance de Hausdorff modifiée dans les
+  configurations \textsf{Droit} et \textsf{LDroit}]%
+  {Variation de la distance de Hausdorff modifiée dans les
+    configurations \textsf{Droit} et \textsf{LDroit}.}
+  \label{fig:measure:droit-ahcd}
+\end{figure}
+
+Un fait qui caractérise la configuration \textsf{LDroit} est qu'il n'y a
+pas d'indice visible du déplacement de l'observateur.  Cela se traduit
+par des courbes complètement plates.  Cette caractéristique apparaît
+dans la configuration \textsf{Droit} lorsque la courbe atteint 0,31~\%
+entre le 30\up{e} et le 80\up{e} mètre.  Dans la suite de cette section,
+nous allons nous demander si les éléments nous indiquant que nous sommes
+en mouvement peuvent être caractérisés par nos mesures.
+
+\subsection{Indices visuels de mouvement}
+
+Pour savoir si les indices visuels de mouvement influencent les mesures,
+nous avons construit une configuration identique à \textsf{Droit} où les
+murs sont composés de créneaux.  Les murs ont une hauteur de 5~mètres et
+sont surmontés de créneaux de 5~mètres de haut sur 10~mètres de long.
+Les créneaux sont espacés de 10~mètres, ainsi chaque mur est surmonté de
+six créneaux.  Cette configuration est notée \textsf{Creneau}.  La
+figure~\ref{fig:interp:creneau-wall} montre l'un des murs de cette
+configuration.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.9\linewidth]{img/interp/droit/creneau-wall.eps}
+  \caption[Un mur de la configuration \textsf{Creneau}]%
+  {Un mur de la configuration \textsf{Creneau}.}
+  \label{fig:interp:creneau-wall}
+\end{figure}
+
+Le résultat avec la distance de Hausdorff hyperbolique et la distance de
+Hausdorff modifiée apparaissent dans les
+figures~\ref{fig:measure:droit-cren-hh} et
+\ref{fig:measure:droit-cren-ahcd} respectivement.  Dans la
+figure~\ref{fig:measure:droit-cren-hh}, la configuration est
+caractérisée par une sorte de sinusoïde.  Toutefois, les sommets de
+cette courbe sont regroupés par paire.  Un premier sommet indique la
+disparition d'un créneau, puis apparaît un creux à 4~\% lorsque les murs
+ont une hauteur de 5~mètres, suivi d'un second sommet pour annoncer
+l'apparition du créneau suivant.  Chaque paire de sommets est séparée
+par un creux inférieur à 4~\% qui est dû au passage près du créneau.  À
+cette position, les murs ont une hauteur de 10~mètres et les différences
+sont moindres entre les squelettes de cette zone.  Quoiqu'il en soit,
+nous pouvons observer des parties communes avec la courbe de la
+configuration \textsf{Droit} au début et à la fin du parcours, mais la
+courbe de \textsf{Creneau} reste au-dessus de 3,5~\% contre 0,31~\% pour
+\textsf{Droit}.  Ce constat est identique pour le résultat avec la
+distance de Hausdorff modifiée
+(figure~\ref{fig:measure:droit-cren-ahcd}).  Toutefois, une différence
+apparaît entre les deux configurations lors de l'entrée et de la sortie
+des rues: les différences dans la configuration \textsf{Creneau} sont
+plus faibles.  Cela s'explique par le fait que dans la configuration
+\textsf{Droit}, l'impression de fermeture est plus forte en voyant deux
+murs de 10~mètres de haut fermer ou ouvrir l'espace.  Ces impressions
+sont moins fortes dans la configuration \textsf{Creneau}.  La structure
+du squelette est en moyenne plus stable dans la configuration
+\textsf{Creneau} que dans la configuration \textsf{Droit}, comme nous
+pouvons le voir dans la figure~\ref{fig:measure:droit-skel}.  Dans la
+figure~\ref{fig:measure:droit-cren-hh}, nous remarquons que les creux de
+la courbe de \textsf{Creneau} ne sont pas tous de la même hauteur.  Un
+creux apparaît lorsque l'observateur est juste au niveau d'une dent du
+créneau ou entre deux dents.  Des branches sont produites entre deux
+dents, comme le montre le bas de la figure~\ref{fig:measure:droit-skel}.
+Ainsi, lorsque l'observateur passe entre deux dents, le squelette varie
+plus fortement que lorsqu'il passe à côté d'une dent.  Nous remarquons
+la même chose pour la figure~\ref{fig:measure:droit-cren-ahcd}.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/droit/droit-cren-hh.eps}
+  \end{center}
+  \caption[Variation de la distance de Hausdorff hyperbolique dans les
+           configurations \textsf{Creneau} et \textsf{Droit}]%
+           {Variation de la distance de Hausdorff hyperbolique dans les
+             configurations \textsf{Creneau} et \textsf{Droit}.}
+  \label{fig:measure:droit-cren-hh}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/droit/droit-cren-ahcd.eps}
+  \end{center}
+  \caption[Variation de la distance de Hausdorff modifiée dans les
+  configurations \textsf{Creneau} et \textsf{Droit}]%
+  {Variation de la distance de Hausdorff modifiée dans les
+    configurations \textsf{Creneau} et \textsf{Droit}.}
+  \label{fig:measure:droit-cren-ahcd}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tabular}{|r|ccc|}
+\hline
+\raisebox{15mm}{\textsf{Droit}}
+  & \includegraphics[width=.2\linewidth]{img/interp/droit/droit-00000.ps}
+  & \includegraphics[width=.2\linewidth]{img/interp/droit/droit-00005.ps}
+  & \includegraphics[width=.2\linewidth]{img/interp/droit/droit-00009.ps}
+\\ \hline
+\raisebox{15mm}{\textsf{Creneau}}
+  & \includegraphics[width=.2\linewidth]{img/interp/droit/creneau-00000.ps}
+  & \includegraphics[width=.2\linewidth]{img/interp/droit/creneau-00005.ps}
+  & \includegraphics[width=.2\linewidth]{img/interp/droit/creneau-00009.ps}
+\\ \hline
+  \end{tabular}
+  \caption[Squelettes des configurations \textsf{Droit} et
+  \textsf{Creneau} au début du parcours]%
+  {Squelettes des configurations \textsf{Droit} et \textsf{Creneau} au
+    début du parcours.  Les squelettes sont entourés de la forme du
+    ciel.  Ils correspondent de la gauche vers la droite au squelette de
+    la forme du ciel aux mètres 0, 5,5 et 10.}
+  \label{fig:measure:droit-skel}
+\end{figure}
+
+La configuration \textsf{Droit} et sa comparaison avec les
+configurations \textsf{LDroit} et \textsf{Creneau} nous apprend que les
+indices visuels de mouvement sont repérés par la distance de Hausdorff
+hyperbolique et la distance de Hausdorff modifiée.  Pour un observateur,
+ces indices sont importants car ils lui donnent des indications de son
+propre mouvement.  S'ils ne sont pas présents, l'observateur a
+l'impression de ne pas avancer \cite{lynch:1966,gibson:1979}.
+
+\section{Apparition d'un croisement}
+
+Les environnements qui suivent représentent trois configurations
+urbaines en T différentes, c'est-à-dire une simple rue avec en son
+centre une ouverture sur le côté obtenue par une seconde rue
+(figure~\ref{fig:measure:te-conf}).  Les trois configurations sont
+identifiées de la manière suivante:
+
+\begin{itemize}
+\item \textsf{TE45~F}: configuration en T avec une ouverture de
+  50~mètres à 45~degrés vers la partie droite de la configuration;
+\item \textsf{TE}: configuration en T avec une ouverture de 50~mètres à
+  90~degrés;
+\item \textsf{TE45~R}: configuration en T avec une ouverture de
+  50~mètres à 45~degrés vers la partie gauche de la configuration;
+\end{itemize}
+
+\noindent%
+La hauteur des bâtiments dans les trois configuration est de 10~mètres.
+L'ouverture a pour but de fournir un événement visuel relativement
+important.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.9\linewidth]{img/interp/te/te-conf.eps}
+  \end{center}
+  \caption[Trois configurations d'espace urbain en T]%
+          {Trois configurations d'espace urbain en T.}
+  \label{fig:measure:te-conf}
+\end{figure}
+
+L'observateur suit le même parcours dans les trois configurations: il
+part de la gauche de la configuration et rejoint l'extrémité droite.
+C'est un parcours de 110~mètres de long.  Dans les
+figures~\ref{fig:measure:te-gmd-size}, \ref{fig:measure:te-gmd},
+\ref{fig:measure:te-hh} et \ref{fig:measure:te-thmd}, nous voyons
+successivement la comparaison des trois configurations selon le
+$\mathbf{GMD_V}$ (figure~\ref{fig:measure:te-gmd-size}
+et~\ref{fig:measure:te-gmd}), la distance de Hausdorff hyperbolique
+(figure~\ref{fig:measure:te-hh}) et la distance de Hausdorff modifiée
+hyperbolique (figure~\ref{fig:measure:te-thmd}).
+
+La taille du $\mathbf{GMD_V}$ varie de manière identique dans les trois
+configurations (figure~\ref{fig:measure:te-gmd-size}).  Hormis le fait
+que l'ouverture soit située à la même position, la forme des
+configurations n'agit pas sur la mesure.  Elle commence par diminuer
+jusqu'à 27~\% au 12\up{e} mètre.  Au mètre~47 une bosse apparaît qui
+s'élève jusqu'à 32~\% au centre du parcours.  Elle disparaît au
+mètre~64.  Enfin, la taille du $\mathbf{GMD_V}$ augmente à partir du
+mètre~98.  Dans ce graphique, nous voyons clairement apparaître le
+croisement qui est représenté par la bosse.  Cette bosse est en effet
+due à l'élargissement de l'espace ouvert dans l'environnement visuel de
+l'observateur causé par le croisement lui-même.  Toutefois, elle
+commence avant le croisement et se termine après.  Lorsque l'observateur
+est au niveau du croisement, la courbe est au-dessus de 30~\%.  Le
+croisement apparaît aussi au centre du graphique des variations de la
+position du $\mathbf{GMD_V}$ dans la figure~\ref{fig:measure:te-gmd}.
+Il est caractérisé par une courbe descendante et symétrique par rapport
+au point d'intersection entre la courbe et l'axe des abscisses.  Le
+$\mathbf{GMD_V}$ (et donc le croisement) apparaît en face de
+l'observateur au mètre~47 comme l'ouverture la plus importante.  Il
+arrive au niveau de l'observateur au mètre~55 et passe derrière lui
+jusqu'au mètre~64.  Après quoi, il devient un élément secondaire.  Si
+nous comparons les mesures des graphiques des
+figures~\ref{fig:measure:te-gmd-size} et~\ref{fig:measure:te-gmd}, nous
+remarquons que l'observateur n'aperçoit le $\mathbf{GMD_V}$ en face qu'à
+la naissance de l'ouverture produite par le croisement.  Il est
+au-dessus de lui lorsque la taille du $\mathbf{GMD_V}$ atteint son
+maximum et il disparaît dans le dos de l'observateur lorsque l'ouverture
+autour de l'observateur commence à diminuer.
+
+\begin{figure}[htpb]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/te/te-gmd-size.eps}
+  \end{center}
+  \caption[Variation de la taille du $\mathbf{GMD}$ dans les
+           trois configurations]%
+          {Variation de la taille du $\mathbf{GMD}$ dans les
+           trois configurations.}
+  \label{fig:measure:te-gmd-size}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/te/te-gmd-diff.eps}
+  \end{center}
+  \caption[Variation de la position relative du $\mathbf{GMD}$ dans les
+           trois configurations]%
+          {Variation de la position relative du $\mathbf{GMD}$ dans les
+           trois configurations.}
+  \label{fig:measure:te-gmd}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/te/te-hh-diff.eps}
+  \end{center}
+  \caption[Variation de la distance de Hausdorff hyperbolique dans les
+           trois configurations]%
+          {Variation de la distance de Hausdorff hyperbolique dans les
+           trois configurations.}
+  \label{fig:measure:te-hh}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[width=.75\linewidth]{img/interp/te/te-thmd-diff.eps}
+  \end{center}
+  \caption[Variation de la distance de Hausdorff modifiée hyperbolique
+  dans les trois configurations]%
+  {Variation de la distance de Hausdorff modifiée hyperbolique dans les
+    trois configurations.}
+  \label{fig:measure:te-thmd}
+\end{figure}
+
+Il est intéressant de remarquer à quel point les courbes sont identiques
+pour les mesures du $\mathbf{GMD_V}$, alors qu'une différence nette
+apparaît pour les deux autres mesures basées sur les distances de
+similarité.
+
+Pour les deux distances de similarité, les différences qui apparaissent
+entre les courbes sont dues au fait que l'apparition et la disparition
+de la rue latérale dans les trois configurations se font de manières
+différentes.  Dans la configuration \textsf{TE45~F}, l'observateur voit
+l'extrémité de la rue très rapidement, alors qu'il apparaît avec plus de
+retard dans la configuration \textsf{TE} et encore plus dans la
+configuration \textsf{TE45~R}.  Ceci explique le décalage entre les
+courbes dans les figures~\ref{fig:measure:te-hh}
+et~\ref{fig:measure:te-thmd}.  Ce décalage est de l'ordre de 5,5~mètres
+d'une configuration à l'autre.  Les trois configurations sont
+caractérisées par deux pics, dont le premier est dû à l'apparition de la
+rue latérale et le second à sa disparition de l'environnement visuel de
+l'observateur.  Si nous essayons nous même de calculer à quelle distance
+exactement il perçoit l'extémité de la rue en croisement, nous trouvons
+43,59~mètres pour \textsf{TE45~F}, 49~mètres pour \textsf{TE} et
+53,59~mètres pour \textsf{TE45~R}.  La disparition de cette extrémité se
+fait à 56,41~mètres pour \textsf{TE45~F}, 61~mètres pour \textsf{TE} et
+66,41~mètres pour \textsf{TE45~R}.  Si nous comparons ces valeurs avec
+les graphiques des distances de similarité
+(figures~\ref{fig:measure:te-hh} et~\ref{fig:measure:te-thmd}), nous
+voyons bien qu'elles correspondent à des pics dans les courbes.
+
+Autre point intéressant pour les distances de similarité: la hauteur des
+pics.  Dans le cas de la distance de Hausdorff hyperbolique, qui indique
+les plus grandes variations qu'il peut y avoir entre deux squelettes
+successifs, on trouve quatre pics autour de 55~\% en différence et deux
+pics plus petits à 47~\%.  Deux des pics à 55~\% appartiennent à la
+configuration \textsf{TE} qui représente un cas extrême ici.  Le fait
+que les deux autres configurations possèdent des pics plus petits est dû
+à l'une des transitions ---~l'apparition de la rue latérale dans la
+configuration \textsf{TE45~R} et la disparition de la rue latérale dans
+la configuration \textsf{TE45~F}~--- qui est plus lente, moins \og
+brutale \fg.  Les transitions sont illustrées dans la
+figure~\ref{fig:measure:t-occlu}.  Par rapport à cette figure, nous
+voyons que les lieux où les courbes des distances de similarité
+indiquent des pics sont les lieux où l'isovist changerait brusquement de
+forme.  Nous voyons ainsi le lien qui existe entre nos mesures et les
+isovists de Benedikt (cf.~§\ref{subsec:survey:isovist}), ou plutôt les
+isovists 3D.  La partie droite de la figure~\ref{fig:measure:t-occlu}
+représente la position des principales transitions de la configuration
+\textsf{TE45~F}.  Si nous comparons ce schéma avec les graphiques des
+figures~\ref{fig:measure:te-hh} et~\ref{fig:measure:te-thmd}, nous
+remarquons que chaque transition liée à l'extrémité de la rue produit un
+pic (aux mètres~43,59 et~56,41), alors les transitions liées aux murs
+marquant la rue délimitent le creux entre les deux pics (aux mètres~45
+et~55).
+
+\begin{figure}[ht]
+  \begin{center}
+  \includegraphics[width=.90\linewidth]{img/interp/te/t-occlu.eps}
+  \end{center}
+  \caption[Apparition de la zone d'occlusivité dans la configuration
+  \textsf{TE45~F}]%
+  {Apparition de la zone d'occlusivité dans la configuration
+    \textsf{TE45~F}.  \`A gauche, chaque disque représente un
+    observateur.  Lorsque celui-ci est gris, l'observateur ne voit pas
+    toute la scène.  \`A droite, le schéma indique la position exacte de
+    différentes transitions.}
+  \label{fig:measure:t-occlu}
+\end{figure}
+
+Dans le cas de la distance de Hausdorff modifiée, les pics des
+configurations \textsf{TE45~F} et \textsf{TE45~R} sont moins hauts que
+ceux de la configurations \textsf{TE}.  Cela semble s'expliquer par le
+fait que la largeur transversale de la rue dans les configurations
+\textsf{TE45~F} et \textsf{TE45~R} est plus petite.  De ce fait,
+l'effet de ces rues est moindre par rapport à celui de la configuration
+\textsf{TE}.  De plus, dans la configuration \textsf{TE} l'apparition et
+la disparition de la rue latérale sont assez soudaines, alors que dans
+les deux autres configurations ces événements sont beaucoup plus
+progressifs.
+
+
+\section{Rétrécissement}
+
+Nous avons procédé à des tests dans deux configurations présentant des
+rétrécissements (figure~\ref{fig:measure:retr-conf}), notées
+\textsf{Retr1} et \textsf{Retr2}.  \textsf{Retr1} est une rue de
+20~mètres de large au départ qui subit un rétrécissement de 10~mètres
+sur la droite au 50\up{e}~mètre.  \textsf{Retr2} est une autre rue de
+30~mètres de large au départ qui subit un rétrécissement de 20~mètres
+des deux côtés au 50\up{e}~mètre.  Dans les deux configurations, le
+parcours de l'observateur est centré par rapport à l'extrémité droite
+des deux rues.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.67\linewidth]{img/interp/retr/retr-conf.eps}
+  \end{center}
+  \caption[Deux configurations avec rétrécissement]%
+          {Deux configurations avec rétrécissement.}
+  \label{fig:measure:retr-conf}
+\end{figure}
+
+Dans la figure~\ref{fig:measure:retr-gmd-size} montrant les variations
+de la taille du $\mathbf{GMD_V}$, nous voyons les courbes descendre.
+Elles se stabilisent au mètre~9 à 42~\% pour \textsf{Retr1} et au
+mètre~7 à 57,5~\% pour \textsf{Retr2}.  La différence entre les deux
+configurations est due au fait que l'entrée de \textsf{Retr2} est plus
+large que celle de \textsf{Retr1}.  Par conséquent, les valeurs de la
+taille du $\mathbf{GMD_V}$ sont plus importantes dans \textsf{Retr2}.
+Les valeurs se stabilisent entre les mètres~7 et~43 est du fait que
+l'observateur est dans un espace qui a localement la forme d'une rue
+droite, après quoi, la rue rétrécit et les deux courbes se rejoignent.
+\`A partir du mètre~62, les courbes sont confondues.  L'importance de
+l'ouverture à l'entrée de \textsf{Retr2} est telle que la fin du
+rétrécissement est retardée de 5~mètres par rapport à \textsf{Retr1}.
+Globalement, les rétrécissements diminuent les valeurs de la taille du
+$\mathbf{GMD_V}$ 10~mètres autour du rétrécissement pour le cas de
+\textsf{Retr1} et 5~mètres autour du rétrécissement pour le cas de
+\textsf{Retr2}.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/retr/retr-gmd-size.eps}
+  \end{center}
+  \caption[Évolution de la taille du $\mathbf{GMD_V}$ dans les
+  configurations \textsf{Retr1} et \textsf{Retr2}]%
+  {Évolution de la taille du $\mathbf{GMD_V}$ dans les configurations
+  \textsf{Retr1} et \textsf{Retr2}.}
+  \label{fig:measure:retr-gmd-size}
+\end{figure}
+
+Nous retrouvons l'ensemble des particularités de la courbe de la
+figure~\ref{fig:measure:retr-gmd-size} dans la courbe des variations de
+la position du $\mathbf{GMD_V}$
+(figure~\ref{fig:measure:retr-gmd-rpos}), dont le retard que produit le
+rétrécissement de \textsf{Retr2} par rapport à celui de \textsf{Retr1}
+au centre du graphique.  Toutefois, nous pouvons remarquer que le
+rétrécissement place le $\mathbf{GMD_V}$ derrière l'observateur: entre
+les mètres~40 et~60, les deux courbes indiquent des valeurs négatives,
+en rappelant que nous considérons les valeurs entre -10~\% et +10~\%
+équivalentes à 0.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/retr/retr-gmd-rpos.eps}
+  \end{center}
+  \caption[Évolution de la position du $\mathbf{GMD_V}$ dans les
+  configurations \textsf{Retr1} et \textsf{Retr2}]%
+  {Évolution de la position du $\mathbf{GMD_V}$ dans les configurations
+  \textsf{Retr1} et \textsf{Retr2}.}
+  \label{fig:measure:retr-gmd-rpos}
+\end{figure}
+
+Pour ce qui concerne les distances de similarité, les courbes présentent
+cinq parties (figures~\ref{fig:measure:retr-hh}
+et~\ref{fig:measure:retr-ahcd}): une diminution due à l'arrivée dans la
+rue, un creux précédant le rétrécissement, un pic à 50~mètres dû au
+rétrécissement, un autre creux poursuivant le rétrécissement et une
+augmentation due à la sortie de la rue.  Dans la
+figure~\ref{fig:measure:retr-hh}, la courbe de \textsf{Retr1} est à peu
+près symétrique.  Par contre, cette symétrie n'apparaît pas pour la
+courbe de \textsf{Retr2}.  La proximité des murs de la rue au début de
+\textsf{Retr1} et à la fin des deux configurations provoque plus
+d'effets sur le squelette qu'au début de \textsf{Retr2}, où les murs
+sont plus éloignés.  En ce qui concerne le rétrécissement, nous voyons
+qu'il commence son effet au 30\up{e}~mètre et produit son effet maximum
+au 50\up{e}~mètre, où les courbes atteignent presque 6~\% de différence.
+L'influence du rétrécissement sur les squelettes continue après le pic,
+mais cette influence est de plus en plus faible.  Elle disparaît
+totalement entre le 70\up{e} et le 80\up{e}~mètre.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/retr/retr-hh.eps}
+  \end{center}
+  \caption[Évolution de la distance de Hausdorff hyperbolique dans les
+  configurations \textsf{Retr1} et \textsf{Retr2}]%
+  {Évolution de la distance de Hausdorff hyperbolique dans les
+    configurations \textsf{Retr1} et \textsf{Retr2}.}
+  \label{fig:measure:retr-hh}
+\end{figure}
+
+Des particularités analogues apparaissent aussi dans les courbes de la
+figure~\ref{fig:measure:retr-ahcd}.  Toutefois, nous observons que la
+courbe de \textsf{Retr2} est plus atténuée et que la valeur du pic est
+plus élevée.  Si les valeurs du pic sont plus élevées pour
+\textsf{Retr2}, c'est que le rétrécissement de deux murs produit plus de
+différence sur les squelettes que celui d'un seul dans \textsf{Retr1}.
+Sinon, les deux courbes se rejoignent après le pic et se confondent à
+partir du mètre~80.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/retr/retr-ahcd.eps}
+  \end{center}
+  \caption[Évolution de la distance de Hausdorff modifiée dans les
+  configurations \textsf{Retr1} et \textsf{Retr2}]%
+  {Évolution de la distance de Hausdorff modifiée dans les
+    configurations \textsf{Retr1} et \textsf{Retr2}.}
+  \label{fig:measure:retr-ahcd}
+\end{figure}
+
+
+\section{Autres croisements}
+
+Dans cette section, nous allons examiner deux cas de croisement de deux
+rues.  Ces deux cas sont représentés dans la
+figure~\ref{fig:measure:zcroix-conf}.  La configuration \textsf{Croix}
+est un simple croisement de deux rues formant un unique carrefour au
+milieu de la configuration.  La configuration \textsf{ZCroix} présente
+deux croisements successifs opposés et espacés de 10~mètres.  Ces
+croisements sont à peu près identiques à ceux de la configuration
+\textsf{TE}.  Dans la figure~\ref{fig:measure:croix-occlu}, nous voyons
+les principales transitions de l'environnement \textsf{ZCroix}.
+L'observateur voit la première extrémité entre les mètres~39 et~51 et la
+seconde extrémité entre les mètres~59 et~71.  Entre ces deux zones,
+l'observateur ne peut voir les extrémités sur une distance de 8~mètres.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.6\linewidth]{img/interp/croix/croix-zcroix.eps}
+  \caption[Configurations \textsf{Croix} et \textsf{ZCroix}]%
+  {Configurations \textsf{Croix} et \textsf{ZCroix}.}
+  \label{fig:measure:zcroix-conf}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.4\linewidth]{img/interp/croix/croix-occlu.eps}
+  \caption[Principales transitions de \textsf{ZCroix}]%
+  {Principales transitions de \textsf{ZCroix}.}
+  \label{fig:measure:croix-occlu}
+\end{figure}
+
+Dans le graphique de la figure~\ref{fig:measure:croix-gmd-size}, nous
+voyons une seule bosse pour \textsf{Croix} caractérisant l'apparition du
+carrefour et deux bosses successives pour \textsf{ZCroix} caractérisant
+l'apparition successive des deux ouvertures.  Ce graphique montre bien
+la différence entre les deux configurations: d'un côté les variations au
+centre du graphique sont plus fortes pour \textsf{Croix} car l'ouverture
+y est plus grande autour de l'observateur.  D'un autre côté les
+variations sont plus nombreuses avec \textsf{ZCroix} du fait des deux
+ouvertures décalées.  Ce graphique peut être comparé avec celui des
+configurations en T de la figure~\ref{fig:measure:te-gmd-size}.  Les
+bosses de \textsf{ZCroix} ont la même hauteur que celles des
+configurations en T pour la même mesure et la bosse de \textsf{Croix}
+est située au même endroit que les bosses des configurations en T.  Dans
+ce dernier cas, elles commencent toutes à 47~mètres et se terminent à
+64~mètres.  Nous voyons que ce sont bien les ouvertures qui produisent
+les bosses.  De plus, la taille de l'ouverture influe sur la taille de
+la bosse.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/croix/croix-gmd-size.eps}
+  \end{center}
+  \caption[Évolution de la taille du $\mathbf{GMD_V}$ dans les
+  configurations \textsf{Croix} et \textsf{ZCroix}]%
+  {Évolution de la taille du $\mathbf{GMD_V}$ dans les configurations
+  \textsf{Croix} et \textsf{ZCroix}.}
+  \label{fig:measure:croix-gmd-size}
+\end{figure}
+
+De telles particularités concernant l'amplitude des ouvertures et leur
+position apparaissent aussi dans le graphique de la
+figure~\ref{fig:measure:croix-gmd-rpos}.  Pour chaque partie du
+graphique caractérisant l'apparition des croisements, la courbe indique
+tout d'abord l'apparition du $\mathbf{GMD_V}$ face à l'observateur.  Au
+fur et à mesure que celui-ci avance, le $\mathbf{GMD_V}$ passe derrière
+l'observateur et revient à un état central.  Pour \textsf{ZCroix}, il
+est intéressant de remarquer qu'entre les deux croisements, nous avons
+une zone où le $\mathbf{GMD_V}$ revient à un état central.  Cette zone
+située entre les mètres~53 et~57 semble être une zone où les deux
+croisements n'ont aucun effet sur la position du $\mathbf{GMD_V}$, ni
+sur sa taille si nous observons le graphique de la
+figure~\ref{fig:measure:croix-gmd-size} au même endroit.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/croix/croix-gmd-rpos.eps}
+  \end{center}
+  \caption[Évolution de la position du $\mathbf{GMD_V}$ dans les
+  configurations \textsf{Croix} et \textsf{ZCroix}]%
+  {Évolution de la position du $\mathbf{GMD_V}$ dans les configurations
+  \textsf{Croix} et \textsf{ZCroix}.}
+  \label{fig:measure:croix-gmd-rpos}
+\end{figure}
+
+Dans la figure~\ref{fig:measure:croix-hh}, si nous comparons la courbe
+de \textsf{ZCroix} à celle de \textsf{Croix} et à celles des
+configurations en T dans la figure~\ref{fig:measure:te-hh}, nous pouvons
+remarquer que les deux croisements de \textsf{ZCroix} sont indépendants
+l'un de l'autre, au vu de la distance de Hausdorff hyperbolique.  En ce
+qui concerne la zone entre les deux croisements que nous avons remarquée
+précédemment, nous la voyons apparaître autour du 55\up{e}~mètre.  Cette
+zone est représentée par un creux dans la courbe, mais il est plus élevé
+que les creux dus à l'apparition des croisements autour des mètres~45
+et~65.  Ceci peut s'expliquer par le fait que dans cette zone la
+distance de Hausdorff hyperbolique est influencée par les croisements
+qui l'entourent.  Dans le cas du $\mathbf{GMD_V}$, cette zone
+n'influençe pas la mesure car le $\mathbf{GMD_V}$ correspond à la partie
+la moins sensible du squelette, ce qui n'est pas toujours le cas avec la
+distance de Hausdorff relative.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/croix/croix-hh.eps}
+  \end{center}
+  \caption[Évolution de la distance de Hausdorff hyperbolique dans les
+  configurations \textsf{Croix} et \textsf{ZCroix}]%
+  {Évolution de la distance de Hausdorff hyperbolique dans les
+    configurations \textsf{Croix} et \textsf{ZCroix}.}
+  \label{fig:measure:croix-hh}
+\end{figure}
+
+Dans le graphique de la figure~\ref{fig:measure:croix-ahcd}, l'aspect de
+la courbe au niveau des croisements pour \textsf{ZCroix} est tout à fait
+comparable avec la courbe du croisement dans \textsf{TE}
+(figure~\ref{fig:measure:te-thmd}).  Pour ce qui concerne la zone dans
+\textsf{ZCroix} entre les deux croisements, les valeurs de la courbe
+sont à peu près les mêmes que lorsque que l'observateur est situé au
+niveau d'un croisement.  Nous voyons que cette zone apparaît comme une
+transition entre les deux croisements, mais nous n'avons pas le même
+influence des croisements que dans le cas de la distance de Hausdorff
+hyperbolique.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/croix/croix-ahcd.eps}
+  \end{center}
+  \caption[Évolution de la distance de Hausdorff modifiée dans les
+  configurations \textsf{Croix} et \textsf{ZCroix}]%
+  {Évolution de la distance de Hausdorff modifiée dans les
+    configurations \textsf{Croix} et \textsf{ZCroix}.}
+  \label{fig:measure:croix-ahcd}
+\end{figure}
+
+
+\section{Discussion sur les cas simples}
+\label{sec:interp:discuss}
+
+Nous avons examiné jusqu'ici le comportement de nos mesures dans un
+certain nombre de cas simples.  Nous voyons que la morphologie des
+divers espaces analysés influence nos mesures selon des critères
+différents.  La taille du $\mathbf{GMD_V}$ est sensible à la taille et à
+la circularité des ouvertures visibles en des positions données.  Ainsi,
+la courbe de la taille du $\mathbf{GMD_V}$ permet de dissocier
+l'apparition d'une ouverture, sa disparition et le passage dans un
+espace homogène, ainsi que la force de ces caractéristiques.  La
+position relative du $\mathbf{GMD_V}$ nous indique le long des parcours
+si la plus grande ouverture locale est face à l'observateur, au-dessus
+de lui ou derrière lui.  Enfin, les courbes des distances de similarité
+montrent l'apparition ou non de variations dans la morphologie de
+l'espace autour de l'observateur.  Ces dernières mesures varient selon
+la force de ces variations.  En s'aidant du $\mathbf{GMD_V}$, elles
+permettent de détecter plusieurs types d'espaces ouverts urbains: les
+espaces homogènes et structurés tels que les rues longues, les espaces
+destructurés causés par de petites ouvertures successives ou
+l'apparition de motifs importants, les grandes ouvertures comme les
+places ou les grandes avenues, ou les zones de transition entre chacun
+de ces espaces.  Une telle classification des espaces ouverts urbains
+permet de diviser un parcours en différentes séquences un peu à la
+manière de la méthode d'analyse séquentielle de Panerai
+\cite{panerai:1999} (cf.~§\ref{sec:survey:panerai}).
+
+Nous proposons ci-dessous un typologie possible des valeurs de nos
+différentes mesures.  Le tableau~\ref{tab:interp:interp} montre la
+signification des différentes valeurs de nos différentes mesures.  Le
+tableau~\ref{tab:interp:gmd} permet de mettre en correspondance les
+valeurs de la taille du $\mathbf{GMD_V}$ et de sa position relative.
+Certaines cases contiennent l'indication \emph{Improbable}, car il
+semble que certaines de ces situations sont difficilement concevables.
+Enfin, le tableau~\ref{tab:interp:cmp-gmd-sim} permet de mettre en
+correspondance les valeurs du $\mathbf{GMD_V}$ et des distances de
+similarité.  Dans ce tableau et le tableau précédent, nous avons
+numéroté chaque cas afin d'y faire référence par la suite.  Cette
+typologie peut nous permettre de diviser un parcours en séquences et de
+caractériser les parcours ou les espaces par ces séquences.  Il s'agit
+ici d'une interprétation expérimentale des valeurs des mesures que nous
+avons développées ici.  Des études plus approfondies pourrait être
+nécessaires.
+
+Dans la suite de ce chapitre, nous allons appliquer nos mesures à des
+exemples d'espaces urbains réels.  Nous tenterons aussi d'y utiliser
+l'esquisse de typologie que nous avons décrite ici.
+
+\begin{table}[htbp]
+\begin{center}\small
+  \begin{tabular}{p{.25\linewidth}p{.65\linewidth}}
+    \textbf{Mesure} & \textbf{Valeur} \\\hline
+    Taille du $\mathbf{GMD_V}$
+    & Amplitude: dépend de la taille de la plus grande ouverture locale
+    et de sa circularité \\
+    & Augmentation: une plus grande ouverture apparaît \\
+    & Constante: l'espace autour de l'observateur est stable \\
+    & Diminution: l'espace autour de l'observateur diminue \\\hline
+%
+    Position du $\mathbf{GMD_V}$
+    & Amplitude: dépend de la proximité la plus grande ouverture par
+    rapport à l'horizon \\
+    & En face (> +10~\%): la plus grande ouverture est face à
+    l'observateur \\
+    & Au dessus (+/-~10~\%): la plus ouverture est au-dessus de
+    l'observateur \\
+    & Derrière (< -10~\%): la plus grande ouverture est derrière
+    l'observateur \\\hline
+%
+    Distance de Hausdorff hyperbolique
+    & Amplitude: dépend de la plus grande variation dans la morphologie de
+    l'environnement \\
+    & Augmentation: au moins une partie de l'espace change de plus en plus \\
+    & Diminution: l'espace se stabilise (de moins en moins de changement) \\
+    & Faible (< 1~\%): la morphologie de l'espace ne varie pas \\\hline
+%
+    Distance de Hausdorff modifiée hyperbolique
+    & Amplitude: dépend de l'ensemble des variations de la morphologie de
+    l'espace autour de l'observateur (en général, la valeur est
+    inférieur à 10~\%) \\
+    & Augmentation: dans son ensemble, la morphologie de l'espace varie de
+    plus en plus \\
+    & Diminution: l'espace se stabilise (de moins en moins de changement) \\
+    & Faible (< 0,5~\%): la morphologie de l'espace ne varie
+    pas \\\hline
+  \end{tabular}
+\end{center}
+\caption[Esquisse de table d'interprétation des mesures]%
+{Esquisse de table d'interprétation des mesures.}
+  \label{tab:interp:interp}
+\end{table}
+
+\begin{table}[htbp]
+\begin{center}\small
+  \begin{tabular}{rc|p{.2\linewidth}|p{.2\linewidth}|p{.2\linewidth}|}
+    & & \multicolumn{3}{c}{\textbf{Taille du $\mathbf{GMD_V}$}} \\\cline{3-5}
+    & & \emph{Augmente} & \emph{Constant} & \emph{Diminue} \\\hline
+    \textbf{Position} & \emph{En face}
+    & \multicolumn{2}{p{.43\linewidth}|}{Une ouverture apparaît face à juste
+      l'observateur ---~\textsf{Cas1}}
+    & \emph{Improbable} (une ouverture face à l'observateur diminue
+    alors qu'il s'en approche) \\\cline{2-5}
+    \textbf{du} & \emph{Au dessus}
+    & L'observateur est presque au centre d'un espace très
+    ouvert ---~\textsf{Cas2}
+    & L'observateur est dans un espace stable (rue canyon) ---~\textsf{Cas3}
+    & L'observateur a passé le centre d'un espace très ouvert (très
+    local) ---~\textsf{Cas4} \\\cline{2-5}
+    \textbf{$\mathbf{GMD_V}$} & \emph{Derrière}
+    & \emph{Improbable} (une ouverture derrière l'observateur augmente
+    alors qu'il s'en éloigne)
+    & \multicolumn{2}{|p{.43\linewidth}|}{L'observateur avance dans une rue
+      et laisse derrière lui une grande ouverture ---~\textsf{Cas5}} \\\hline
+  \end{tabular}
+\end{center}
+\caption[Esquisse de table de comparaison des valeurs de la taille du
+$\mathbf{GMD_V}$ et de la position relative du $\mathbf{GMD_V}$]%
+{Esquisse de table de comparaison des valeurs de la taille du
+  $\mathbf{GMD_V}$ et de la position relative du $\mathbf{GMD_V}$.}
+  \label{tab:interp:gmd}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \begin{tabular}{l||p{.25\linewidth}|p{.25\linewidth}|p{.25\linewidth}|}
+    & \multicolumn{3}{c|}{\textbf{Distance de similarité}} \\\hline
+    $\mathbf{GMD_V}$ & \emph{Augmente} & \emph{Diminue} & \emph{Faible} \\\hline
+    \textsf{Cas1}
+    & Transition morphologique: apparition d'une ouverture en face de
+    l'observateur ---~\textsf{Cas11}
+    & \multicolumn{2}{p{.53\linewidth}|}{Fin de transition morphologique:
+      l'espace s'est ouvert devant l'observateur et peut continuer à
+      s'ouvrir ---~\textsf{Cas12}}
+    \\\hline
+    \textsf{Cas2}
+    & Ouverture morphologique confuse: l'observateur se rapproche du
+    centre d'un espace très ouvert et des perturbations apparaissent
+    autour de lui ---~\textsf{Cas21}
+    & \multicolumn{2}{p{.5\linewidth}|}{Ouverture morphologique adoucie:
+      l'observateur est presque au centre d'un espace très ouvert et cet
+      espace se stabilise ---~\textsf{Cas22}} \\\hline
+    \textsf{Cas3}
+    & \multicolumn{2}{p{.5\linewidth}|}{Stabilité morphologique avec des
+      perturbations lointaines ---~\textsf{Cas31}}
+    & Stabilité morphologique régulière ---~\textsf{Cas32} \\\hline
+    \textsf{Cas4}
+    & Fermeture morphologique de l'espace: l'observateur sort d'un
+    espace très ouvert (l'augmentation de la distance de similarité est
+    normale) ---~\textsf{Cas41}
+    & \emph{Improbable} (l'observateur va sortir d'un espace très ouvert
+    et la quantité de variation diminue)
+    & Début de la fermeture morphologique de l'espace: l'observateur
+    sort d'un espace très ouvert ---~\textsf{Cas42} \\\hline
+    \textsf{Cas5}
+    & Transition morphologique: apparition d'une fermeture en face de
+    l'observateur ---~\textsf{Cas51}
+    & \multicolumn{2}{p{.5\linewidth}|}{Fin de transition morphologique:
+      l'espace s'est refermé derrière l'observateur et peut continuer à
+      se fermer ---~\textsf{Cas52}} \\\hline
+  \end{tabular}
+  \caption[Esquisse de table de comparaison des valeurs du
+  $\mathbf{GMD_V}$ et des distance de similarité]%
+  {Esquisse de table de comparaison des valeurs du $\mathbf{GMD_V}$ et
+    des distance de similarité.} 
+  \label{tab:interp:cmp-gmd-sim}
+\end{table}
+
+\section{La rue Xavier-Neujean à Liège}
+\label{sec:interp:xn}
+
+Nous avons souhaité tester nos mesures sur des exemples réels.  L'un de
+ces exemples concerne la rue Xavier-Neujean à Liège en Belgique.  Cette
+rue est composée d'une place en son centre prolongée par deux allées.
+Elle commence au boulevard de la Sauvenière et débouche sur l'opéra de
+la ville, rue des Dominicains.  Elle donne directement accès à une
+église, une piscine classée monument historique, un parking à ciel
+ouvert, un bâtiment commercial, ainsi que quelques commerces et
+habitations (figure~\ref{fig:measure:xavier-neujean}).
+
+Dans la figure~\ref{fig:measure:xavier-neujean}, nous voyons le chemin
+suivi par l'observateur.  Ce parcours fait 254,84~mètres de long.  Il
+commence rue de la Sauvenière et passe près de l'église, de l'espace en
+forme de place (face à la piscine), du parking, du bâtiment commercial
+et s'arrête à l'arrière de l'opéra.  Quant au modèle 3D utilisé pour les
+mesures, il correspond à une zone un peu plus grande que celle
+représentée dans la figure~\ref{fig:measure:xavier-neujean}.  Ce modèle
+est composé de 3264~faces et 13\,469~sommets.  Il a été réalisé par le
+\textsc{Lema}.  Les projections sphériques sont espacées de 2,54~mètres,
+soit 100~projections au total.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.67\linewidth]{img/interp/xn/xavier-desc.eps}
+  \caption[Plan de la rue Xavier-Neujean à Liège en Belgique]%
+  {Plan de la rue Xavier-Neujean à Liège en Belgique.}
+  \label{fig:measure:xavier-neujean}
+\end{figure}
+
+\subsection{$\mathbf{GMD_V}$}
+
+Le graphique de la figure~\ref{fig:measure:xn-gmd-size} montre
+l'évolution de la taille du $\mathbf{GMD_V}$ dans la rue Xavier-Neujean.
+Les différents éléments de la rue y apparaissent.  Le pic au mètre~53
+est dû à une ouverture de l'espace juste avant l'église.  Puis l'espace
+rétrécit jusqu'à ce l'observateur ait dépassé l'église.  \`A ce moment,
+l'observateur rentre dans un espace en forme de place.  Un grand espace
+apparaît et le rayon du $\mathbf{GMD_V}$ augmente de manière
+significative.  \`A ce niveau, le rayon atteint presque 50~\% du rayon
+maximal, ce qui indique un espace assez ouvert dans un environnement
+urbain.  \`A partir du mètre~140, le rayon diminue jusqu'au mètre~170:
+ceci indique que l'observateur sort de la place.  \`A ce moment, une
+nouvelle bosse apparaît dans le graphique: il s'agit de l'apparition du
+passage près du parking, qui représente une ouverture importante sur le
+ciel.  Ensuite, le rayon du $\mathbf{GMD_V}$ rétrécit car l'observateur
+pénètre dans un espace en forme de rue étroite.  Puis, il augmente au
+fur et à mesure que l'observateur s'approche de l'opéra.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/xn/xn-gmd-size.eps}
+  \end{center}
+  \caption[Taille du $\mathbf{GMD_V}$ par rapport au zénith de
+  l'observateur pour le parcours de la rue Xavier-Neujean à Liège]%
+  {Taille du $\mathbf{GMD_V}$ par rapport au zénith de l'observateur
+  pour le parcours de la rue Xavier-Neujean à Liège.}
+  \label{fig:measure:xn-gmd-size}
+\end{figure}
+
+Le graphique représentant l'évolution de la position relative du
+$\mathbf{GMD_V}$ dans le parcours de la rue Xavier-Neujean est donné
+dans la figure~\ref{fig:measure:xn-gmd-rpos}.  Dans ce graphique, nous
+devons nous demander quand l'observateur peut-il voir le
+$\mathbf{GMD_V}$ en face et quand est-ce qu'il ne le peut pas?
+L'observateur peut voir le $\mathbf{GMD_V}$ en face en quatre lieux:
+avant le passage près de l'église, sur la place, près du parking et
+lorsqu'il se rapproche de l'opéra.  Il ne le voit voit pas en face en
+quatre autres lieux: à l'entrée de la rue, entre l'église et la place,
+entre la place et le parking et dans la première moitié de la rue entre
+le parking et l'opéra.  Si nous comparons ces données avec celles du
+graphique de la figure~\ref{fig:measure:xn-gmd-size}, nous remarquons
+que l'observateur aperçoit le $\mathbf{GMD_V}$ en face lorsque sa taille
+commence à augmenter.  Il voit le $\mathbf{GMD_V}$ à la naissance d'une
+ouverture, mais il ne le voit pas en face lorsque sa taille atteint un
+maximum local et lorsque l'ouverture diminue.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/xn/xn-gmd-rpos.eps}
+  \end{center}
+  \caption[Position du $\mathbf{GMD_V}$ par rapport au zénith de
+  l'observateur pour le parcours de la rue Xavier-Neujean à Liège]%
+  {Position du $\mathbf{GMD_V}$ par rapport au zénith de l'observateur
+    pour le parcours de la rue Xavier-Neujean à Liège.}
+  \label{fig:measure:xn-gmd-rpos}
+\end{figure}
+
+La figure~\ref{fig:interp:xn-desc-gmd} représente une division du
+parcours de la rue Xavier-Neujean selon deux critères sur le
+$\mathbf{GMD_V}$: le trait de la figure est gras si la taille du
+$\mathbf{GMD_V}$ est supérieure à 35~\% et la position devant ou
+au-dessus de l'observateur.  La taille a été choisie afin de ne prendre
+en compte que les bosses qui apparaissent dans le graphique de la
+figure~\ref{fig:measure:xn-gmd-size}.  Selon cette figure, il y a quatre
+ouvertures principales: une petite ouverture juste avant l'église, une
+ouverture lors de l'entrée dans la place et un peu avant, une ouverture
+près d'une partie du parking et la naissance d'une ouverture près de
+l'opéra.  Dans ce parcours, nous pouvons remarquer que le
+$\mathbf{GMD_V}$ est devant l'observateur moins longtemps que lorsqu'il
+est derrière lui.  La rue Xavier-Neujean est constituée en son centre de
+deux espaces très ouverts et est prolongée d'un côté et de l'autre par
+deux espaces étroits en forme de rue.  Cependant, cette rue n'est pas
+symétrique selon les mesures basées sur le $\mathbf{GMD_V}$.  En effet,
+nous n'obtiendrions pas les mêmes valeurs si l'observateur réalise le
+parcours inverse.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.75\linewidth]{img/interp/xn/xn-desc-gmd.eps}
+  \caption[Division du parcours de la rue Xavier-Neujean selon les
+  mesures du $\mathbf{GMD_V}$]%
+  {Division du parcours de la rue Xavier-Neujean selon les mesures du
+    $\mathbf{GMD_V}$.}
+  \label{fig:interp:xn-desc-gmd}
+\end{figure}
+
+Par rapport à la typologie que nous avons élaborée au
+§\ref{sec:interp:discuss} pour les mesures du $\mathbf{GMD_V}$
+(tableau~\ref{tab:interp:gmd}), le \textsf{Cas1} apparaît presque à
+chaque fois que la taille du $\mathbf{GMD_V}$ augmente dans le graphique
+de la figure~\ref{fig:measure:xn-gmd-size} et le \textsf{Cas5} à chaque
+fois que la taille diminue.  Le \textsf{Cas2} se manifeste juste avant
+le premier sommet, où il remplace le \textsf{Cas1}.  Il reparaît au
+niveau du plus au sommet du graphique de la
+figure~\ref{fig:measure:xn-gmd-size}.  Enfin, nous avons un seul
+\textsf{Cas4} au niveau de l'avant dernier sommet sur une dizaine de
+mètres.  Le \textsf{Cas3} n'apparaît jamais.  \'Etant donné la typologie
+que nous avons donnée auparavant, l'ordre d'apparition la plus fréquente
+des cas lorsque la courbe de la taille du $\mathbf{GMD_V}$ fait une
+bosse devrait être: \textsf{Cas1}, \textsf{Cas2}, \textsf{Cas4} et
+\textsf{Cas5}.  Ce qui se traduit par l'arrivée de l'observateur dans un
+espace très ouvert, son passage par ou près du centre de cette espace et
+sa sortie.  Or certains cas (les \textsf{Cas2} et \textsf{Cas4}) ne sont
+pas présents quelque soit la bosse
+(figure~\ref{fig:measure:xn-gmd-size}).  Autrement dit, d'après notre
+typologie, l'observateur arrive dans des espaces très ouverts et il en
+sort très rapidement ou alors l'observateur n'a pas eu le temps d'entrée
+dans ces espaces qu'il en sort déjà!  Cela peut venir de la
+particularité de la rue Xavier-Neujean, qui est un espace assez
+destructuré, ou alors nous avons rencontré dans cet exemple une limite à
+notre typologie.
+
+\subsection{Distances de similarité}
+
+La figure~\ref{fig:mesaure:xn-hh} montre l'évolution de la distance de
+Hausdorff hyperbolique dans l'environnement de la rue Xavier-Neujean.
+Dans ce graphique, nous devons repérer les lieux où l'observateur
+effectue une rotation, car les rotations provoquent des différences
+importantes dans la position des branches des squelettes.  Au niveau de
+la courbe, cela se traduit par un pic brusque.  Dans le chemin que nous
+avons édité, les positions où l'observateur effectue un virage sont
+situées aux mètres~46, 116,4 et 161\footnote{Nous pouvons remarquer
+  qu'en ces positions, les courbes des
+  figures~\ref{fig:measure:xn-gmd-size} et~\ref{fig:measure:xn-gmd-rpos}
+  ne semblent pas affectées.}.  Dans le cas de la distance de Hausdorff
+hyperbolique, seuls les virages aux mètres~48 et~161 semblent
+caractérisés par un pic.
+
+Dans le graphique de la figure~\ref{fig:mesaure:xn-hh}, le premier pic
+est causé par la disparition du boulevard de la Sauvenière.  L'entrée de
+la rue Xavier-Neujean est en effet étroite.  Au 14\up{e}~mètre, une
+ouverture apparaît par un bâtiment plus petit: celui-ci à une hauteur de
+3,40~mètres alors que les autres ont plus de 10~mètres de haut.  Cette
+ouverture de 6~mètres de long, selon le modèle, disparait au mètre~29.
+Une autre ouverture apparaît juste après à 34~mètres. \`A cette
+position, située juste avant l'église dans le parcours, l'espace
+s'élargit.  Au mètre~59, une ouverture importante apparaît entre le
+clocher et le dôme de l'église.  Une seconde ouverture apparaît de
+l'autre côté du clocher plus loin au mètre~68.  Ensuite, la première de
+ces deux ouvertures disparaît lorsque l'observateur atteint 90~mètres.
+Entre les mètres~100 et~108, une série de variations de plus en plus
+fortes apparaissent.  Ces variations sont dues à l'apparition
+progressive de la place face à la piscine.  L'importance de ces
+variations s'atténue sur quelques mètres après le mètre~108: à ce
+moment, l'observateur est dans la place.  Par cette succession de
+variations, nous pouvons constater que la place produit un effet
+important.  Si nous comparons cette mesure avec celles du
+$\mathbf{GMD_V}$, nous pouvons penser qu'il s'agit même de la variation
+la plus importante du parcours.  Entre les mètres~110 et~120, une rue
+apparaît au loin dans la place sur la droite de l'observateur: elle
+apparaît, puis l'observateur tourne un peu à 116~mètres et la rue
+disparaît brusquement.  Le fait qu'elle soit distante de l'observateur
+explique que cette rue ne produit que de faibles valeurs au niveau de la
+courbe de la distance de Hausdorff hyperbolique, par rapport à l'entrée
+dans la place.  Au mètre~130, une autre ouverture apparaît, causée par
+l'apparition d'une petite ouverture entre l'église et la piscine.  Au
+mètre~144, une autre rue apparaît plus loin dans la place.  Cette rue
+disparaît au mètre~159.  Au mètre~161, l'ouverture au niveau du parking
+apparaît, mais il est difficile de dire si la valeur de la courbe est
+causée par cet événement ou si elle est due au changement de direction
+de l'observateur.  Toutefois, nous pouvons remarquer que l'apparition du
+parking est suivie sur plusieurs mètres, entre les mètres~161 et~169,
+alors que le virage est situé à 161~mètres.  Ainsi, selon nos mesures,
+la fin du passage dans la place est marqué par deux événements: la
+disparition d'une rue sur la droite de l'observateur et l'apparition du
+parking.  Après le mètre~169, la courbe diminue doucement jusqu'au
+mètre~187.  Ceci est dû à la disparition progressive et lente de la
+place alors que l'observateur avance près du parking.  \`A partir du
+mètre~187, la courbe commence à augmenter.  Ici, l'observateur s'éloigne
+du parking et son environnement visuel se transforme en une rue étroite.
+L'entrée dans cette rue est repérée par un pic au mètre~210.  Puis le
+parking disparaît au fur et à mesure.  Après le mètre~230,
+l'environnement visuel de l'observateur est entièrement occupé par la
+rue étroite jusqu'au mètre~237.  \`A ce moment, l'espace près de l'opéra
+apparaît: il s'élargit et une rue apparaît subitement sur la droite de
+l'observateur au mètre~245.  Cet événement s'étend sur 10~mètres.  Après
+quoi, l'observateur est dans l'espace derrière l'opéra.  Cet espace est
+stable: il ne varie pas dans la suite du parcours.
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/xn/xn-hh.eps}
+\end{center}
+  \caption[Évolution de la distance de Hausdorff hyperbolique pour le
+  parcours dans la rue Xavier-Neujean à Liège]%
+  {Évolution de la distance de Hausdorff hyperbolique pour le parcours
+    dans la rue Xavier-Neujean à Liège.}
+  \label{fig:mesaure:xn-hh}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/xn/xn-ahcd.eps}
+\end{center}
+\caption[Variation de la distance de Hausdorff modifiée dans la rue
+Xavier-Neujean à Liège]%
+{Variation de la distance de Hausdorff modifiée dans la rue
+  Xavier-Neujean à Liège.}
+  \label{fig:mesaure:xn-ahcd}
+\end{figure}
+
+Le graphique de la figure~\ref{fig:mesaure:xn-ahcd} représente les
+variations de la distance de Hausdorff modifiée dans le parcours de la
+rue Xavier-Neujean.  Avec la distance moyenne de mouvement, nous
+remarquons que les points importants du graphique sont à peu près les
+mêmes que ceux du graphique de la distance de Hausdorff hyperbolique
+(figure~\ref{fig:mesaure:xn-hh}).  Cependant, l'importance de ces points
+n'est plus tout à fait la même.  En particulier, les virages de
+l'observateur semblent avoir plus d'importance avec la distance de
+Hausdorff modifiée.  Toutefois, au mètre~161, le pic semble être
+exagérément élevé.  Selon les remarques que nous avons faites avec la
+distance de Hausdorff hyperbolique, il apparaît possible que ce pic soit
+le résultat de deux événements: le virage de l'observateur et la
+disparition de la place face à la piscine de l'environnement visuel de
+l'observateur.  Si nous retirons les pics des virages de la courbe, nous
+observons que les événements les plus importants du parcours sont
+l'entrée dans la rue Xavier-Neujean au début et l'apparition de l'espace
+près de l'opéra.  Ces deux événements semblent indiquer que l'espace de
+la rue Xavier-Neujean est totalement différent des espaces qui
+l'entourent.  En effet, la rue Xavier-Neujean est un espace plutôt
+renfermé par rapport au boulevard de la Sauvenière, qui est un boulevard
+large où autrefois passait la Meuse et qui fait le tour de l'espace
+urbain (figure~\ref{fig:measure:xavier-neujean}).  Il est aussi
+différent de l'espace autour de l'opéra.  L'opéra est en effet bien
+espacé des bâtiments qui l'entourent, étant séparé des autres bâtiments
+par un espace ouvert assez vaste.  La place à l'intérieur de la rue
+Xavier-Neujean crée un espace qui se dissocie du reste de la rue.  Cette
+rue est repérée dans le graphique de la
+figure~\ref{fig:mesaure:xn-ahcd}, par deux pics aux mètres~108 et~161.
+Cette place est délimitée par des façades assez élevées et elle est plus
+ou moins cachée au reste de la ville, puisque l'accès à cette place se
+fait en passant par des rues étroites.
+
+La figure~\ref{fig:interp:xn-desc-ahcd} montre une division du parcours
+de la rue Xavier-Neujean selon la distance de Hausdorff modifiée.  Dans
+ce schéma, nous avons indiqué en gras les parties du parcours où la
+distance à une valeur inférieure à 1~\% sur une séquence de plus de
+10~mètres.  Ces parties représentent les moments les plus stables du
+parcours, c'est-à-dire les moments où il y a le moins de variations
+autour de l'observateur.
+%
+En comparant le schéma de la figure~\ref{fig:interp:xn-desc-ahcd} avec
+celui de la figure~\ref{fig:interp:xn-desc-gmd}, nous remarquons que les
+zones indiquées en gras dans la figure~\ref{fig:interp:xn-desc-gmd} sont
+contenues dans les zones de la figure~\ref{fig:interp:xn-desc-ahcd},
+sauf les quelques mètres derrière l'opéra.  Il est intéressant de
+constater que l'entrée dans la place correspond dans les deux figures.
+Cette entrée dans la place est marquée par une grande ouverture que
+l'observateur voit en face et correspond à un espace stable.  Autres
+correspondances, les quelques mètres au début du parcours et le passage
+entre la place et le parking.  Le début du parcours est étroit et marqué
+par plusieurs variations importantes.  Cet espace réalise une coupure
+entre le boulevard de la Sauvenière et la place.  Le passage entre la
+place et le parking est aussi marqué par un passage étroit.  Bien que le
+virage intervienne en cette position, il semble certain que cet espace
+constitue ici une transition entre la place et le parking qui obstrue
+ces deux emplacements.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.75\linewidth]{img/interp/xn/xn-desc-ahcd.eps}
+  \caption[Division du parcours de la rue Xavier-Neujean selon la
+  distance de Hausdorff modifiée]%
+  {Division du parcours de la rue Xavier-Neujean selon la distance
+    de Hausdorff modifiée.}
+  \label{fig:interp:xn-desc-ahcd}
+\end{figure}
+
+En utilisant le parcours que nous avons décrit plus haut, il semble que
+la place face à la piscine dans la rue Xavier-Neujean corresponde à un
+micro espace urbain qui se dissocie du reste de la ville.  Mais pour
+confirmer cette analyse, il serait nécessaire d'effectuer d'autres
+mesures sur d'autres parcours dans cette rue.
+
+En appliquant la typologie que nous avons élaborée dans le
+tableau~\ref{tab:interp:cmp-gmd-sim}, nous avons rencontré une
+succession d'incohérence le long du parcours de la rue Xavier-Neujean.
+Par exemple, nous avons relevé des fins de transitions (\textsf{Cas12}
+ou \textsf{Cas52}) précédents des début de transitions (\textsf{Cas11}
+ou \textsf{Cas51}), sans qu'une transition ait commencé auparavant.
+Ceci montre une limite de notre typologie qui ne semble pas être adaptée
+pour le parcours de la rue Xavier-Neujean et aussi pour d'autres
+parcours dans des rues équivalentes.
+
+\subsection{Conclusion sur l'analyse}
+
+Nous avons réalisé ici une analyse de la rue Xavier-Neujean le long d'un
+parcours.  Cette analyse nous a montré que notre méthode permet de
+mettre en valeur des aspects de l'espace qui ne transparaissent pas
+directement dans le plan ou le modèle 3D.  Par ces constats, nous sommes
+capables à la fois de décrire les grandes variations du parcours et de
+décrire les principales caractéristiques morphologiques des espaces
+traversés.  Nous nous sommes aussi rendu compte d'une insuffisance de la
+typologie que nous avons élaborée au §\ref{sec:interp:discuss}: celle-ci
+ne semble pas être adaptée à des espaces destructurés comme celui de la
+rue Xavier-Neujean à Liège.
+
+Pour terminer ce chapitre, nous allons voir un dernier exemple
+d'application de nos mesures sur un parcours à Nantes.  Les espaces
+traversés sont beaucoup plus homogènes et nous découvrirons entre autres
+si notre esquisse de typologie peut s'appliquer à certains espaces
+urbains.
+
+
+\section{Parcours à Nantes}
+\label{sec:interp:nantes}
+
+\begin{figure}[htbp]
+  \centering
+  \subfigure[\label{nantes:decre}]{\includegraphics[width=.40\linewidth]{img/interp/nantes/photo/decre.eps}}
+  \subfigure[\label{nantes:croix1}]{\includegraphics[width=.25\linewidth]{img/interp/nantes/photo/croix_1_1.eps}}
+  \subfigure[\label{nantes:croix2}]{\includegraphics[width=.25\linewidth]{img/interp/nantes/photo/croix_2_1.eps}}
+  \subfigure[\label{nantes:nicolas}]{\includegraphics[width=.25\linewidth]{img/interp/nantes/photo/nicolas_1.eps}}
+  \subfigure[\label{nantes:otages1}]{\includegraphics[width=.35\linewidth]{img/interp/nantes/photo/otages_1.eps}}
+  \subfigure[\label{nantes:otages2}]{\includegraphics[width=.35\linewidth]{img/interp/nantes/photo/otages_2.eps}}
+  \subfigure[\label{nantes:tortu}]{\includegraphics[width=.25\linewidth]{img/interp/nantes/photo/tortu.eps}}
+  \subfigure[\label{nantes:orleans}]{\includegraphics[width=.40\linewidth]{img/interp/nantes/photo/orleans.eps}}
+  \caption[Quelques photographies le long du parcours à Nantes]%
+  {Quelques photographies le long du parcours à Nantes.  Ces
+  photographies ont été prises avec un objectif grand angle, ce qui a
+  pour effet de provoquer de légères déformations.}
+  \label{fig:interp:nantes-photo}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.77\linewidth]{img/interp/nantes/render/nantes3.eps}
+  \caption[Modèle 3D utilisé pour le parcours à Nantes]%
+  {Modèle 3D utilisé pour le parcours à Nantes.}
+  \label{fig:interp:nantes-model}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.90\linewidth]{img/interp/nantes/Royale_plan.eps}
+  \caption[Parcours à Nantes]%
+  {Parcours à Nantes.  Le plan représente un extrait de la maquette 3D.
+    Le haut du plan correspond au nord.  Les différents symboles
+    représentés par un disque et trait sont les lieux et les directions
+    des photographies de la figure~\ref{fig:interp:nantes-photo}.  Leur
+  ordre d'apparition le long du parcours correspond à leur ordre de
+  numérotation dans la figure~\ref{fig:interp:nantes-photo}}.
+  \label{fig:interp:nantes-plan}
+\end{figure}
+
+Dans cette section, nous allons proposer une application de nos mesures
+dans un parcours à Nantes en France.  Ce parcours est situé dans le
+centre de la ville.  Il commence place du Pilori et se termine sur la
+place Royale.  Le parcours est représenté dans la
+figure~\ref{fig:interp:nantes-plan}.  L'observateur commence place du
+Pilori et traverse la rue de la Marne en longeant sur sa droite un long
+bâtiment commercial (figure~\ref{nantes:decre}).  Il coupe la rue du
+Moulin, d'où il peut voir l'église Sainte~Croix sur la gauche
+(figure~\ref{nantes:croix1}).  L'observateur passe ensuite à côté de la
+rue Travers à gauche et peut apercevoir à nouveau l'église Sainte~Croix
+derrière lui (figure~\ref{nantes:croix2}).  Ensuite, il coupe la rue des
+Carmes.  Il traverse la rue de la Barillerie et passe à côté de la rue
+de la Bleterie à gauche et aperçoit la rue Haute~Casserie sur sa droite,
+d'où il peut voir l'église Saint~Nicolas (figure~\ref{nantes:nicolas})
+qui se trouve dans la partie ouest du plan.  Il arrive enfin sur le
+cours des Cinquante~Otages (figure~\ref{nantes:otages1}).  Ce cours est
+une voie très large qui coupe notre plan en deux parties distinctes et
+qui est dominée visuellement par la Tour de Bretagne
+(figure~\ref{nantes:otages2}).  Puis, l'observateur traverse la rue
+d'Orléans avant d'arriver sur la place Royale
+(figure~\ref{nantes:orleans}).  Entre-temps, il est passé près de la rue
+du Bois~Tortu à sa droite (figure~\ref{nantes:tortu}), il a coupé la rue
+du Couëdic et est passé près de la rue de la Pérouse à sa gauche.  Il
+arrive enfin sur la place Royale.
+
+Le modèle 3D du centre de Nantes est composé de 87\,049~faces et
+78\,393~sommets (figure~\ref{fig:interp:nantes-model}).  Il a été
+réalisé par le \textsc{Cerma}.  Il intègre tout le vieux centre de
+Nantes avec le château des Ducs de Bretagne et la cathédrale, les cours
+Saint-André et Saint-Pierre à l'ouest.  Sont représentés l'ensemble du
+cours des Cinquante Otages, du cours Franklin Roosevelt au sud jusqu'à
+l'Erdre au nord, l'île Feydeau au bord du cours Franklin Roosevelt, la
+place Royale, la place du Commerce, ainsi la rue Crébillon et la place
+Graslin à l'est.  Enfin, la Tour de Bretagne, les églises Sainte-Croix
+et Saint Nicolas, ainsi que le théatre Graslin sont aussi représentés.
+Sur la figure~\ref{fig:interp:nantes-model}, nous voyons un rendu du
+modèle 3D utilisé dans nos calcul.  Dans cette image, nous pouvons voir
+la Tour de Bretagne sur la gauche, l'église Sainte Croix juste à côté et
+la cathédrale de la ville dans le fond.  Le parcours représenté dans la
+figure~\ref{fig:interp:nantes-plan} a une longueur de 493,364 mètres.
+Sur ce parcours, nous avons réalisé 500~projections sphériques: ce qui
+donne un peu moins d'un mètre entre deux projections.  Des virages sont
+effectués par l'observateur aux distances suivantes: 41,015~mètres,
+138,083~mètres, 142,724~mètres, 267,962~mètres, 311,577~mètres et
+435,486~mètres.  Les trois premiers et le dernier virage sont assez
+importants et les deux autres ne sont pratiquement pas perceptibles.
+
+\subsection{$\mathbf{GMD_V}$}
+\label{sec:interp:nantes-gmd}
+
+Le graphique de la variation de la taille du $\mathbf{GMD_V}$ dans le
+parcours à Nantes (figure~\ref{fig:mesaure:nantes-gmd-size}) montre une
+courbe relativement claire.  Elle dissocie nettement les ouvertures et
+les espaces étroits.  La courbe commence par une bosse due à l'ouverture
+de la place du Pilori.  Puis l'observateur pénètre dans une rue longue,
+et longe sur sa droite le bâtiment commercial: la rue de la Marne
+(cf.~figure~\ref{nantes:decre}).  Cet espace produit une courbe droite
+et horizontale entre les mètres~50 et~110.  Ensuite, la bifurcation avec
+la rue du Moulin apparaît à l'extrémité du bâtiment commercial sur
+quelques mètres, faisant apparaître en même temps l'église Sainte~Croix
+sur la gauche de l'observateur (figure~\ref{nantes:croix1}).  Cette
+bifurcation produit une bosse entre les mètres~110 et~150.  Le parcours
+continue avec deux bosses en partie <<~fusionnées~>> entre les
+mètres~150 et~210.  La première bosse est due à la seconde apparition de
+l'église Sainte~Croix derrière l'observateur sur sa gauche, par la rue
+Travers, et la suivante est due à l'apparition d'un espace en forme de
+place juste après, produit par la jonction de plusieurs rues.  Entre les
+mètres~210 et~250, une ouverture s'ouvre en face de l'observateur, sur
+sa droite, laissant apparaître l'église Saint~Nicolas à travers la rue
+Haute Casserie (figure~\ref{nantes:nicolas}).  Une grande ouverture se
+manifeste entre les mètres~250 et~332: il s'agit du cours des Cinquante
+Otages (figures~\ref{nantes:otages1} et~\ref{nantes:otages2}).  Puis,
+l'observateur entre dans la rue d'Orléans (figure~\ref{nantes:orleans}).
+Cette portion entre les mètres~332 et~405 est caractérisée comme pour la
+rue de la Marne par une courbe quasiment droite et horizontale.  Une
+première bosse apparaît avant la fin du parcours autour du mètre~420: il
+s'agit d'un carrefour entre la rue d'Orléans et la rue du Couédic.
+Puis, l'observateur pénètre la place Royale, ce qui se traduit par une
+immense bosse.
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/nantes/nantes-gmd-size.eps}
+\end{center}
+  \caption[Évolution de la taille du $\mathbf{GMD_V}$ pour le
+  parcours de Nantes]%
+  {Évolution de la taille du $\mathbf{GMD_V}$ pour le parcours
+    de Nantes.}
+  \label{fig:mesaure:nantes-gmd-size}
+\end{figure}
+
+Dans ce parcours, nous voyons six principaux espaces différents.  Cela
+commence par l'ouverture de la place du Pilori, puis le passage de la
+partie de la rue de la Marne près du bâtiment commercial, un ensemble
+d'ouvertures formant un espace destructuré entre la première apparition
+de l'église Sainte~Croix et le cours des Cinquante Otages, la première
+grande ouverture du cours des Cinquante Otages, le passage dans la rue
+d'Orléans et la seconde grande ouverture de la place Royale.
+
+La figure~\ref{fig:mesaure:nantes-gmd-rpos} montre l'évolution de la
+position relative du $\mathbf{GMD_V}$.  Le graphique donne à nouveau les
+ouvertures que nous avions remarquées précédemment, si nous relevons les
+éléments de la courbe descendant qui traversent l'axe des abscisses.
+Quand aux deux passages dans des rues, ils apparaissent un peu
+curieusement.  Le passage dans la rue de la Marne produit par endroit
+des valeurs supérieures à +10~\%.  Nous pensons que cette particularité
+est due à un bâtiment qui est plus avancé que les autres sur la gauche
+de l'observateur près de la rue du Moulin.  L'ensemble de la rue
+d'Orléans est caractérisé par une courbe marquée par de grandes
+variations.  Bien que cette rue paraisse homogène, les bâtiments qui
+l'entourent ont des façades de hauteurs différentes\footnote{Il semble
+  que le modèle 3D de la rue d'Orléans ne soit tout à fait fidèle.  La
+  véritable rue d'Orléans est bien régulière pour ce qui est de la
+  hauteur des bâtiments.}.
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/nantes/nantes-gmd-rpos.eps}
+\end{center}
+  \caption[Évolution de la position relative du $\mathbf{GMD_V}$ pour le
+  parcours de Nantes]%
+  {Évolution de la position relative du $\mathbf{GMD_V}$ pour le parcours
+    de Nantes.}
+  \label{fig:mesaure:nantes-gmd-rpos}
+\end{figure}
+
+La figure~\ref{fig:interp:nantes-desc-gmd} montre la division du
+parcours à Nantes selon les valeurs du $\mathbf{GMD_V}$.  Dans le
+schéma, les traits gras indiquent que le $\mathbf{GMD_V}$ est face à
+l'observateur ou au-dessus de lui et que la taille du $\mathbf{GMD_V}$
+est supérieure à 20~\%.  Nous remarquons le long du parcours que
+l'observateur ne voit le $\mathbf{GMD_V}$ que peu de temps.  Ce parcours
+est principalement caractérisé par des passages dans des espaces étroits
+avec par endroit des apparitions d'ouvertures, dont principalement lors
+de la traversée du cours des Cinquante Otages et l'arrivée sur la place
+Royale.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.75\linewidth]{img/interp/nantes/nantes-desc-gmd.eps}
+  \caption[Séquences du parcours à Nantes selon les valeurs du
+  $\mathbf{GMD_V}$]%
+  {Séquences du parcours à Nantes selon les valeurs du
+    $\mathbf{GMD_V}$.}
+  \label{fig:interp:nantes-desc-gmd}
+\end{figure}
+
+Contrairement à la rue Xavier-Neujean, l'ordre des cas dans le parcours
+à Nantes est beaucoup plus régulier: chaque bosse de la
+figure~\ref{fig:mesaure:nantes-gmd-size} est caractérisée par la série
+\textsf{Cas1}, \textsf{Cas2}, \textsf{Cas4} et \textsf{Cas5}.  Les
+seules exceptions sont la deuxième et la dernière bosse où le
+\textsf{Cas2} n'est pas présent.  Enfin, le passage près du bâtiment
+commercial est qualifié par un \textsf{Cas3} (i.e.~passage dans un
+espace stable).  Par contre, le passage dans la rue d'Orléans est
+caractérisé par une succession de \textsf{Cas2}, \textsf{Cas3} et
+\textsf{Cas4} due aux grandes variations de la position relative du
+$\mathbf{GMD_V}$ (figure~\ref{fig:mesaure:nantes-gmd-rpos}).  Ainsi, au
+vue des mesures du $\mathbf{GMD_V}$, l'ensemble du parcours traduit une
+grande régularité.
+
+\subsection{Distances de similarité}
+
+La figure~\ref{fig:mesaure:nantes-hh} montre les variations de la
+distance de Hausdorff dans le parcours de Nantes et la
+figure~\ref{fig:mesaure:nantes-ahcd} montre celle de la distance de
+Hausdorff modifiée.  La courbe de la figure~\ref{fig:mesaure:nantes-hh}
+présente un nombre important de variations.  Toutefois, nous pouvons
+reconnaître les deux passages dans la rue de la Marne et la rue
+d'Orléans, caractérisés par des creux.
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/nantes/nantes-hh.eps}
+\end{center}
+  \caption[Évolution de la distance de Hausdorff hyperbolique pour le
+  parcours de Nantes]%
+  {Évolution de la distance de Hausdorff hyperbolique pour le parcours
+    de Nantes.}
+  \label{fig:mesaure:nantes-hh}
+\end{figure}
+
+La courbe de la figure~\ref{fig:mesaure:nantes-ahcd} semble plus claire
+et il est plus simple d'y analyser l'espace autour du parcours.  Nous
+pouvons remarquer que les positions où la courbe dépasse 4~\%
+correspondent aux positions où l'observateur effectue des virages
+importants.  Ces virages n'étaient pas très clairement indiqués dans le
+graphique de la figure~\ref{fig:mesaure:nantes-hh}.  Nous avons réalisé
+un agrandissement en ordonnée du graphique de la
+figure~\ref{fig:mesaure:nantes-ahcd} dans la
+figure~\ref{fig:mesaure:nantes-ahcd2}.  Cet agrandissement permet
+d'analyser avec plus de précision les valeurs du graphique, inférieures
+à 2~\%.  Dans ce graphique, nous pouvons isoler les creux en deux
+catégories: les creux inférieurs à 0,2~\% et les creux entre 0,2~\% et
+0,5~\%.  Dans la première catégorie, se placent les deux passages dans
+la rue de la Marne et la rue d'Orléans.  Cette catégorie ne représente
+que des lieux à la fois morphologiquement homogènes sur la portion du
+parcours qu'ils occupent et étroits.  Ils correspondent à peu près à un
+parcours dans le centre de l'environnement \textsf{Droit} que nous
+avions au §\ref{sec:interp:droit}.  Dans la seconde catégorie, nous
+avons la place du Pilori au départ, la rue de la Haute Casserie laissant
+apparaître le clocher de l'église Saint Nicolas pour la première fois
+dans le parcours, le cours des Cinquante Otages et la place Royale.
+Cette catégorie est caractérisée par une grande ouverture: l'observateur
+est plus distant des murs qui l'entourent et en même temps il peut
+toujours avoir l'impression qu'il avance mais cette impression y est
+moins forte.  Dans le cas du parcours à Nantes, chacun des creux est
+délimité par des pics de plus de 1~\%.  Chacun de ces pics marque une
+transition qui semble indiquer que l'observateur change d'espace.  Il
+reste une catégorie d'espace qui est indiquée dans le graphique et que
+nous n'avons pas citée: il s'agit des espaces repérés par une succession
+de pics.  Le premier apparaît entre le creux de la rue de la Marne et le
+creux de la rue Haute Casserie (entre 130 et 200~mètres).  Le second
+apparaît entre la rue d'Orléans et la place Royale (entre 410 et
+440~mètres).  Ces espaces sont soit des espaces de transition soit des
+espaces destructurés marqués par l'apparition et la disparition
+succcessives de petites ouvertures.
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/nantes/nantes-ahcd.eps}
+\end{center}
+\caption[Variation de la distance de Hausdorff modifiée dans le parcours
+de Nantes]%
+{Variation de la distance de Hausdorff modifiée dans le parcours de
+  Nantes.}
+  \label{fig:mesaure:nantes-ahcd}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+  \includegraphics[width=.75\linewidth]{img/interp/nantes/nantes-ahcd2.eps}
+\end{center}
+\caption[Variation de la distance de Hausdorff modifiée dans le parcours
+de Nantes]%
+{Variation de la distance de Hausdorff modifiée dans le parcours de
+  Nantes.}
+  \label{fig:mesaure:nantes-ahcd2}
+\end{figure}
+
+La figure~\ref{fig:interp:nantes-desc-ahcd} montre une division du
+parcours à Nantes selon la valeur de la distance de Hausdorff modifiée.
+Les parties en gras correspondent aux parties du parcours où la valeur
+de la distance est entre 0,2~\% et 0.5~\%.  Les parties en pointillé
+correspondent à des valeurs inférieures à 0,2~\%.
+%
+En comparant cette figure avec la
+figure~\ref{fig:interp:nantes-desc-gmd}, nous remarquons quelques points
+communs: le début du parcours, la traversée du cours des Cinquante
+Otages et l'arrivée dans la place Royale.  Le premier espace et surtout
+le dernier forment de grands espaces ouverts et relativement fermés au
+regard de leur taille.  Le cours des Cinquante Otages au centre du
+parcours marque une forme de transition dans le parcours que nous
+n'avons pas vue auparavant: une transition longue et très ouverte sur le
+ciel qui coupe l'espace urbain en deux moitiés.  En effet, la partie est
+du parcours passe dans un espace plutôt destructuré.  Le seul élément
+qui structure cet espace est le bâtiment commercial situé à droite de
+l'observateur au début du parcours.  Par contre, la partie ouest du
+parcours passe dans un espace plutôt régulier, homogène.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.75\linewidth]{img/interp/nantes/nantes-desc-ahcd.eps}
+  \caption[Division du parcours à Nantes selon les valeurs de la
+  distance de Hausdorff modifiée]%
+  {Division du parcours à Nantes selon les valeurs de la distance de
+    Hausdorff modifiée.}
+  \label{fig:interp:nantes-desc-ahcd}
+\end{figure}
+
+Nous avons vu au §\ref{sec:interp:nantes-gmd} que la caractérisation du
+parcours à Nantes par notre typologie était assez régulière.  Il en va
+de même lorsque nous y associons une distance de similarité, comme la
+distance de Hausdorff modifiée (figure~\ref{fig:mesaure:nantes-ahcd}),
+qui apporte des précisions supplémentaires sur les caractéristiques des
+rues traversées.  Par exemple, selon la typologie donnée dans le
+tableau~\ref{tab:interp:cmp-gmd-sim}, le début du parcours jusqu'au
+premier pic de la figure~\ref{fig:mesaure:nantes-ahcd} nous fournit la
+séquence: \textsf{Cas11}, \textsf{Cas22}, \textsf{Cas42} et \textsf{52}.
+Autrement dit, le début du parcours est caractérisé par une transition
+morphologique donnant sur un espace avec une grande ouverture.  Puis
+l'observateur avance dans cette espace qui continue de s'ouvrir
+régulièrement.  Il en atteint le centre en quelques mètres et en sort
+pendant que l'espace se referme doucement derrière lui et continue à se
+refermer.  Cette séquence se déroule sur moins de 50~mètres
+%
+Toutefois, nous avons observé quelques difficultés.  Notre typologie ne
+prend pas en compte les rotations de l'observateur et, lorsqu'il
+effectue un virage, la caractérisation devient incohérente.  par
+ailleurs, les espaces où il y a beaucoup de variations sont aussi
+difficiles à qualifier, comme l'espace près de l'église Sainte-Croix
+entre les mètres~150 et~200.
+
+\subsection{Conclusion sur l'analyse de Nantes}
+
+Nous avons réalisé ici une analyse le long d'un parcours dans le centre
+de Nantes.  Encore une fois, nous avons pu mettre en valeur des aspects
+de l'espace qui ne transparaissent pas directement dans le plan ou dans
+le modèle 3D.  Nous voyons que le long du parcours à Nantes notre
+méthode permet de caractériser à la fois le parcours, les espaces
+ouverts urbains et une partie des tissus traversés.  La typologie que
+nous avons élaborée au §\ref{sec:interp:discuss} semble mieux
+s'appliquer dans le cas du parcours à Nantes.  Toutefois, nous avons
+observé d'autres limitations comme les difficultés à caractériser les
+positions où l'observateur tourne et les espaces où se produisent
+beaucoup de variations.
+
+
+\section{Conclusion}
+
+Après avoir présenté l'environnement informatique utilisé pour nos
+calculs, nous avons présenté dans ce chapitre un ensemble de mesures
+tout d'abord sur des espaces urbains de tests puis sur deux cas réels.
+En nous basant sur des projections sphériques obtenues le long d'un
+parcours et sur la squelettisation, nous avons tour à tour appliqué les
+mesures basées sur le $\mathbf{GMD_V}$, la distance de Hausdorff
+relative et la distance de Hausdorff modifiée.  Les premiers tests nous
+ont permis d'observer le comportement de nos mesures.  En particulier,
+les mesures effectuées sur une configuration représentant une rue droite
+ont mis en évidence certaines erreurs de précision des valeurs obtenues.
+Nous avons aussi remarqué que les mesures basées sur les distances de
+similarité sont sensibles aux éléments indiquant à l'observateur dans
+son environnement visuel qu'il est en mouvement.  Nous avons appelé ces
+éléments, des indices visuels de mouvement.  Avec les configurations en
+T, nous avons mis en évidence que les mesures sont influencées par les
+croisements.  En particulier, nous avons pu observer que la rotation de
+la rue de croisement n'avait aucun effet sur les mesures du
+$\mathbf{GMD_V}$.  Par contre, avec les distances de similarité, une
+distinction apparaît et nous avons pu observer que les différentes
+configurations sont différenciées par leur angle d'arrivée et leur
+largeur.  Dans le cas des rétrécissements, nous avons pu constater que
+la largeur de l'espace influence les mesures.  Dans les cas du carrefour
+et des croisements successifs, nous avons vu que les mesures sont
+capables de caractériser différemment les transitions d'un parcours.
+Pour terminer l'étude des configurations simples, nous avons tenter de
+réaliser une interprétation des valeurs en les classant et en les
+comparant.  Bien que cette interprétation soit expérimentale, il semble
+que ces mesures permettent d'étendre notre langage.  Ainsi, nous
+pourrions presque imaginer un processus automatique qui à partir de ces
+mesures permettrait de qualifier l'espace ou de diviser le parcours en
+séquences.
+%
+Nous avons proposés une esquisse de typologie de séquences le long d'un
+parcours en suivant les variations conjointes du $\mathbf{GMD_V}$
+(taille et position relative) et des distances de similarité.  Cette
+typologie propose dix types de séquences morphologiques.
+
+Les cas réels nous ont permis de mettre en évidence d'autres
+comportements de nos mesures.  Par exemple, nous avons pu constater que
+les distances de similarité repéraient les lieux où l'espace s'élargit
+et où il existe des bâtiments plus bas que ceux qui l'entourent.  Ce
+comportement ne peut pas apparaître avec les méthodes purement 2D.  Par
+contre, nous pouvons le retrouver avec les méthodes basées sur un DEM
+(cf.~§\ref{subsec:survey:ratti}) ou sur des modèles 3D
+(cf.~§\ref{subsec:survey:fisher} et §\ref{subsec:survey:teller}).  Nous
+avons pu aussi constater que nos mesures permettent de mieux observer la
+progression des variations de la morphologie de l'espace et de faire
+ainsi la distinction entre, par exemple, des apparitions soudaines et
+progressives.  Nous avons pu ainsi repérer différemment les parties des
+parcours et des espaces ouverts traversés.  Les mesures que nous avons
+développées nous permettent de réaliser une caractérisation à la fois
+des parcours urbains et des espaces urbains en fonction de la
+morphologie autour de l'observateur et de ses variations.
+
+Par rapport à la perspective de mouvement, que nous essayons d'analyser,
+nous avons vu les capacités des distances de similarité à détecter
+l'apparition et la disparition d'ouvertures.  En particulier, la
+distance de Hausdorff hyperbolique semble plus adaptée pour détecter la
+moindre variation.  Nous avons aussi pu constater à quel point la
+distance de Hausdorff modifiée permet de différencier ces variations
+dans la morphologie des espaces ouverts urbains.  Nous avions déjà
+discuté de ce point au début de ce mémoire
+(cf.~§\ref{sec:survey:visual-event}) et nous avions constaté l'absence
+de ce type de distinction dans les mesures existantes.  La distance de
+Hausdorff modifiée hyperbolique permet maintenant de la réaliser.
+
+% Local Variables:
+% mode: latex
+% fill-column: 72
+% End:

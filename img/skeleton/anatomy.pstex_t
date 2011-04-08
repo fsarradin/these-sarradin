@@ -1,0 +1,19 @@
+\begin{picture}(0,0)%
+\includegraphics{img/skeleton/anatomy.pstex}%
+\end{picture}%
+\setlength{\unitlength}{2960sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(2616,2513)(685,-2060)
+\put(3301,-136){\makebox(0,0)[lb]{\smash{\SetFigFont{11}{13.2}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}point terminal}%
+}}}
+\put(2926,-811){\makebox(0,0)[lb]{\smash{\SetFigFont{11}{13.2}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}point multiple}%
+}}}
+\put(2851,-1411){\makebox(0,0)[lb]{\smash{\SetFigFont{11}{13.2}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}point g\'en\'erique}%
+}}}
+\end{picture}

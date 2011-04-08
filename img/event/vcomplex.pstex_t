@@ -1,0 +1,41 @@
+\begin{picture}(0,0)%
+\includegraphics{img/event/vcomplex.pstex}%
+\end{picture}%
+\setlength{\unitlength}{2960sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(8637,3342)(439,-3223)
+\put(1051,-3061){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$6$}%
+}}}
+\put(3151,-3061){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$4$}%
+}}}
+\put(2101,-2311){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$5$}%
+}}}
+\put(1651,-961){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$1$}%
+}}}
+\put(2551,-961){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$2$}%
+}}}
+\put(3751,-361){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$3$}%
+}}}
+\put(901,-361){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$7$}%
+}}}
+\put(7951,-736){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$2^*$}%
+}}}
+\put(8776,-1261){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$3^*$}%
+}}}
+\put(8476,-2311){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$4^*$}%
+}}}
+\put(6751,-736){\makebox(0,0)[rb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$1^*$}%
+}}}
+\put(6301,-2236){\makebox(0,0)[rb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$6^*$}%
+}}}
+\put(5851,-1261){\makebox(0,0)[rb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$7^*$}%
+}}}
+\put(7801,-2911){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$5^*$}%
+}}}
+\end{picture}

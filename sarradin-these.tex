@@ -1,0 +1,250 @@
+% sarradin-these.tex - thèse de doctorat
+%
+% Copyright (C) 2002, 2003, 2004 - François Sarradin
+%
+% $Id$
+%
+
+\documentclass{fs-thesis}
+
+\usepackage[german,italian,french,english]{babel}
+\usepackage{xspace}
+\usepackage{times}
+\usepackage{mathptm}
+%\usepackage{a4wide}
+\usepackage{a4}
+\usepackage{letterspace}
+\usepackage{subfigure}
+\usepackage{multirow}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\TitreThese{Analyse morphologique des espaces ouverts urbains le
+  long de parcours: Mesure des variations des formes de ciel par la
+  squelettisation}
+\def\PhDTitle{Morphological analysis of urban open spaces along
+  routes: measure of the variations in sky shape by skeletization}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\university{Université de Nantes}
+\doctschool{\'Ecole Doctorale\\[12pt] Mécanique Thermique Génie Civile}
+
+\speciality{Ambiances Architecturales et Urbaines}
+    \author{François \textsc{Sarradin}}
+%      \year{2004}
+      \date{\textbf{14 décembre}\ }
+
+      \title{Analyse morphologique des espaces ouverts urbains le long
+        de parcours} \subtitle{
+        Mesure des variations des formes de ciel par la
+        squelettisation}
+
+\jury{
+  \begin{tabbing}
+    \hspace{.30\linewidth} \= -- \hspace{.50\linewidth} \= \kill
+    Jean-Pierre Guédon \> Université de Nantes \> président \\
+    Michel Couprie     \> ESIEE \> rapporteur \\
+    Albert Dupagne     \> Université de Liège \> rapporteur \\
+    Michael Batty      \> University College London \> examinateur \\
+    Jacques Teller     \> Université de Liège \> examinateur \\
+    Gérard Hégron      \> \a'Ecole d'Architecture de Nantes \> examinateur \\
+    Daniel Siret       \> \a'Ecole d'Architecture de Nantes \> invité
+  \end{tabbing}}
+
+\supervisor{Gérard Hégron}
+\coordinator{Dr. Daniel Siret}
+\laboratory{CERMA UMR CNRS 1563, \\
+            \'Ecole d'Architecture de Nantes,
+            rue Massenet, BP 81\,319, \\
+            44\,319 Nantes Cedex 3, France}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\selectlanguage{french}
+\setcounter{secnumdepth}{3}
+\sloppy
+
+\bibliographystyle{plain}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Résumé
+
+\cleardoublepage
+\markboth{\footnotesize Résumé}{\footnotesize Résumé}
+
+\begin{center} \bf
+Analyse morphologique des espaces ouverts urbains le long de parcours:
+mesure des variations des formes de ciel par la squelettisation
+\end{center}
+
+\noindent%
+\textbf{Résumé.} \quad
+%
+Le mouvement de l'observateur dans un espace donné produit une forme
+de perception particulière appelée <<~perspective de mouvement~>>.
+Celle-ci a été définie par Gibson comme étant la variation graduelle
+de l'ensemble des déplacements des lignes de contour apparaissant dans
+le champ visuel de l'observateur. Cette thèse décrit une nouvelle
+approche destinée à analyser la perspective de mouvement le long de
+parcours dans les espaces ouverts urbains. Elle se base sur des
+projections sphériques qui fournissent la forme du contour du ciel
+autour de l'observateur, et que l'on étudie au travers de leur
+squelette, à savoir un ensemble continu de courbes obtenues par
+amincissement progressif de la forme autour de ses principales
+saillances. La méthode proposée ici utilise ces squelettes pour suivre
+les variations de la forme du contour du ciel entre vues successives.
+Des mesures de ces variations ont été développées et expérimentées sur
+différents exemples de morphologies urbaines.
+
+\noindent%
+\textbf{Mots-clés.} \quad
+Urbanisme, espaces ouverts urbains, projection sphérique,
+forme de ciel, analyse d'images, squelettisation, distance de
+Hausdorff
+
+
+\begin{otherlanguage}{english}
+
+\begin{center} \bf
+Morphological analysis of the urban open spaces along the
+routes: measure of variations in the sky shapes by the skeletonisation
+\end{center}
+
+\noindent%
+\textbf{Abstract.} \quad
+The motion of an observer in a given space produces a kind
+of particular perception called ``motion perception''. This has been
+defined by Gibson as the gradual changes in the rate of displacements
+of contour lines in the visual field of the observer. This thesis
+describes a new approach intended for analysing the motion perspective
+along routes in urban open spaces. It is based on spherical
+projections which provide the shape of the sky boundary around the
+observer and that are studied through their skeletons, that is to say
+a continuous set of curves obtained by a progressive thinning down of
+the shape around its main saliencies. The proposed method here uses
+these skeletons in a view to follow the variations in the shape of the
+sky boundary between the successive views. Measures of these
+variations have been developed and tested on different examples of
+urban morphologies.
+
+\noindent%
+\textbf{Keywords.} \quad
+Urban planning, urban open spaces, spherical projection,
+sky shape, image analysis, skeletonisation, Hausdorff distance
+
+\end{otherlanguage}
+\selectlanguage{french}
+
+\vspace*{\stretch{1}}
+
+\noindent%
+\textbf{Discipline:} Sciences pour l'ingénieur option architecture
+
+\noindent%
+N°:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+\listoffigures
+\listoftables
+\listof{algorithm}{Table des algorithmes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Remerciements
+
+\chapter*{Remerciements}
+
+J'adresse tout d'abord mes remerciements aux membres du jury.  Au
+professeur J.P. Guédon pour avoir accepté de présider ce jury, aux
+professeurs M. Couprie et A. Dupagne qui se sont constitués
+rapporteurs, au professeur M. Batty qui a accepté de venir malgré les
+difficultés que posent nos deux différentes langues, à J. Teller, au
+professeur G. Hégron et à D. Siret.
+
+J'adresse à nouveau mes remerciements au professeur A. Dupagne pour
+m'avoir accepté quelques mois dans son équipe et aussi pour son
+intérêt pour mon travail.  J'adresse un grand merci à J. Teller qui
+s'est réellement investi dans mon travail et qui a su m'aider au
+moment où j'en avais le plus besoin.  Je remercie l'équipe du
+\textsc{Lema} pour m'avoir si gentiment accueilli pendant trois mois.
+Cette thèse a bénéficié des travaux réalisés dans le cadre du projet
+SUIT\footnote{\emph{(Sustainable development of Urban historical areas
+    through an active Integration within Towns)} supporté par le
+  programme de l'Union Européenne \emph{``Environment and Sustainable
+    Development''}, action clé~4: <<~La ville de demain et
+  patrimoine~>>, thème~4.2.3: <<~Favoriser l'intégration du patrimoine
+  dans les ensembles urbains~>>, numéro de contrat:
+  EVK4-CT-2000-00017}
+coordonné par le \textsc{Lema}.
+
+J'adresse à nouveau mes remerciements à M. Couprie pour son intérêt
+pour mes recherches et avec qui j'ai eu des discussions intéressantes.
+Je remercie également le professeur F. Rocaries sans qui cette
+rencontre n'aurait pu être possible.
+
+J'adresse enfin d'autres remerciements au professeur G. Hégron pour
+être venu me chercher au <<~fin fond~>> de l'\'Ecole des Mines de
+Nantes et m'avoir ouvert à de nouveaux horizons.
+% sans qui bien sûr cette thèse n'aurait pu être possible.
+J'adresse un autre grand merci à D. Siret qui s'est aussi beaucoup
+investi dans ma thèse.  Il a été à l'origine d'un bon nombre d'idées
+originales et constructives, et aussi d'un bon nombre de corrections.
+Merci à tous les membres du \textsc{Cerma}, ainsi qu'à ses doctorants
+et docteurs.
+
+D'autres personnes sont intervenues plus ou moins directement dans
+cette thèse.  Je pense tout d'abord au professeur S.~W. Zucker, au
+professeur B. Kimia et au professeur K. Siddiqi qui m'ont orienté.  Je
+pense aussi à P.  Dimitrov, qui m'a fourni une implémentation de la
+\og squelettisation Hamilton-Jacobi \fg, et à F. Fol-Leymarie avec qui
+j'ai eu des discussions très intéressantes sur les méthodes de
+squelettisation et les mesures sur les squelettes.
+
+Merci à ma famille pour leurs encouragements.
+
+Merci à Ying qui autant que possible a essayé d'apporter un cadre
+agréable à mon travail.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\include{glossary}
+
+\include{intro}
+
+\part[Méthodes d'analyse de la perception visuelle des environnements
+      urbains: état de l'art]%
+     {Méthodes d'analyse \\
+      de la perception visuelle \\
+      des environnements urbains \\
+      (\'Etat de l'art)}
+\include{part-survey/event}
+\include{part-survey/uos}
+
+\part[Analyse des formes de ciel dans les espaces ouverts urbains par
+      la méthode de squelettisation]%
+     {Analyse des formes de ciel \\
+      dans les espaces ouverts urbains \\
+      par la méthode \\
+      de squelettisation}
+\include{part-skeleton/skeleton}
+\include{part-skeleton/skel-cmp}
+
+\part[Mesure des squelettes de la forme de ciel]%
+     {Mesure des squelettes \\
+      de la forme de ciel}
+\include{part-measure/measure}
+\include{part-measure/interp}
+
+\include{conclu}
+
+\bibliography{biblio-these}
+
+\end{document}
+
+% End

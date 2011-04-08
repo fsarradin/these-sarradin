@@ -1,0 +1,280 @@
+%!PS-Adobe-2.0 EPSF-2.0
+%%Title: lattice.fig
+%%Creator: fig2dev Version 3.2 Patchlevel 4
+%%CreationDate: Thu Nov  4 16:44:16 2004
+%%For: François Sarradin@PC-INFMAT09 (François Sarradin,U-PC-INFO012\François Sarradin,S-1-5-21-2088796492-1461591630-3765019497-1012)
+%%BoundingBox: 0 0 181 77
+%%Magnification: 1.0000
+%%EndComments
+/$F2psDict 200 dict def
+$F2psDict begin
+$F2psDict /mtrx matrix put
+/col-1 {0 setgray} bind def
+/col0 {0.000 0.000 0.000 srgb} bind def
+/col1 {0.000 0.000 1.000 srgb} bind def
+/col2 {0.000 1.000 0.000 srgb} bind def
+/col3 {0.000 1.000 1.000 srgb} bind def
+/col4 {1.000 0.000 0.000 srgb} bind def
+/col5 {1.000 0.000 1.000 srgb} bind def
+/col6 {1.000 1.000 0.000 srgb} bind def
+/col7 {1.000 1.000 1.000 srgb} bind def
+/col8 {0.000 0.000 0.560 srgb} bind def
+/col9 {0.000 0.000 0.690 srgb} bind def
+/col10 {0.000 0.000 0.820 srgb} bind def
+/col11 {0.530 0.810 1.000 srgb} bind def
+/col12 {0.000 0.560 0.000 srgb} bind def
+/col13 {0.000 0.690 0.000 srgb} bind def
+/col14 {0.000 0.820 0.000 srgb} bind def
+/col15 {0.000 0.560 0.560 srgb} bind def
+/col16 {0.000 0.690 0.690 srgb} bind def
+/col17 {0.000 0.820 0.820 srgb} bind def
+/col18 {0.560 0.000 0.000 srgb} bind def
+/col19 {0.690 0.000 0.000 srgb} bind def
+/col20 {0.820 0.000 0.000 srgb} bind def
+/col21 {0.560 0.000 0.560 srgb} bind def
+/col22 {0.690 0.000 0.690 srgb} bind def
+/col23 {0.820 0.000 0.820 srgb} bind def
+/col24 {0.500 0.190 0.000 srgb} bind def
+/col25 {0.630 0.250 0.000 srgb} bind def
+/col26 {0.750 0.380 0.000 srgb} bind def
+/col27 {1.000 0.500 0.500 srgb} bind def
+/col28 {1.000 0.630 0.630 srgb} bind def
+/col29 {1.000 0.750 0.750 srgb} bind def
+/col30 {1.000 0.880 0.880 srgb} bind def
+/col31 {1.000 0.840 0.000 srgb} bind def
+
+end
+save
+newpath 0 77 moveto 0 0 lineto 181 0 lineto 181 77 lineto closepath clip newpath
+-35.3 111.5 translate
+1 -1 scale
+
+/cp {closepath} bind def
+/ef {eofill} bind def
+/gr {grestore} bind def
+/gs {gsave} bind def
+/sa {save} bind def
+/rs {restore} bind def
+/l {lineto} bind def
+/m {moveto} bind def
+/rm {rmoveto} bind def
+/n {newpath} bind def
+/s {stroke} bind def
+/sh {show} bind def
+/slc {setlinecap} bind def
+/slj {setlinejoin} bind def
+/slw {setlinewidth} bind def
+/srgb {setrgbcolor} bind def
+/rot {rotate} bind def
+/sc {scale} bind def
+/sd {setdash} bind def
+/ff {findfont} bind def
+/sf {setfont} bind def
+/scf {scalefont} bind def
+/sw {stringwidth} bind def
+/tr {translate} bind def
+/tnt {dup dup currentrgbcolor
+  4 -2 roll dup 1 exch sub 3 -1 roll mul add
+  4 -2 roll dup 1 exch sub 3 -1 roll mul add
+  4 -2 roll dup 1 exch sub 3 -1 roll mul add srgb}
+  bind def
+/shd {dup dup currentrgbcolor 4 -2 roll mul 4 -2 roll mul
+  4 -2 roll mul srgb} bind def
+/$F2psBegin {$F2psDict begin /$F2psEnteredState save def} def
+/$F2psEnd {$F2psEnteredState restore end} def
+
+$F2psBegin
+10 setmiterlimit
+0 slj 0 slc
+ 0.06000 0.06000 sc
+%
+% Fig objects follow
+%
+% 
+% here starts figure with depth 52
+% Polyline
+n 1050 900 m 1200 900 l 1200 1050 l 1050 1050 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1350 900 m 1500 900 l 1500 1050 l 1350 1050 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1500 900 m 1650 900 l 1650 1050 l 1500 1050 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1650 900 m 1800 900 l 1800 1050 l 1650 1050 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1800 750 m 1950 750 l 1950 900 l 1800 900 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1800 900 m 1950 900 l 1950 1050 l 1800 1050 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1800 1050 m 1950 1050 l 1950 1200 l 1800 1200 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1650 1050 m 1800 1050 l 1800 1200 l 1650 1200 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1650 1200 m 1800 1200 l 1800 1350 l 1650 1350 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1500 1200 m 1650 1200 l 1650 1350 l 1500 1350 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1500 1350 m 1650 1350 l 1650 1500 l 1500 1500 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1350 1350 m 1500 1350 l 1500 1500 l 1350 1500 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1200 1500 m 1350 1500 l 1350 1650 l 1200 1650 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1050 1500 m 1200 1500 l 1200 1650 l 1050 1650 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 900 1500 m 1050 1500 l 1050 1650 l 900 1650 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 900 1350 m 1050 1350 l 1050 1500 l 900 1500 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 750 1350 m 900 1350 l 900 1500 l 750 1500 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 750 900 m 900 900 l 900 1050 l 750 1050 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 750 1200 m 900 1200 l 900 1350 l 750 1350 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 750 1050 m 900 1050 l 900 1200 l 750 1200 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 900 900 m 1050 900 l 1050 1050 l 900 1050 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 2925 1050 m 3075 1050 l 3075 1200 l 2925 1200 l
+ cp gs col7 0.75 shd ef gr 
+% Polyline
+n 1200 900 m 1350 900 l 1350 1050 l 1200 1050 l
+ cp gs col7 0.75 shd ef gr 
+% here ends figure;
+% 
+% here starts figure with depth 50
+% Polyline
+7.500 slw
+n 600 1650 m
+ 2100 1650 l gs col0 s gr 
+% Polyline
+30.000 slw
+n 2850 825 m
+ 3150 825 l gs col0 s gr 
+% Polyline
+7.500 slw
+n 600 600 m
+ 600 1800 l gs col0 s gr 
+% Polyline
+n 750 600 m
+ 750 1800 l gs col0 s gr 
+% Polyline
+n 900 600 m
+ 900 1800 l gs col0 s gr 
+% Polyline
+n 1050 600 m
+ 1050 1800 l gs col0 s gr 
+% Polyline
+n 1200 600 m
+ 1200 1800 l gs col0 s gr 
+% Polyline
+n 1350 600 m
+ 1350 1800 l gs col0 s gr 
+% Polyline
+n 1500 600 m
+ 1500 1800 l gs col0 s gr 
+% Polyline
+n 1650 600 m
+ 1650 1800 l gs col0 s gr 
+% Polyline
+n 1950 600 m
+ 1950 1800 l gs col0 s gr 
+% Polyline
+n 1800 600 m
+ 1800 1800 l gs col0 s gr 
+% Polyline
+n 2100 600 m
+ 2100 1800 l gs col0 s gr 
+% Polyline
+n 600 600 m
+ 2100 600 l gs col0 s gr 
+% Polyline
+n 600 750 m
+ 2100 750 l gs col0 s gr 
+% Polyline
+n 600 900 m
+ 2100 900 l gs col0 s gr 
+% Polyline
+n 600 1050 m
+ 2100 1050 l gs col0 s gr 
+% Polyline
+n 600 1200 m
+ 2100 1200 l gs col0 s gr 
+% Polyline
+n 600 1350 m
+ 2100 1350 l gs col0 s gr 
+% Polyline
+n 600 1500 m
+ 2100 1500 l gs col0 s gr 
+% Polyline
+n 600 1800 m
+ 2100 1800 l gs col0 s gr 
+% Polyline
+gs  clippath
+2115 1770 m 2115 1680 l 2065 1680 l 2095 1725 l 2065 1770 l cp
+1935 1680 m 1935 1770 l 1985 1770 l 1955 1725 l 1985 1680 l cp
+eoclip
+n 1950 1725 m
+ 2100 1725 l gs col0 s gr gr
+
+% arrowhead
+n 1985 1680 m 1955 1725 l 1985 1770 l  col0 s
+% arrowhead
+n 2065 1770 m 2095 1725 l 2065 1680 l  col0 s
+% here ends figure;
+% 
+% here starts figure with depth 48
+% Polyline
+2 slj
+30.000 slw
+n 1488 1000 m 1520 996 l 1553 990 l 1585 983 l 1618 975 l 1650 966 l
+ 1682 956 l 1713 946 l 1744 936 l 1772 926 l 1799 917 l
+ 1824 909 l 1846 902 l 1866 897 l 1882 894 l 1896 893 l
+ 1906 894 l 1913 898 l 1916 904 l 1916 913 l 1913 925 l
+ 1908 936 l 1902 948 l 1893 962 l 1884 978 l 1872 995 l
+ 1859 1014 l 1844 1034 l 1827 1055 l 1809 1078 l 1789 1102 l
+ 1769 1126 l 1746 1151 l 1723 1177 l 1699 1203 l 1674 1230 l
+ 1649 1256 l 1623 1282 l 1597 1307 l 1570 1332 l 1544 1355 l
+ 1518 1378 l 1493 1400 l 1468 1420 l 1443 1439 l 1419 1456 l
+ 1395 1472 l 1372 1487 l 1350 1500 l 1326 1512 l 1303 1523 l
+ 1281 1532 l 1258 1539 l 1236 1545 l 1214 1550 l 1192 1552 l
+ 1171 1553 l 1150 1553 l 1129 1551 l 1108 1548 l 1088 1543 l
+ 1069 1537 l 1050 1529 l 1032 1521 l 1015 1511 l 999 1500 l
+ 983 1489 l 968 1476 l 955 1463 l 942 1450 l 929 1435 l
+ 918 1421 l 907 1406 l 897 1391 l 888 1375 l 878 1358 l
+ 869 1340 l 860 1321 l 852 1302 l 844 1282 l 838 1262 l
+ 832 1242 l 827 1221 l 822 1200 l 819 1180 l 817 1159 l
+ 815 1139 l 815 1119 l 816 1100 l 818 1082 l 821 1065 l
+ 826 1049 l 831 1034 l 838 1021 l 845 1009 l 854 998 l
+ 864 989 l 875 981 l 888 975 l 901 970 l 916 966 l
+ 932 964 l 950 962 l 969 962 l 990 962 l 1012 963 l
+ 1036 965 l 1061 968 l 1087 971 l 1114 975 l 1142 978 l
+ 1171 982 l 1200 986 l 1230 990 l 1259 994 l 1289 997 l
+ 1319 1000 l 1348 1002 l 1376 1003 l 1405 1004 l 1433 1004 l
+ 1460 1002 l
+ cp gs col0 s gr 
+% here ends figure;
+$F2psEnd
+rs
+showpage

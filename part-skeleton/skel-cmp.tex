@@ -1,0 +1,1309 @@
+% skel-cmp.tex - Rapport sur des méthodes de squelettisation et leur
+%                comparaison
+%
+% Copyright (C) 2004 - François Sarradin
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Comparaison de quelques méthodes de squelettisation dans
+  l'espace discret}
+\author{François Sarradin}
+\laboratory{%
+  CNRS -- CERMA UMR 1563 \\
+  École d'Architecture de Nantes \\
+  Rue Massenet -- BP 81\,931 \\
+  44\,319 NANTES CEDEX 3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sloppy
+\makeheader
+
+\label{chap:skel-cmp}
+
+\begin{intropar}
+  {L}\textsc{a} squelettisation est une méthode assez répandue dans le
+  domaine de l'analyse d'images.  Elle s'applique aussi bien aux
+  espaces continus qu'aux images discrètes.  Avec la méthode des
+  projections sphériques de Teller, les images que nous devons traiter
+  sont des images discrètes.  Or nous avons vu que certaines notions
+  classiques dans les espaces continus sont difficiles à retrouver
+  dans les espaces discrets.  Ces difficultés déforment parfois
+  exagérément le squelette.  Dans ce cas, il est nécessaire soit de
+  modifier la forme d'origine soit de modifier le squelette obtenu.
+  
+  Actuellement, il existe une multitude de méthodes de squelettisation
+  dans l'espace discret.  Dans ce chapitre, nous décrivons les
+  méthodes que nous avons rencontrées au cours de notre projet.  Nous
+  commencerons par les méthodes basées sur le calcul de la carte de
+  distances, puis nous verrons une méthode utilisant les diagramme de
+  Voronoï, enfin nous terminerons par une méthode directement inspirée
+  par l'analogie du feu de prairie pour détecter les points
+  squelettaux.  Par la suite, nous décrirons quelle méthode nous avons
+  choisie parmi celles que nous avons rencontrées.  Pour cela, nous
+  exposerons la série de tests qui nous a conduits dans notre choix.
+\end{intropar}
+
+~\par
+\newpage
+
+\section{Méthodes basées sur le calcul de la carte de distances dans
+  l'espace discret}
+
+La squelettisation peut être vue comme une méthode qui consiste à
+rechercher, parmi les points d'une forme, ceux qui sont les plus
+éloignés du contour.  Si, pour chaque point de la forme, nous
+associons la distance au point du périmètre le plus proche, nous
+obtenons la carte de distances.  Dans cette représentation, en
+interprétant la valeur d'un point de la carte de distances comme
+l'altitude du point dans un relief topographique, le squelette
+correspond à l'ensemble des points positionnés sur des crêtes.  Les
+points d'une crête sont en effet des maxima locaux et sont
+équidistants à deux points au moins du contour.  Rechercher ces points
+revient donc à rechercher les points du squelette.  Le problème posé
+est donc de calculer correctement la carte des distances et de
+rechercher les maxima locaux.
+
+\subsection{Distances de chanfrein}
+
+Thiel a proposé une méthode de squelettisation basée sur les distances
+de chanfrein de Borgefors \cite{thiel-phd:1994,thiel-hdr:2001}.
+Elle consiste à rechercher dans une forme discrète les points
+appartenant au squelette.
+
+Sur un quadrillage, les distances $d_4$ et $d_8$ sont des distances
+discrètes couramment utilisées.  Pour deux points $p(x_p,y_p)$ et
+$q(x_q,y_q)$ de $\mathbbm{Z}^2$,
+
+\begin{align}
+d_4 (p,q) &= |x_q-x_p| + |y_q-y_p|, \\
+d_8 (p,q) &= \max \{|x_q-x_p|, |y_q-y_p|\}.
+\end{align}
+
+Par rapport à la distance euclidienne $d_E$, la 4-distance $d_4$ donne
+des valeurs trop élevées et la 8-distance $d_8$ des valeurs trop
+petites.  En règle générale, nous avons $d_4 (p,q) \geq d_E (p,q) \geq
+d_8 (p,q)$, sachant que les distances sont égales le long des axes
+vertical et horizontal et qu'elles atteignent leur écart maximal le
+long des diagonales (dans ce cas, $d_4 \equiv d_E \sqrt{2} \equiv 2
+d_8$).  Les boules de ces distances permettent d'étudier leur
+différence.  La forme de la boule varie selon la distance utilisée.
+Comme le montre la figure~\ref{fig:skeleton:boules}, la boule de la
+distance euclidienne $\mathrm{B}^E$ dans le plan a la forme d'un
+disque, quelque soit son rayon et son centre.  La boule de la
+4-distance $B^4$ est un carré incliné de 45° par rapport aux axes et
+celle de la 8-distance $B^8$ est un carré non incliné.
+
+\begin{figure}[ht]
+  \begin{center}
+  \input{img/skel-cmp/boules.pstex_t}
+  \end{center}
+  \caption[Boules des distances $d_4$, $d_8$ et $d_E$]%
+  {Boules des distances $d_4$, $d_8$ et $d_E$.  La figure montre des
+    différences importantes entre les trois distances.  Ces
+    différences sont plus importantes au niveau des diagonales.}
+  \label{fig:skeleton:boules}
+\end{figure}
+
+Des solutions ont été proposées pour créer une distance dont la boule
+est proche de la boule euclidienne.  À la fin des années 60, Montanari
+a développé un ensemble de distances basées sur la notion de masque
+\cite{montanari:1968}.  Elles permettent d'avoir une approximation de
+la distance euclidienne dans les espaces discrets.  La méthode de
+Montanari consiste à associer à des déplacements élémentaires une
+valeur appelée \emph{coût} ou \emph{poids}, obtenue en calculant la
+distance euclidienne du déplacement.  Dans les années 80, Borgefors
+reprend le concept des masques en utilisant des coûts entiers à la
+place des coûts réels de Montanari
+\cite{borgefors:1984,borgefors:1986}.  L'utilisation de coûts entiers
+permet de calculer plus rapidement les cartes des distances.
+
+\subsubsection{Définitions}
+
+Une \emph{pondération} est un couple $(\mathbf{x},w)$ composé d'un
+déplacement $\mathbf{x}$ de $\mathbbm{Z}^2$ et d'un poids
+$w\in\mathbbm{R}$.  Un \emph{masque} $\mathcal{M}$ est un ensemble
+fini de pondérations: $\mathcal{M}=
+\{(\mathbf{x}_i,w_i)\in\mathbbm{Z}^2\times\mathbbm{R}\}$.  Un
+\emph{masque de chanfrein} est un masque possédant une symétrie
+centrale, dont les poids sont strictement positifs et dont les
+déplacements sont non nuls.  La figure~\ref{fig:skeleton:chamfer}
+représente des masques de chanfrein couramment utilisés.  Les masques
+$\langle 1 \rangle$ et $\langle 1,1 \rangle$ correspondent
+respectivement au 4-voisinage et au 8-voisinage.  Les masques $\langle
+3,4 \rangle$, $\langle 5,7,11 \rangle$ et $\langle 14,20,31,44
+\rangle$ ont été introduits par Borgefors
+\cite{borgefors:1984,borgefors:1986}, le masque $\langle
+62,88,139,196,224 \rangle$ a été introduit par Thiel
+\cite{thiel-phd:1994}.
+
+\begin{figure}[ht]
+  \begin{center}
+  \input{img/skel-cmp/chamfer.pstex_t}
+  \end{center}
+  \caption[Quelques masques de chanfrein]%
+    {Quelques masques de chanfrein.}
+  \label{fig:skeleton:chamfer}
+\end{figure}
+
+Les masques de chanfrein permettent de définir des distances dans
+l'espace discret.  Le calcul d'une distance entre deux points $p$ et
+$q$ à partir d'un masque de chanfrein se fait en recherchant les
+chemins allant de $p$ à $q$ et utilisant les déplacements du masques.
+Soient $p$ et $q$ deux points, $q = p + \sum \lambda_i \mathbf{x}_i$,
+où $\lambda_i$ correspond au nombre de fois que le déplacement
+$\mathbf{x}_i$ du masque est utilisé.  La distance entre les deux
+points correspond donc au chemin $\sum \lambda_i \mathbf{x}_i$ pour
+lequel $\sum \lambda_i w_i$ est minimal, où chaque
+$(\mathbf{x}_i,w_i)$ est une pondération du masque utilisé.
+
+\begin{definition}[Distance de chanfrein]
+  Une \emph{distance de chanfrein} $d_{\mathcal{M}}$ entre deux points
+  $p$ et $q$ du plan est le coût minimal $\sum \lambda_i w_i$ de tous
+  les chemins de longueur finie $\sum \lambda_i\mathbf{x}_i$, liant
+  $p$ et $q$ et utilisant les déplacements $(\mathbf{x}_i,w_i)$ du
+  masque de chanfrein $\mathcal{M}$:
+
+\begin{equation}
+  d_{\mathcal{M}}(p,q) = \min \left\{ \sum_{i=1}^n \lambda_i w_i \left|
+      q = p + \sum_{i=1}^n \lambda_i\mathbf{x}_i
+    \right.\right\}.
+\end{equation}
+\end{definition}
+
+Les distances de chanfrein $d_{\langle 1\rangle}$ et $d_{\langle
+  1,1\rangle}$ sont respectivement équivalentes aux distances $d_4$ et
+$d_8$.  Le taux d'erreur de $d_{\langle 1\rangle}$ par rapport à $d_E$
+atteint $40\,\%$.  Avec la distance $d_{\langle 3,4 \rangle}$, ce taux
+est réduit à $6\,\%$, avec la distance $d_{\langle 5,7,11 \rangle}$ il
+est réduit à $2\,\%$ et avec la distance $d_{\langle
+  62,88,139,196,224\rangle}$ il est réduit à $0,66\,\%$
+\cite{thiel-phd:1994}.  D'une manière générale, il est possible
+d'estimer plus finement la distance euclidienne avec des masques plus
+grands.  La figure~\ref{fig:skeleton:boule-dm} représente les boules
+$B^{\langle 3,4\rangle}$ et $B^{\langle 5,7,11 \rangle}$ pour un même
+rayon.  La boule $B^E$ équivalente apparaît en gris.  Nous voyons que
+la boule $B^{\langle 5,7,11 \rangle}$ est une meilleure approximation
+de la boule euclidienne.  De manière générale, les boules $B^{\langle
+  3,4 \rangle}$ forment des octogones et les boules $B^{\langle 5,7,11
+  \rangle}$ forment des hexadécagones (16 côtés).
+
+\begin{figure}[ht]
+  \begin{center}
+  \input{img/skel-cmp/boule-dm.pstex_t}
+  \end{center}
+  \caption[Boules de chanfrein pour un rayon de $5,35$]%
+    {Boules de chanfrein pour un rayon de $5,35$.  La boule
+     $B^E(5,35)$ apparaît en gris.  Les boules équivalentes de cette
+     figure sont \emph{(a)} $B^{\langle 3,4 \rangle}(16)$ et
+     \emph{(b)} $B_{\langle 5,7,11 \rangle}(26)$.}
+  \label{fig:skeleton:boule-dm}
+\end{figure}
+
+\subsubsection{Recherche du squelette}
+\label{ref:skeleton:dc-step}
+
+La recherche du squelette d'une forme en utilisant les distances de
+chanfrein se fait en cinq étapes \cite{thiel-phd:1994}.
+
+\begin{enumerate}
+\item Calcul de la carte de distances en utilisant une distance de
+  chanfrein.
+\item Extraction des maxima locaux, des points de selle et des chemins
+  de reconnexion.
+\item Remplissage des faux trous.
+\item Réduction à l'épaisseur 1.
+\item Élagage et simplification du squelette.
+\end{enumerate}
+
+Le calcul de la carte de distances se base sur l'algorithme de
+Rosenfeld et Pflatz \cite{rosenfeld:1966}
+(algorithme~\ref{algo:chanfer-dt}).  Dans cet algorithme, le masque de
+chanfrein est coupé en deux (figure~\ref{fig:skeleton:av-ar}).  La
+moitié inférieure sert pour le parcours avant de l'image et l'autre
+moitié pour le parcours arrière. La distance de chanfrein utilisée
+pour la transformation de distances influence beaucoup l'apparence de
+la carte de distances.  À titre d'exemple, la
+figure~\ref{fig:skeleton:chamfer-dm} représente différentes cartes de
+distances pour une même forme de dimension 64$\times$64, mais avec
+différentes distances de chanfrein.  Les deux premières cartes ont été
+respectivement calculées avec les distances $d_4$ et $d_8$.  Les
+dernières cartes se rapprochent plus de la carte des distances
+euclidiennes.
+
+\begin{figure}[htbp]
+  \centering
+  \input{img/skel-cmp/av-ar.pstex_t}
+  \caption[Demi-masque avant $\langle 5,7,11 \rangle^h$]%
+  {Demi-masque avant $\langle 5,7,11 \rangle^h$.}
+  \label{fig:skeleton:av-ar}
+\end{figure}
+
+\begin{algorithm}[htbp]
+\caption{Algorithme de transformée de distance par les masques de chanfrein.}%
+[Cet algorithme prend en paramètre un masque de chanfrein
+$\mathcal{M}$, une image $I$ de dimension $L_x\times L_y$ et renvoie
+une carte de distance $\mathrm{DM}$.]
+\bgroup \obeylines\obeyspaces %
+\textbf{procédure} distanceTransform ($\mathcal{M}$, $I$, $L_x$, $L_y$, $\mathrm{DM}$)
+\textbf{début}
+\hspace*{2em} $\mathcal{M}^h \leftarrow \{ (x, y, w) \in \mathcal{M} | (x > 0 \wedge y = 0) \vee y > 0 \}$
+\emph{// Balayage avant}
+\hspace*{2em} \textbf{pour} $x$ \textbf{de} 0 à $L_x$ \textbf{faire}
+  \hspace*{4em} \textbf{pour} $y$ \textbf{de} 0 à $L_y$ \textbf{faire}
+    \hspace*{6em} \textbf{si} $I[x,y] \neq 0$ \textbf{alors}
+      \hspace*{8em} $k \leftarrow +\infty$
+      \hspace*{8em} \textbf{pour tout} $(p,w) \in \mathcal{M}^h$ \textbf{faire}
+        \hspace*{10em} $k \leftarrow \min(k, I[(x,y)-p]+w)$
+      \hspace*{8em} \textbf{finpour}
+      \hspace*{8em} $\mathrm{DM}[x,y]\leftarrow k$
+    \hspace*{6em} \textbf{sinon}
+      \hspace*{8em} $\mathrm{DM}[x,y]\leftarrow 0$
+    \hspace*{6em} \textbf{finsi}
+  \hspace*{4em} \textbf{finpour}
+\hspace*{2em} \textbf{finpour}
+\emph{// Balayage arrière}
+\hspace*{2em} \textbf{pour} $x$ \textbf{de} $L_x$ à 0 \textbf{faire}
+  \hspace*{4em} \textbf{pour} $y$ \textbf{de} $L_y$ à 0 \textbf{faire}
+    \hspace*{6em} \textbf{si} $\mathrm{DM}[x,y] \neq 0$ \textbf{alors}
+      \hspace*{8em} $k \leftarrow +\infty$
+      \hspace*{8em} \textbf{pour tout} $(p,w) \in \mathcal{M}^h$ \textbf{faire}
+        \hspace*{10em} $k \leftarrow \min(k, \mathrm{DM}[(x,y)+p]+w)$
+      \hspace*{8em} \textbf{finpour}
+      \hspace*{8em} $\mathrm{DM}[x,y]\leftarrow k$
+    \hspace*{6em} \textbf{finsi}
+  \hspace*{4em} \textbf{finpour}
+\hspace*{2em} \textbf{finpour}
+\textbf{fin}
+\egroup
+\label{algo:chanfer-dt}
+\end{algorithm}
+
+\begin{figure}[htbp]{\em
+(a)\quad\includegraphics[width=.4\linewidth]{img/skel-cmp/chamfer-dm/ex-dm1.eps}\quad
+(b)\quad\includegraphics[width=.4\linewidth]{img/skel-cmp/chamfer-dm/ex-dm1_1.eps}\par\vskip6pt
+(c)\quad\includegraphics[width=.4\linewidth]{img/skel-cmp/chamfer-dm/ex-dm3_4.eps}\quad
+(d)\quad\includegraphics[width=.4\linewidth]{img/skel-cmp/chamfer-dm/ex-dm5_7_11.eps}\par\vskip6pt
+(e)\quad\includegraphics[width=.4\linewidth]{img/skel-cmp/chamfer-dm/ex-dm14_20_31_44.eps}\quad
+(f)\quad\includegraphics[width=.4\linewidth]{img/skel-cmp/chamfer-dm/ex-dm62_88_139_196_224.eps}}
+  \caption[Cartes des distances pour différentes distances de
+           chanfrein]%
+          {Cartes des distances pour différentes distances de
+           chanfrein pour une image de 64$\times$64.
+           \emph{(a)} $\mathrm{DM}_{\langle 1\rangle}$,
+           \emph{(b)} $\mathrm{DM}_{\langle 1,1\rangle}$,
+           \emph{(c)} $\mathrm{DM}_{\langle 3,4\rangle}$,
+           \emph{(d)} $\mathrm{DM}_{\langle 5,7,11\rangle}$,
+           \emph{(e)} $\mathrm{DM}_{\langle 14,20,31,44\rangle}$,
+           \emph{(f)} $\mathrm{DM}_{\langle 62,88,139,196,224\rangle}$.
+           Chaque image utilise un dégradé parabolique (suivant
+           l'application $x\mapsto \sqrt{x}$).  Plus les points sont
+           blancs, plus ils sont distants du contour de la forme.}
+  \label{fig:skeleton:chamfer-dm}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \input{img/skel-cmp/propag.pstex_t}
+  \caption[Propagation de l'information de distance]%
+  {Propagation de l'information de distance.  Le point $p$ propage
+    l'information de distance car $\mathrm{DM}_S(p+\mathbf{x}) >
+    \mathrm{DM}_S(p)$ et la boule maximale en $p$ est contenue dans la
+    boule maximale en $p+\mathbf{x}$.}
+  \label{fig:skeleton:propag}
+\end{figure}
+
+La recherche des maxima locaux se fait en recherchant les points de la
+carte de distances qui ne propagent pas l'information de distance
+(figure~\ref{fig:skeleton:propag}).  Soient $S$ une forme et un point
+$p$ de la carte de distances $\mathrm{DM}^{\mathcal{M}}_S$, où
+$\mathcal{M}$ est un masque de chanfrein, on dit que $p$ ne propage
+l'information de distance si pour toute pondération $(\mathbf{x},w)$
+de $\mathcal{M}$, on a
+
+\begin{equation}
+  \label{eq:skelton:lmc}
+\mathrm{DM}^{\mathcal{M}}_S(p+\mathbf{x})
+  < \mathrm{DM}^{\mathcal{M}}_S(p) + w.
+\end{equation}
+
+\noindent%
+Cependant, cette relation n'est pas valable pour toutes les distances
+de chanfrein, du fait que, pour ces masques, il existe des boules de
+rayon $r$ équivalents à des boules de rayon $r\pm1$ ou plus (par
+exemple, les boules $B^{\langle 5,7,11\rangle}(5)$ et $B^{\langle
+  5,7,11\rangle}(6)$ sont équivalentes).  De ce fait, tous les points
+$p$ vérifiant l'équation (\ref{eq:skelton:lmc}) ne sont pas forcément
+des points de l'axe médian.  Pour résoudre ce problème, Thiel propose
+d'utiliser une table permettant d'obtenir les correspondances entre
+les rayons des différentes boules équivalentes pour une distance de
+chanfrein donnée.  Dans \cite{thiel-hdr:2001,remy:2002}, il donne une
+méthode pour calculer des tables de correspondance ($\mathrm{Lut}$).
+$\mathrm{Lut}$ est une table à deux entrées qui dépend du masque de
+chanfrein utilisé (figure~\ref{fig:skeleton:lut}): pour un déplacement
+et un rayon donnés, la table fournit le rayon de la boule équivalente.
+Ainsi, pour appartenir au squelette, un point $p$ doit vérifier le
+critère suivant:
+
+\begin{equation}
+  \label{eq:skeleton:lut}
+  p\in\mathbf{MA}(S)\quad \Longleftrightarrow\quad
+  \forall \mathbf{x}\in \mathcal{M}_{\mathrm{Lut}},
+  \mathrm{DM}^{\mathcal{M}}_S(p+\mathbf{x})
+    < \mathrm{Lut}\left(\mathbf{x}, \mathrm{DM}^{\mathcal{M}}_S(p)\right),
+\end{equation}
+
+\noindent%
+où $\mathcal{M}_{\mathrm{Lut}}$ est l'ensemble des déplacements à
+prendre en compte pour effectuer les corrections correspondantes.  Il
+faut noter que les déplacements de $\mathcal{M}_{\mathrm{Lut}}$ ne
+sont pas forcément les mêmes que les déplacements du masque utilisé
+\cite{thiel-phd:1994}.
+
+\begin{figure}[htbp]
+  \centering \small
+  \begin{tabular}{|r|rrr|}
+  \hline
+  $R\backslash\mathbf{x}$ & (1,0) & (1,1) & (2,1) \\
+  \hline
+  5 & 6 & 8 & 12 \\
+  7 & 11 & 12 & 17 \\
+  10 & 12 & 15 & 19 \\
+  11 & & 17 & \\
+  14 & 17 & 19 & 23 \\
+  15 & 19 & & \\
+  16 & & 22 & \\
+  18 & 22 & 23 & 28 \\
+  20 & 23 & 26 & 30 \\
+  21 & & 27 & \\
+  25 & 28 & 30 & 34 \\
+  27 & & 33 & \\
+  28 & & 34 & \\
+  \hline
+  \end{tabular}
+\quad
+  \begin{tabular}{|r|rrr|}
+  \hline
+  $R\backslash\mathbf{x}$ & (1,0) & (1,1) & (2,1) \\
+  \hline
+  29 & 33 & & \\
+  30 & 34 & & \\
+  31 & & 37 & \\
+  32 & & 38 & \\
+  35 & 39 & 41 & 45 \\
+  38 & & 44 & \\
+  39 & & 45 & \\
+  40 & 44 & & \\
+  42 & & 48 & \\
+  46 & & 52 & \\
+  49 & & 55 & \\
+  53 & & 59 & \\
+  60 & & 66 & \\
+  \hline
+  \end{tabular}
+  \caption[Table de correspondance pour le masque $\langle 5,7,11
+    \rangle$]%
+    {Table de correspondance pour le masque $\langle 5,7,11 \rangle$.}
+  \label{fig:skeleton:lut}
+\end{figure}
+
+La recherche des maxima locaux ne permet d'obtenir qu'un nuage de
+points.  La construction du squelette passe donc par un ensemble de
+calcul qui permettent de connecter cet ensemble de points en
+recherchant les points de selle (points au niveau desquels le gradient
+s'annule) et en suivant les gradients pour propager la ligne médiane.
+D'autres étapes sont nécessaires et réalisent un amincissement, un
+élagage ou un \og embellissement \fg avant d'effectuer une
+polygonisation du squelette.
+
+\subsubsection{Critique de la méthode}
+
+Nous avons tenté de réaliser notre propre implémentation de la méthode
+de squelettisation par les distance de chanfrein.  Cette
+implémentation suit les différentes étapes, jusqu'au point numéro~4,
+décrites précédemment à la page~\pageref{ref:skeleton:dc-step}, pour
+rechercher un squelette.  Les cartes de distances de la
+figure~\ref{fig:skeleton:chamfer-dm} ont été obtenues par cette
+implémentation.  Toutefois, nous avons rencontré des difficultés qui
+ne nous ont pas permis de la terminer.
+
+La première difficulté venait de l'algorithme utilisé pour la
+propagation de la ligne médiane.  Il consiste principalement à
+rechercher les gradients maximums qui permettent de connecter les
+nuages de points obtenus lors de la recherche des maxima locaux.
+Thiel propose une méthode qui utilise un masque de $5\times 5$ comme
+la masque $\langle 5,7,11 \rangle$.  Par rapport à ce masque, elle
+étend chaque nuages de points vers les points qui maximise le
+gradient.
+%
+Cependant, Thiel ne précise pas comment faire pour distribuer les
+poids aux différents déplacements.  Dans son DEA, Remy propose un
+autre algorithme basé cette fois sur le voisinage en 3D avec des
+masques ayant des poids de 1 \cite{remy-dea:1997}.  En 2D, la méthode
+de Remy revient à explorer le 8-voisinage.  De notre côté, nous avons
+proposé un autre algorithme basé sur le voisinage induit par le masque
+utilisé avec des points de 1.  Cet algorithme recherche dans le
+voisinage du masque l'ensemble des points propageant l'information de
+distance.  Nous obtenons un ensemble de composantes connexes et pour
+chacune d'elles nous calculons la somme des déplacements qui nous
+donne des directions dominantes.  On propage la ligne médiane en
+utilisant les points qui se situent dans la direction dominante.
+
+Nous avons constaté une seconde difficulté dans l'algorithme de
+réduction à l'épaisseur 1.  La ligne médiane peut avoir une épaisseur
+strictement supérieure à 1 dans certaines parties.  Dans ce cas, Thiel
+propose un algorithme en deux passes sensé réduire l'épaisseur du
+squelette tout en favorisant son centrage \cite{thiel-phd:1994}.
+Cependant, nous avons remarqué que l'algorithme qu'il proposait
+supprimait trop de point dès la première passe.  Le squelette obtenu
+ne permet pas de reconstruire entièrement la forme d'origine...
+
+Pour terminer, les distances de chanfrein permettent d'estimer la
+distance euclidienne en utilisant des valeurs et des opérations
+entières.  Cependant, elles apportent aussi des imprécisions dans les
+calculs de la carte de distances et du ssquelette.
+
+\subsection{Distance euclidienne quadratique}
+\label{sec:skeleton:de2}
+
+Des chercheurs se sont intéressés au calcul des squelettes en se
+basant sur la distance euclidienne.  La distance euclidienne est une
+distance qui permettrait de générer des cartes de distances précise.
+Cependant, elle n'est pas discrète, car elle utilise la fonction
+racine carré.  Aussi, certains chercheurs se sont intéressés à la
+distance euclidienne quadratique.  Bien que ce ne soit pas une
+distance au sens de la définition~\ref{def:distance}, elle fournit des
+valeurs entières positives à partir de coordonnées discrètes et elle
+permet de limiter les algorithmes aux opérations d'addition et de
+multiplication.  Soient deux points $p$ et $q$ de $\mathbbm{Z}^2$, la
+distance euclidienne quadratique $d_E^2(p,q)$ entre $p$ et $q$ est
+définie par
+
+\begin{equation}
+  d_E^2 (p, q) = ||q - p||^2 = (x_q - x_p)^2 + (y_q - y_p)^2.
+\end{equation}
+
+\noindent%
+$d_E^2$ n'est pas une distance car elle ne vérifie pas l'inégalité
+triangulaire (cf.~définition~\ref{def:distance}).  Par exemple, soient
+$p(1, 0)$ et $q(2,0)$.  On a $d_E^2(0,p) = d_E^2 (p,q) = 1$ et $d_E^2
+(0,q) = 4$, donc $d_E^2 (O,q) \not\leq d_E^2 (O,p) + d_E^2 (p,q)$.
+Malgré cette particularité, des méthode ont été proposées par Saito et
+Toriwaki ainsi que par Hirata pour calculer des cartes de distances
+\cite{hirata:1996,saito:1994} et par Thiel et Remy pour calculer des
+axes médians \cite{thiel:2003} à partir de $d_E^2$ (pour les axes
+médians, Thiel et Remy utilisent des $\mathrm{Lut}$ pré-calculées).
+
+Couprie et Zrour ont proposé une méthode récente pour calculer les
+squelettes euclidiens en 2D et en 3D basée sur $d_E^2$
+\cite{couprie:2004,zrour-dea:2004}.  Cette méthode utilise
+l'algorithme de Saito et Toriwaki pour le calcul de la carte de
+distances \cite{saito:1994} et la méthode de Thiel et Remy pour le
+calcul de l'axe médian \cite{thiel:2003}.  Une version discrète des
+angles bissecteurs, que nous avons vu au
+§\ref{sec:skeleton:bissector}, a été développé par Couprie et Zrour
+pour analyser et filtrer le squelette.  Soient $S$ une forme et $p$ un
+point de $S$.  \emph{L'aval} de $p$ dans $S$, noté $\mathrm{DS}_S(p)$,
+est l'ensemble des points $q$ de $\overline{S}$ les plus proches de
+$p$
+
+\begin{equation}
+  \mathrm{DS}_S(p) = \left\{ q\in\overline{S} | \forall
+    q'\in\overline{S}, d_E^2(q,p) \leq d_E^2(q',p)\right\}.
+\end{equation}
+
+Soient $S$ une forme et $p$ un point de $S$.  \emph{l'aval étendu},
+noté $\mathrm{EDS}_S(p)$, est l'union de tous les $\mathrm{DS}_s(q)$
+pour tous les points $q$ dans le 4-voisinage de $p$.  \emph{L'angle
+  bissecteur} de $p$ dans $S$, noté $\theta_S(p)$, est défini comme le
+plus grand angle entre 0 et $\pi$ entre les vecteurs $q-p$ et $q'-p$,
+pour tous points $q$ et $q'$ de $\mathrm{EDS}_S(p)$.  En particulier,
+si le nombre d'éléments dans $\mathrm{EDS}_s(p)$ vaut 1, alors
+$\theta_S(p)$ vaut 0.  Il est alors possible de fixer un seuil pour
+retirer de l'axe médian des points dont la valeur de l'angle
+bissecteur est trop petite.
+
+Pour calculer l'angle bissecteur d'un point dans une forme, il faut
+calculer son aval étendu.  Couprie et Zrour proposent un algorithme
+pour calculer l'aval étendu d'un point à partir de la carte de
+distances pour la distance euclidienne quadratique.  Ainsi, la carte
+de distance permet à la fois de calculer l'axe médian et de le filtrer
+pour en retirer certaines perturbations.  Enfin, Courpie et Zrour
+utilisent leur propre algorithme d'amincissement pour obtenir un
+squelette euclidien discret et homotopique \cite{couprie:2004}.
+
+La méthode développée par Couprie et Zrour semble particulièrement
+efficace et rapide\footnote{Pour des images de $400\times 400$ pixels
+  et avec un ordinateur doté d'un Pentium~IV à 1,4~GHz, la méthode
+  développée produit un squelette en moins de 4~secondes.}.
+Cependant, elle comporte une particularité qui dans certains cas
+pourrait être génante: cette méthode produit des squelettes discrets
+qui par endroit peuvent avoir une épaisseur de deux pixels.
+
+\subsection{Conclusion sur les méthodes discrètes}
+
+Dans cette section, nous avons vu une méthode basée sur le calcul de
+la carte de distance d'une forme pour rechercher le squelette.  Hormis
+les problèmes que nous avons rencontré avec la méthode de Thiel, le
+défaut majeur de cette méthode est de se baser sur une estimation de
+la distance euclidienne.  Toutefois, il existe d'autres approximations
+de cette distance.  Ces autres méthodes consistent soit à calculer la
+carte de déplacement minimale au lieu de la carte des distances.  Dans
+ce cas, si $p$ est un point de la forme $S$, $\mathrm{DM}_S(p)$ est un
+vecteur vers le point du contour de la forme le plus proche de $p$.
+Cette méthode a été développée à l'origine par Danielsson
+\cite{danielsson:1980}.  D'autres méthodes proposent enfin des
+approches exactes de la distance euclidienne en utilisant des
+algorithmes de propagation, de balayage ou en utilisant les diagrammes
+de Voronoï \cite{cuisenaire-phd:1999}.
+
+L'une des principales critiques qui a été faite sur les méthodes
+basées sur la recherche des crêtes dans la carte de distances consiste
+à dire que ces méthodes ne s'exécutent pas sans difficultés.  La
+recherche des crêtes introduit d'inévitables erreurs et nécessite
+toujours un post-traitement \cite{tek:1999a}.
+% Ces méthodes ne permettent pas de calculer avec exactitude la carte
+% des distances euclidiennes.
+Les squelettes résultants sont généralement incongrus et isotropiques,
+c'est-à-dire que le descripteur de forme n'est pas robuste sous
+certaines transformations géométriques \cite{ogniewicz:1995}.
+
+\section{Squelette discret de Voronoï}
+\label{sec:skeleton:voro}
+
+La carte de distances d'une forme représente ni plus ni moins une
+relation de proximité entre les points d'une forme et les points de
+son contour.  La génération d'une carte de distances est très proche
+de la notion de régions de proximité pour un ensemble de points.  Un
+tel problème peut être résolu par les \emph{diagrammes de Voronoï}
+\cite{cuisenaire:1999,ogniewicz-phd:1993,preparata:1990}.
+
+La signification des diagrammes de Voronoï peut être illustrée par le
+problème suivant:
+
+\begin{quotation}
+  Soit $\Omega$ un ensemble de points (appelés \emph{sites}) d'un plan
+  euclidien.  Pour tout $p_i$ de $\Omega$, quels sont les points
+  $q\not\in\Omega$ du plan qui sont les plus proches de $p_i$ que de
+  n'importe quel autre point $p_k\in\Omega$?
+\end{quotation}
+
+\noindent
+La solution de ce problème consiste en un pavage du plan par les
+\emph{polygones de Voronoï}.  Ce sont des régions polygonales limitées
+par des segments de droite, des demi-droites ou des droites.  Le
+partitionnement est appelé \emph{diagramme de Voronoï}.  La
+figure~\ref{fig:voro-ex} donne quatre exemples de diagramme de Voronoï
+pour deux, trois, quatre et six sites.  Nous donnons ci-dessous la
+définition proposée par Okabe \emph{et al.} \cite{okabe:1992}.
+
+\begin{definition}[Diagramme de Voronoï]
+  Soit un ensemble fini $\Omega=\{p_1,...,p_n\}$ de $n$ points isolés
+  de $\mathbbm{R}^2$, avec $n \geq 2$.  \`A chaque point $p_i$ de $S$,
+  nous associons l'ensemble $\mathrm{Vor}(p_i)$ des points de
+  $\mathbbm{R}^2$ qui sont strictement plus proches (au sens de la
+  distance euclidienne) de $p_i$ que de tout autre point de $\Omega$:
+
+  \begin{equation}
+    \mathrm{Vor}(p_i) = \left\{ q \in \mathbbm{R}^2
+      \left| \forall j\in\{1,...,n\}\backslash\{i\}, d_E(q,p_i) <
+      d_E(q,p_j) \right.\right\}.
+  \end{equation}
+
+  Nous appelons ce pavage le \emph{diagramme de Voronoï} généré par
+  l'ensemble $\Omega$, noté $\mathrm{Vor}(\Omega)$.  Une région
+  $\mathrm{Vor}(p_i)$ dépendante d'un point $p_i\in\Omega$ constituant
+  une portion du diagramme est appelée \emph{polygone de Voronoï}.
+\end{definition}
+
+\begin{figure}[ht]
+  \begin{center}
+  \input{img/skel-cmp/vor-ex.pstex_t}
+  \end{center}
+  \caption[Diagramme de Voronoï pour deux, trois, quatre et six
+           points]%
+    {Diagramme de Voronoï pour deux, trois, quatre et six points.}
+  \label{fig:voro-ex}
+\end{figure}
+
+Ogniewicz propose d'utiliser le diagramme de Voronoï à partir des
+points du contour d'une forme discrète pour obtenir son squelette.
+Auparavant, Montanari avait déjà montré l'équivalence entre les
+diagrammes de Voronoï et les squelettes \cite{montanari:1969}.
+
+\begin{definition}[Axe médian discret de Voronoï
+  \cite{ogniewicz-phd:1993}]
+  L'axe médian discret de Voronoï ($\mathrm{DVMA}$) d'une forme $S$
+  correspond à l'intersection du diagramme de Voronoï des points du
+  contour de $S$ et de $S$ lui-même:
+
+  \begin{equation}
+    \mathrm{DVMA}(S) = \mathrm{Vor}(\partial S)\cap S.
+  \end{equation}
+\end{definition}
+
+\begin{figure}[p]
+  \begin{center}
+    \includegraphics[width=.80\linewidth]{img/skel-cmp/voro-voro2.eps}
+  \end{center}
+  \caption[De la forme à l'axe médian discret de Voronoï]%
+    {De la forme à l'axe médian discret de Voronoï.  Le contour du
+     rectangle apparaît en pointillé.  À partir des points du contour,
+     nous pouvons calculer l'axe médian discret de Voronoï qui
+     apparaît en traits pleins.}
+  \label{fig:voro-voro2}
+\end{figure}
+
+\begin{figure}[p]
+  \begin{center}
+    \includegraphics[width=.95\linewidth]{img/skel-cmp/voro-voro.eps}
+  \end{center}
+  \caption[Axe médian discret de Voronoï d'une forme quelconque]%
+    {Axe médian discret de Voronoï d'une forme quelconque.}
+  \label{fig:voro-voro}
+\end{figure}
+
+Les figures~\ref{fig:voro-voro2} et~\ref{fig:voro-voro} représentent
+les $\mathrm{DVMA}$ d'un rectangle et d'une forme quelconque,
+respectivement.  Cependant, les squelettes de ces formes présentent
+trop d'informations et ne sont pas invariants par transformation.
+Pour le rectangle de la figure~\ref{fig:voro-voro2}, il est possible
+d'isoler les quatre arêtes obliques ainsi que l'arête centrale.  Nous
+obtenons alors un squelette quasiment identique au squelette d'un
+rectangle.  Ainsi, Ogniewicz défini le squelette discret de Voronoï
+d'une forme ($\mathrm{DVSK}$) comme un sous-ensemble de l'axe médian
+de Voronoï ($\mathrm{DVSK}(S) \subseteq \mathrm{DVMA}(S)$) tel que
+$\mathrm{DVSK}(S)$ soit invariant par transformation géométrique.
+Pour cela, Ogniewicz propose d'élaguer $\mathrm{DVMA}(S)$ en utilisant
+une heuristique.
+
+$\mathrm{DVMA}(S)$ est composé d'un ensemble d'arêtes provenant des
+polygones de Voronoï.  Chaque arête $e$ est un segment de la
+médiatrice de deux points $p_A$ et $p_B$ appartenant au contour
+$\partial S$.  Ces points sont appelés points d'ancrage de l'arête
+$e$.  La distance d'ancrage est la longueur $w_{AB}$ du plus court
+chemin entre les deux points $p_A$ et $p_B$, le long du contour
+$\partial S$ (figure~\ref{fig:skeleton:anchor}).  Le \emph{résidu
+  potentiel} de l'arête $e$ de $\mathrm{DVMA}(S)$, noté $\Delta
+R_P(e)$, est égale à $w_{AB}$.  Ogniewicz propose d'élaguer
+$\mathrm{DVMA}(S)$ en effectuant un simple seuillage, c'est-à-dire que
+l'arête $e$ est une arête de $\mathrm{DVSK}(S)$ si et seulement si
+$\Delta R_P(e) > T$ pour tout $e$ de $\mathrm{DVMA}(S)$, sachant que
+$T$ représente la valeur de seuil.  Ogniewicz propose d'autres
+heuristiques basées sur la différence entre $w_{AB}$ et la plus petite
+longueur d'arc du plus grand cercle inscrit passant par $p_A$ et $p_B$
+ou avec la longueur de corde entre $p_A$ et $p_B$.
+
+\begin{figure}[htbp]
+  \centering
+  \input{img/skel-cmp/anchor.pstex_t}
+  \caption[Distance d'ancrage et résidu potentiel d'une arête du
+  DVMA]%
+  {Distance d'ancrage et résidu potentiel d'une arête du DVMA.
+    $w_{AB}$ représente la distance d'ancrage de l'arête $e$.  Cette
+    distance part du point d'ancrage $p_A$ et suit le contour de la
+    forme jusqu'au point d'ancrage $p_B$.}
+  \label{fig:skeleton:anchor}
+\end{figure}
+
+La méthode développée par Ogniewicz est particulièrement précise
+puisqu'elle permet d'obtenir l'axe médian exact de la forme discrète.
+Toutefois, nous pouvons remettre en question les squelettes basés sur
+cet axe médian pour plusieurs raisons: premièrement, la recherche du
+squelette est basée sur des heuristiques, sans qu'aucune garantie ne
+soit donnée sur son invariance par transformation géométrique;
+deuxièmement, le principe même de l'élagage de l'axe médian discret
+peut être remis en cause car aucune preuve n'a été faite que le
+squelette de la forme perçue est un sous-ensemble de cet axe médian.
+
+\section{Squelette d'Hamilton-Jacobi}
+\label{sec:skeleton:hamilton}
+
+Si nous reprenons l'analogie du feu de prairie, le front enflammé peut
+être représenté par une courbe qui se déplace au cours du temps depuis
+le contour de la forme vers son centre.  Selon Kimia \emph{et al.}, il
+est alors possible de rechercher le squelette par une équation
+différentielle partielle basée sur l'évolution de cette courbe
+\cite{kimia:1995}.  Siddiqi \emph{et al.} se sont intéressés à cette
+possibilité \cite{siddiqi:1999}.
+
+Soit une forme $S$ de $\mathbbm{R}^2$.  Le front enflammé est
+représenté par une courbe $\mathcal{C}$ évoluant dans le temps, qui au
+départ du processus du feu de prairie correspond au contour de $S$:
+$\mathcal{C}(0) \equiv \mathcal{C}_0 \equiv \partial S \equiv
+\left\{(x_0(s),y_0(s))\right\}$, où $s$ est l'abscisse curviligne,
+$x_0(s)$ et $y_0(s)$ sont les coordonnées cartésiennes des points du
+contour de $S$ (l'indice $0$ indique qu'il s'agit de la position
+initiale de la courbe).  Chaque point de cette courbe évolue en
+fonction du temps dans une direction donnée.  L'évolution de la courbe
+vérifie le système d'équations
+
+\begin{equation}
+  \left\{
+  \begin{array}{l}
+  \frac{\partial\mathcal{C}}{\partial t}(s,t) = F\cdot\mathbf{N}, \\
+  \mathcal{C}(s,0) = \mathcal{C}_0(s),
+  \end{array}
+  \right.
+\label{eq:skeleton-curve}
+\end{equation}
+
+\noindent%
+où $\mathbf{N}$ est la normale interne, $t$ est le paramètre de temps,
+$F$ représente à la fois la vitesse et la direction de l'évolution.
+Cette équation concerne les déformations constantes\footnote{Kimia
+  \emph{et al.} démontrent que l'évolution d'une courbe satisfaisant
+  le système d'équations~(\ref{eq:skeleton-curve}) est équivalent à
+  l'évolution d'une forme par les opérations d'érosion ou de
+  dilatation définies en morphologie mathématique
+  \cite{serra:1982,schmitt:1993}, avec comme élément structurant une
+  boule de taille $F$.  Utiliser l'évolution du front enflammé pour
+  détecter le squelette revient donc à l'opération d'amincissement de
+  la forme.}.
+La forme $S$ de contour $\mathcal{C}_0$ équivaut la surface obtenue en
+superposant toutes les courbes $\mathcal{C}(s,t)$, avec $t\geq 0$.
+Soit, $T$ la fonction qui indique pour chaque point $q$ de $S$ la date
+à laquelle il est atteint par la courbe $\mathcal{C}$.
+%
+Ainsi, $T(q) = \mathrm{DM}_S(q)$ pour tout point $q$ de $S$.  La
+figure~\ref{fig:hj-curve} montre un exemple de courbe évoluant dans le
+temps.
+
+\begin{figure}[ht]
+  \begin{center}
+  \input{img/skel-cmp/hj-curve.pstex_t}
+  \end{center}
+  \caption[Évolution d'une courbe]%
+  {Évolution d'une courbe.  Dans la figure, $t_0$, $t_1$ et $t_2$ sont
+    trois dates successives et nous voyons l'évolution de la courbe
+    $\mathcal{C}$ (en pointillé) pour ces trois dates.  Chaque courbe
+    vérifiant l'équation $T(x,y) = t_i$ apparaît en trait plein.
+    Chacune de ces courbes est pondérée avec la date $t_i$.
+    $\mathbf{q}$ est un point de la courbe d'équation $T(x,y)=t_1$ et
+    $\mathbf{q'}$ correspond au point $\mathbf{q}$ mais pour la courbe
+    d'équation $T(x,y)=t_2$.  $\mathbf{N}$ est la normale du vecteur
+    $\mathbf{q'}-\mathbf{q}$, $\alpha$ est l'angle du vecteur
+    $\mathbf{q'}-\mathbf{q}$ par rapport au plan horizontal,
+    $h=t_2-t_1$, $d$ est la longueur de la projection du vecteur
+    $\mathbf{q'}-\mathbf{q}$ sur le plan horizontal et $d'$ est la
+    longueur de la projection du la normale sur le plan horizontal.}
+  \label{fig:hj-curve}
+\end{figure}
+
+En se basant sur les paramètres de la figure~\ref{fig:hj-curve}, la
+vélocité de la courbe est obtenue par
+
+\begin{equation}
+F = \frac{d}{h} = \frac{1}{\tan \alpha} = \frac{1}{d'}
+  = \frac{1}{||\nabla T||}.
+\end{equation}
+
+\noindent%
+Ainsi, $T$ satisfait l'équation eikonale
+
+\begin{equation}
+||\nabla T||\cdot F = 1.
+\end{equation}
+
+\noindent%
+La résolution de cette équation peut être obtenue grâce à l'équation
+canonique d'Hamilton.  On pose
+
+\begin{equation}
+D_{q_0}(q_t) = d_E(q_0,q_t) = \mathrm{DM}_S (q_t) = t
+\end{equation}
+
+\noindent%
+la distance euclidienne entre $q_0$, le point du contour
+$\mathcal{C}_0$ de la forme, et le point $q_t$ du front enflammé
+$\mathcal{C}(t)$, représentant la position à l'instant $t$ de
+l'élément qui se trouvait initialement en $q_0$.  Pour tout point
+$q_0$ du contour et point $q_t(x,y)$ correspondant, la valeur du
+gradient $||\nabla D|| = \left|\left|\left(\frac{\partial D}{\partial
+        x},\frac{\partial D}{\partial y}\right)\right|\right|$ est de
+1, ce qui signifie que la vitesse du front enflammé est constante.  On
+pose $\mathbf{p} = \frac{\partial D}{\partial q}$, aussi appelé
+vecteur de la lenteur normale du front enflammé. $\mathbf{p}$
+satisfait l'équation d'Hamilton-Jacobi
+
+\begin{equation}
+\frac{\partial D}{\partial t} + H(q, \mathbf{p}, t) = 0,
+\end{equation}
+
+\noindent%
+où $H(q, \mathbf{p}, t)$ est la fonction hamiltonienne. La résolution
+de cette équation se fait par le système d'équations hamiltoniennes
+
+\begin{equation}
+\left\{
+  \begin{array}{l}
+  \dot{\mathbf{p}} = -\frac{\partial H}{\partial q}, \\
+  \dot{q} = \frac{\partial H}{\partial\mathbf{p}}.
+  \end{array}
+\right.
+\end{equation}
+
+\noindent%
+Si nous considérons le front enflammé dans le processus de
+squelettisation, nous avons $||\mathbf{p}|| = ||\nabla D|| = 1$ et
+$\dot{q}\cdot\mathbf{p} = 1$, car par le principe de Huygens la
+direction du rayon $\dot{q} = \frac{dq}{dt}$ est le conjugué de la
+direction du mouvement.  La fonction hamiltonienne $H(q, \mathbf{p},
+t)$ est alors donnée par
+
+\begin{equation}
+H(q, \mathbf{p}, t) = \mathbf{p}\cdot \dot{q} - ||\dot{q}||
+                    = 1 - ||\nabla D||,
+\end{equation}
+
+\noindent%
+et le système hamiltonien est donné par
+
+\begin{equation}
+\left\{
+  \begin{array}{l}
+  \dot{\mathbf{p}} = -\frac{\partial H}{\partial q} = (0,0), \\
+  \dot{q} = \frac{\partial H}{\partial\mathbf{p}} = -\nabla D.
+  \end{array}
+\right.
+\end{equation}
+
+\noindent%
+Nous voyons bien que la vitesse de la courbe est constante.  Le signe
+négatif de cette vitesse signifie que la courbe se déplace vers le
+centre de la forme.
+
+Selon Siddiqi \emph{et al.}, si aucun fronts ne se rencontrent,
+l'énergie totale $H(q, \mathbf{p}, t)$ est normalement constante le
+long de toutes trajectoires de la courbe du front enflammé
+\cite{siddiqi:2002}.  Si un choc apparaît entre deux fronts enflammés,
+alors le principe de conservation d'énergie est violé.  Pour repérer
+les points du squelette, il suffit donc de retrouver les zones de non
+conservation de l'énergie.  
+
+La distinction des points squelettaux par rapport aux autres points se
+fait en calculant le flux de sortie moyen du champ de vecteurs
+$\dot{q}$ autour d'un point.  Le flux de sortie moyen est défini comme
+le rapport entre le flux de sortie d'une région $R$ contenant ce point
+et le périmètre de cette région
+
+\begin{equation}
+\frac{\int_{\partial R} \langle \dot{q},\mathbf{N} \rangle\,ds}%
+     {\mathcal{P}(R)},
+\end{equation}
+
+\noindent%
+où $\langle\cdot,\cdot\rangle$ est le produit scalaire, $ds$ est une
+portion du contour de $R$ et $\mathbf{N}$ est la normale de sortie en
+chaque point du contour.  Selon le théorème sur la divergence
+
+\begin{equation}
+\int_R \mathrm{div}\left(\dot{q}\right)\,da
+   = \int_{\partial R} \langle \dot{q},\mathbf{N} \rangle\,ds,
+\end{equation}
+
+\noindent%
+où $da$ est une portion de surface de $R$.  De ce fait, la relation
+entre le flux de sortie et la divergence du champ de vecteurs $\dot{q}$
+est donné par
+
+\begin{equation}
+\mathrm{div} \left(\dot{q}\right)
+  = \lim_{\mathcal{A}(R)\rightarrow 0}
+      \frac{\int_{\partial R} \langle \dot{q},\mathbf{N} \rangle\,ds}%
+           {\mathcal{A}(R)}.
+\end{equation}
+
+L'intégrale de la divergence de $\dot{q}$ dans une région, ou plutôt
+le flux sortant à travers le contour de cette région, mesure le degré
+avec lequel le flux généré par $\dot{q}$ préserve la surface. En
+particulier, il est négatif si le flux tend à diminuer l'aire dans le
+voisinage, positif si le flux tend à augmenter l'aire dans le
+voisinage et nul sinon.  Cependant, le théorème sur la divergence ne
+s'applique pas pour les régions contenant l'axe médian.  Si $q$ est un
+point quelconque, le flux sortant moyen donne une valeur proche de
+zéro.  Si $q$ est un point de l'axe médian, le flux sortant moyen
+donne une forte valeur négative.
+
+L'algorithme~\ref{algo:hamilton} correspond à l'algorithme de Siddiqi
+\emph{et al.} pour calculer les squelettes Hamilton-Jacobi
+\cite{siddiqi:2002}.
+
+\begin{algorithm}[ht]
+\begin{enumerate}
+\item Partir de la courbe initiale $\mathcal{C}_0 = \partial S$
+  représentant le contour de la forme $S$.
+\item Créer une séquence ordonnée de particules le long du contour
+  espacé de $\delta s$.
+\item Calculer la carte des distances euclidienne de la forme $S$ de tel
+  sorte que chaque point de la grille situé à l'intérieur de $S$ soit
+  associé à la plus petite distance par rapport aux particules.
+\item Pour chaque point de la grille, calculer le gradient $\nabla D$.
+\item \textbf{Pour chaque} étape  \{ \\
+ \hspace*{2em} \textbf{Pour chaque} particule \{ \\
+ \hspace*{4em} Mettre à jour la position de la particule: \\
+ \hspace*{4em} $x(\text{étape}+1) = x(\text{étape})
+   - \Delta{}t\frac{\partial D}{\partial x}$ \\
+ \hspace*{4em} $y(\text{étape}+1) = y(\text{étape})
+   - \Delta{}t\frac{\partial D}{\partial y}$ \\
+ \hspace*{4em} \textbf{Si}
+   $d_E(\text{particule},\text{particule\_suivante}) > \epsilon$ \{ \\
+ \hspace*{6em} Créer une nouvelle particule \\
+ \hspace*{4em} \} \\
+ \hspace*{2em} \} \\
+ \}
+\end{enumerate}
+  \caption{Algorithme de calcul des squelettes Hamilton-Jacobi.}
+  \label{algo:hamilton}
+\end{algorithm}
+
+La particularité de la méthode de Siddiqi \emph{et al.} est de se
+baser sur une approximation curviligne du contour de la forme.  Ce qui
+permet de ce rapprocher plus de ce que nous appellerons la forme
+perçue de la forme discrète.  Cependant, contrairement à la méthode
+d'Ogniewicz, la méthode de Siddiqi \emph{et al.} se base sur une trame
+discrète.  Si bien que le squelette obtenu est composé d'un ensemble
+de points distants d'un pixel\footnote{Une implémentation de
+  l'algorithme de squelettisation de Siddiqi \emph{et al.} nous a été
+  remise par l'équipe d'analyse de formes du CIM de l'Université de
+  McGill au Canada.  Cette implémentation en est encore au stade
+  expérimental.  Sur un ordinateur équipé d'un Pentium~IV à 2,8~GHz et
+  512~Mo de mémoire vive, le calcul s'exécute en 20~minutes pour des
+  images de 400$\times$400~pixels.}.
+
+\section{Évaluation des méthodes de squelettisation}
+\label{sec:skeleton:test}
+
+Nous avons vu dans la section précédente différentes méthodes de
+squelettisation dans l'espace discret.  Curieusement, nous avons
+constaté que ces méthodes proposent parfois des solutions différentes
+pour des formes qui sont identiques.  Il semble donc difficile de se
+fier strictement à l'une des méthodes présentées ou à d'autres.
+Toutefois, nous pouvons tester ces méthodes et ne conserver que celle
+fournissant les squelettes les plus \og raisonnables \fg.
+
+Quelques évaluations ont déjà été faites pour comparer des méthodes de
+squelettisation existantes.  Loncaric propose un rapide état de l'art
+de ces méthodes en précisant leurs caractéristiques
+\cite{loncaric:1998}.  Pizer \emph{et al.} fournissent une évaluation
+plus pertinente \cite{pizer:2003}.  Cependant, leur comparaison n'est
+faite que sur trois méthodes de squelettisation: les méthodes basées
+sur le diagramme de Voronoï, les méthodes basées sur l'équation
+d'Hamilton-Jacobi et les méthodes basées sur la recherche de crêtes et
+des zones selles.  De plus les méthodes ne sont comparées que par
+rapport à leur conception et par rapport à un exemple simple.  Aussi,
+certains aspects de ces méthodes de squelettisation peuvent être
+ignorés.  Par exemple, si des auteurs ne s'en tiennent qu'au fait que
+les squelettes qu'ils produisent permettent de retrouver la forme
+d'origine, pour démontrer que leur méthode est satisfaisante.
+Malheureusement, ce test n'est pas suffisant, car la carte de
+distances, qui est un sur-ensemble du squelette pondéré, permet elle
+aussi de reconstruire la forme de la même manière qu'un squelette.
+
+Pour élaborer notre méthode de test, nous proposons de revoir la
+définition de la forme à partir de laquelle nous souhaitons extraire
+les squelettes.  Ensuite, nous utiliserons cette définition et la
+définition des squelettes, leurs propriétés ainsi que celles des
+projections sphériques des espaces urbains produites le long de
+parcours, pour mettre au point une série de tests permettant d'évaluer
+les méthodes de squelettisation.  À l'issue de ce test, nous verrons,
+par rapport aux critères que nous avons choisis, la méthode qui nous a
+paru la plus adaptée pour l'analyse des espaces urbains.
+
+\subsection{Notion de squelette de la forme perçue}
+
+Il y a deux manières de percevoir une forme discrète.  D'un côté, nous
+pouvons faire attention à chaque point qui la compose et, dans ce cas,
+nous percevons des objets délimités par un ensemble de lignes
+verticales et horizontales.  C'est en général la perception des formes
+utilisée dans les algorithmes de géométrie discrète.  D'un autre côté,
+il est possible de prendre du recul et d'observer en une fois le
+résultat de la forme discrète.  Si la forme discrète a été élaborée
+sur un pavage suffisamment fin, nous verrons un objet qui
+illusoirement sera défini par des lignes obliques ou des courbes, sans
+excès de pics causés par des lignes horizontales ou verticales.  C'est
+ce que parfois inconsciemment nous faisons, c'est le genre d'images
+que nous transmet notre système visuel grâce à des techniques innées
+d'anti-crénelage, de flou ou de fusion de pixels.  Aussi, puisque
+cette forme illusoire est souvent celle que nous percevons, nous
+proposons de l'appeler \emph{forme perçue} d'une forme discrète.
+
+Il est difficile de définir avec précision ce qu'est exactement une
+forme perçue.  Une telle définition nécessite de s'intéresser aux
+différents et nombreux mécanismes du système visuel humain.  Par
+contre, la forme perçue possède naturellement un ensemble de
+propriétés qui fait qu'elle est différente de la forme discrète. Par
+exemple, une forme perçue est invariante par transformation
+géométrique alors que la forme discrète ne l'est pas.  Autre exemple,
+deux formes discrètes différentes peuvent produire la même forme
+perçue.  La forme perçue est non seulement due à l'acuité de notre
+système visuel, mais aussi à un phénomène appelé \emph{hyperacuité}.
+Le niveau de définition permis par notre résolution rétinienne
+correspond à une minute d'arc\footnote{Une minute d'arc correspond à
+  1/60\up{e} de degré.}, alors que notre système visuel est capable de
+détecter, d'ajouter ou d'éliminer des caractéristiques à des niveaux
+de définition beaucoup plus fins (allant jusqu'à la seconde
+d'arc\footnote{Une seconde vaut 1/60\up{e} de minute d'arc.}), c'est
+ce qui caractérise l'hyperacuité.
+
+De la même manière, il existe un ensemble de différences entre le
+squelette d'une forme discrète et celui d'une forme perçue similaire.
+Cette différence est principalement due aux pics qui apparaissent dans
+la forme discrète.
+
+\subsection{Élaboration d'une méthode pour tester les méthodes de
+  squelettisation}
+          
+Nous avons choisi des projections sphériques produisant des images
+discrètes de la forme du ciel.  Les méthodes de squelettisation
+doivent être appliquées à ces formes discrètes et doivent construire
+des squelettes de leur forme perçue.  Puisque les formes perçues sont
+invariantes par transformation géométriques, ces squelettes doivent
+l'être aussi.
+
+Du fait de la discrétisation, le bruit intervient inévitablement dans
+les transformations géométriques.  Soit
+$\mathcal{T}:\mathbbm{Z}^2\rightarrow\mathbbm{Z}^2$ une transformation
+géométrique.  De ce fait, l'équation (\ref{eq:skeleton:invariance})
+d'invariance que nous avons vue au §\ref{subsec:skeleton:properties}
+devient \cite{ogniewicz-phd:1993}
+
+\begin{equation}
+\mathcal{T}(\mathbf{MAT}(S)) \approx
+  \mathbf{MAT}(\mathcal{T}(S)\cap\mathcal{N}),
+\end{equation}
+
+\noindent%
+où $\mathcal{N}$ correspond à l'influence du bruit sur la forme $S$.
+Les critères d'invariance et de tolérance au bruit ne sont donc pas
+respectés.  Ainsi, pour comparer les méthodes de squelettisation, nous
+devons comparer les squelettes obtenus avant et après transformation
+de l'image.
+
+La comparaison des squelettes peut se faire de différentes manières.
+À l'{\oe}il nu, nous pouvons déjà faire la différence entre deux
+squelettes, mais dans certains cas, elle n'est pas forcément
+perceptible: si, par exemple, un pic dans le contour s'est légèrement
+déplacé, la branche dans le squelette correspondant risque d'être
+déplacée de manière imperceptible.  Une autre méthode consiste à
+compter le nombre de terminaisons.  En effet, les extrémités du
+squelette sont extrêmement sensibles aux perturbations du contour.
+Des transformations comme la rotation et l'homothétie ont tendance à
+générer ou à retirer des pics dans le contour.  Aussi, la comparaison
+du nombre de terminaisons entre deux squelettes permet de rendre
+compte de la stabilité d'une méthode de squelettisation.  Enfin, nous
+pouvons utiliser la distance de Hausdorff $d_{\mathcal{H}}$.  Soit
+$\mathcal{T}$ un groupe de transformations géométriques permettant de
+tester une méthode de squelettisation.  Plus la distance
+$d_{\mathcal{H}}(\mathbf{MAT}(\mathcal{T}(S)),
+\mathcal{T}(\mathbf{MAT}(S)))$ sera petite plus la méthode sera stable
+pour le test appliqué.  Toutefois, dans notre projet, nous nous sommes
+limités au test visuel et au nombre de terminaisons.
+
+Dans le cadre de notre étude, il existe un cas supplémentaire
+d'invariance.  Supposons que nous ayions une rue très longue délimitée
+d'un côté comme de l'autre par deux murs rectangulaires de même
+hauteur.  Le long d'un parcours centré dans cette rue, nous
+obtiendrons un ensemble de projections sphériques quasiment
+identiques.  Mais il se peut que la discrétisation produise des
+différences légères entre deux images successives du parcours.  Si la
+méthode de squelettisation ne remarque pas de différence alors nous
+pouvons considérer que cette méthode est stable pour ce test.
+
+\subsection{Test des méthodes rencontrées}
+
+Dans cette section, nous nous intéresserons seulement à la comparaison
+des méthodes d'Ogniewicz (squelette discret de Vorono\"i) rencontrée
+dans le §\ref{sec:skeleton:voro} et de Siddiqi \emph{et al.}
+(squelette d'Hamilton-Jacobi) rencontrée dans le
+§\ref{sec:skeleton:hamilton}.  La méthode de Thiel n'apparaît pas ici,
+n'ayant pu obtenir ou constituer une application qui y correspond.
+
+Les tests que nous avons réalisés se basent tout d'abord sur des
+figures simples: un disque et un rectangle déjà rencontrés dans la
+figure~\ref{fig:ske-ex} à la page~\pageref{fig:ske-ex}, et une figure
+en forme de tranchant d'hallebarde.  Le résultat de ces tests apparaît
+dans la figure~\ref{fig:skeleton:simple-test}.  Nous y voyons
+rapidement les défauts de la méthode d'Ogniewicz qui laisse échapper
+des branches dans les courbures, alors qu'il ne devrait pas y en
+avoir.  Le résultat le plus intéressant est sans doute celui du
+cercle.  Alors que nous savions que le squelette d'un cercle est un
+point (figure~\ref{fig:ske-ex}), la méthode d'Ogniewicz nous donne un
+ensemble de segments partant du centre du cercle.  Ceux-ci sont dus
+aux parties de la courbure du cercle les plus dégénérés par les
+perturbations de la forme discrète. De son côté, la méthode de Siddiqi
+\emph{et al.} donne des résultats qui sont beaucoup plus proches de ce
+que nous attendions\footnote{En réalité, pour le cas du cercle, le
+  squelette de la méthode de Siddiqi \emph{et al.} n'est pas un point
+  mais deux points, formant un segment de droite extrêmement petit.}.
+
+\begin{figure}[htbp]
+\begin{center}
+  \begin{tabular}{|c|l|}
+  \hline
+\raisebox{10mm}{\textbf{Ogniewicz}} &
+  \quad
+  \raisebox{3mm}{\includegraphics[width=15mm]{img/skel-cmp/cmp/simple/disque-vor.eps}}
+  \quad
+  \raisebox{5mm}{\includegraphics[width=25mm]{img/skel-cmp/cmp/simple/rectangle-vor.eps}}
+  \quad
+  \includegraphics[width=20mm]{img/skel-cmp/cmp/simple/sablier-vor.eps}
+\\[3pt] \hline
+%
+\raisebox{10mm}{\textbf{Siddiqi}} &
+  \quad
+  \raisebox{3mm}{\includegraphics[width=15mm]{img/skel-cmp/cmp/simple/disque-hj.eps}}
+  \quad
+  \raisebox{5mm}{\includegraphics[width=25mm]{img/skel-cmp/cmp/simple/rectangle-hj.eps}}
+  \quad
+  \includegraphics[width=25mm]{img/skel-cmp/cmp/simple/sablier-hj.eps}
+\\[3pt] \hline
+  \end{tabular}
+\end{center}
+\caption[Résultat des deux méthodes de squelettisation sur des figures
+simples]%
+{Résultat des deux méthodes de squelettisation sur des figures
+  simples.}
+  \label{fig:skeleton:simple-test}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+  \begin{tabular}{c|c|c|}
+\textbf{Rotation} & \textbf{Ogniewicz} & \textbf{Siddiqi} \\\hline
+  \textbf{0°}
+    & \psfig{figure=img/skel-cmp/cmp/rotation/xavier-0-vor.eps,scale=.25}
+    & \psfig{figure=img/skel-cmp/cmp/rotation/xavier-0-hj.eps,scale=.25}
+\\\hline
+  \textbf{30°}
+    & \psfig{figure=img/skel-cmp/cmp/rotation/xavier-30-vor.eps,scale=.25}
+    & \psfig{figure=img/skel-cmp/cmp/rotation/xavier-30-hj.eps,scale=.25}
+\\\hline
+  \textbf{45°}
+    & \psfig{figure=img/skel-cmp/cmp/rotation/xavier-45-vor.eps,scale=.25}
+    & \psfig{figure=img/skel-cmp/cmp/rotation/xavier-45-hj.eps,scale=.25}
+\\\hline
+  \textbf{60°}
+    & \psfig{figure=img/skel-cmp/cmp/rotation/xavier-60-vor.eps,scale=.23}
+    & \psfig{figure=img/skel-cmp/cmp/rotation/xavier-60-hj.eps,scale=.25}
+\\\hline
+  \textbf{90°}
+    & \psfig{figure=img/skel-cmp/cmp/rotation/xavier-90-vor.eps,scale=.23}
+    & \psfig{figure=img/skel-cmp/cmp/rotation/xavier-90-hj.eps,scale=.25}
+\\ \hline
+  \end{tabular}
+  \end{center}
+  \caption[Test d'invariance par rotation sur une projection sphérique
+  d'une place.]%
+  {Test d'invariance par rotation sur une projection sphérique d'une
+    place.}
+  \label{fig:rotate}
+\end{figure}
+
+Pour le test suivant, nous nous sommes intéressés à la rotation d'une
+forme.  Ce test nous paraissait suffisamment pertinent pour notre
+application.  La forme utilisée qui a apparaît dans la
+figure~\ref{fig:rotate} correspond à une projection sphérique de la
+partie centrale de la rue Xavier-Neujean à Liège en Belgique: il
+s'agit d'une forme complexe, mais qui permet de déterminer rapidement
+la stabilité des méthodes de squelettisation.  Là encore, nous voyons
+une certaine instabilité de la méthode d'Ogniewicz face à la méthode
+de Siddiqi \emph{et al.}.  Cela se voit dans la partie centrale du
+squelette qui est plutôt instable avec la méthode d'Ogniewicz.  La
+méthode de Siddiqi \emph{et al.} l'est aussi.  Par exemple, lorsque la
+forme est transformée par une rotation à 60°, il y a dans la partie
+supérieure gauche du squelette une branche qui n'apparaît pas dans les
+autres.  Toutefois, nous pouvons constater que la méthode de Siddiqi
+\emph{et al.} est beaucoup plus stable que la méthode d'Ogniewicz.
+
+Pour terminer, nous avons effectué une série de tests des deux
+méthodes de squelettisation sur une séquence de forme
+(figure~\ref{fig:skeleton:sequence}).  Les formes représentent des
+projections sphériques autour de la place Saint-Stanislas à Nancy en
+France.  Ces projections se basent naturellement sur une modélisation
+simplifiée de l'espace.  Si bien que la rue est quasiment droite et
+homogène.  Nous pouvons observer la série de projections sphériques
+qui apparaît dans la figure~\ref{fig:skeleton:sequence}.  Cette série
+contient 27~images.  Pour chacune des méthodes de squelettisation,
+nous avons compté le nombre de terminaisons dans chaque projection.
+Le résultat du dénombrement apparaît dans le graphique de la
+figure~\ref{fig:skeleton:seqdiff}.  Puisque les projections sont
+quasiment identiques, le nombre de terminaison dans les squelettes ne
+devrait pas varier.  Là encore, nous voyons l'instabilité de la
+méthode d'Ogniewicz face à celle de Siddiqi \emph{et al.}.
+
+\begin{figure}[p]
+  \begin{center}
+  \includegraphics[width=.67\linewidth]{img/skel-cmp/cmp/sequence/sequence.eps}
+  \end{center}
+  \caption[Test d'invariance sur une séquence de projections
+  sphériques le long d'un parcours autour de la place Saint-Stanislas
+  à Nancy]%
+  {Test d'invariance sur une séquence de projections sphériques le
+    long d'un parcours autour de la place Saint-Stanislas à Nancy.}
+  \label{fig:skeleton:sequence}
+\end{figure}
+
+\begin{figure}[p]
+  \begin{center}
+  \includegraphics[width=.8\linewidth]{img/skel-cmp/cmp/sequence/cmp-seqdiff.eps}
+  \end{center}
+  \caption[Test d'invariance sur une séquence de projections
+  sphériques le long d'un parcours autour de la place Saint-Stanislas
+  à Nancy]%
+  {Test d'invariance sur une séquence de projections sphériques le
+    long d'un parcours autour de la place Saint-Stanislas à Nancy.}
+  \label{fig:skeleton:seqdiff}
+\end{figure}
+
+
+\section{Conclusion}
+
+Nous nous sommes intéressés, dans ce chapitre, à la recherche d'une
+méthode de squelettisation de formes discrètes la plus stable possible
+et permettant d'analyser les formes de ciel dans les espaces ouverts
+urbains.  Pour cela, nous avons vu trois méthodes de squelettisation
+différentes.  Nous avons commencé avec la méthode de Thiel consistant
+à utiliser les distances de chanfrein pour calculer la carte de
+distances d'un forme et à en extraire le squelette.  Puis, nous avons
+vu la méthode développée par Ogniewicz qui consiste à calculer le
+diagramme de Voronoï des points du contour d'une forme et à l'élaguer
+afin d'obtenir un squelette.  Enfin, nous avons vu avec la
+squelettisation d'Hamilton-Jacobi développée par Siddiqi \emph{et
+  al.}.  Cette dernière méthode consiste à simuler le processus du feu
+de prairie pour retrouver le squelette.
+
+\`A part la méthode de Thiel que nous n'avons pas pu mettre en
+pratique, nous avons organisé différents tests pour les méthodes
+rencontrées basés sur la notion de forme perçue.  Ce type forme est
+produite par notre système visuel à partir d'une forme discrète.  Ce
+qui caractérise ce type de forme est son invariance face aux
+transformations géométriques.  En utilisant cette caractéristique,
+nous avons testé les méthodes de squelettisation et vérifié si elles
+étaient elles aussi invariantes.  Le résultat des tests a permis de
+montrer que la méthode de Siddiqi est une méthode plus stable que
+celle d'Ogniewicz.  C'est donc grâce à la méthode des squelettes
+d'Hamilton-Jacobi que nous allons analyser les variations de la
+perception visuelle des espaces ouverts urbains le long de parcours.
+\`A la fin de notre projet, nous avons eu l'occasion d'étudier une
+nouvelle méthode de squelettisation développée par Couprie et Zrour,
+que nous avons décrite dans le §\ref{sec:skeleton:de2}.
+L'implémentation de cette méthode semble comporter des avantages qui
+ne paraissent pas dans l'implémentation de la méthode
+d'Hamilton-Jacobi, comme une plus grande rapidité et la possibilité de
+calculer le squelette de formes avec des trous.  Pour le moment, nous
+n'avons pas eu la possibilité de la comparer avec la méthode
+d'Hamilton-Jacobi.
+
+Au cours des chapitres précédents, nous avons déterminé une méthode de
+représentation des espaces ouverts urbains utilisant des projections
+hémisphériques de la forme du ciel, puis nous avons déterminé un
+descripteur de formes, appelé squelette, qui permet de fournir des
+descriptions de la forme du ciel le long de parcours.  Il nous reste
+alors à définir une méthode qui à partir d'une série de squelettes de
+formes de ciel prises le long d'un parcours est capable de
+caractériser les variations morphologiques qui apparaissent dans ce
+parcours.
+
+% End

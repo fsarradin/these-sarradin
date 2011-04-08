@@ -1,0 +1,679 @@
+% event.tex - état de l'art sur les méthodes 
+%
+% Copyright (C) 2003, 2004 - François Sarradin
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \title{Analyse des événements visuels dans les espaces architecturaux
+        et urbains}
+\author{François Sarradin}
+\laboratory{
+  CNRS -- CERMA UMR 1563 \\
+  École d'Architecture de Nantes \\
+  Rue Massenet -- BP 81\,931 \\
+  44\,319 NANTES CEDEX 3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sloppy
+\makeheader
+
+\begin{reflexion}
+  \begin{otherlanguage}{english}\emph{Vision is the art of seeing what
+  is invisible to others.}\par
+\raggedleft Jonathan Swift\par
+  \end{otherlanguage}
+\end{reflexion}
+
+\label{chap:event}
+
+\begin{intropar}
+  {I}\textsc{l} semble que la meilleure manière d'apprécier un espace
+  urbain, c'est tout simplement de s'y promener.  De cette façon, nous
+  pouvons non seulement apprécier les éléments qui le compose, mais
+  aussi sa structure, les concepts qui ont été utilisés pour
+  l'organiser.  Et ainsi, l'observateur peut deviner ou même comprendre
+  la culture locale, les événements historiques qui s'y sont produits,
+  la force du pouvoir local à certaines époques.  Ces éléments se
+  perçoivent très bien lorsque nous parcourons le boulevard Hausmann à
+  Paris, les rues de Maastricht aux Pays~Bas ou celle de Cottbus en
+  ex-Allemagne de l'Est, pour prendre des exemples européens.  Mais ces
+  éléments ne peuvent être perçues parfaitement avec des photographies.
+  ainsi, il semble qu'observer la ville en mouvement permet de mieux la
+  comprendre.
+\end{intropar}
+
+Dans ce chapitre, nous allons nous intéresser à un ensemble de méthodes
+qui ont été développée pour analyser les espaces urbains en considérant
+des observateurs poursuivant un parcours.  Nous commencerons par des
+méthodes d'analyse se basant sur une succession de photographies ou de
+dessins obtenus le long de parcours.  Nous continuerons avec une méthode
+qui consiste à retrouver des schémas, des motifs dans la perception des
+espaces urbains en mouvement.  Puis, nous verrons deux méthodes qui
+permettent de décrire les espaces urbains en utilisant des notations.
+Mais, l'espace urbain en mouvement se compose essentiellement de
+changements qui apparaissent à nos yeux.  Certains chercheurs se
+sont intéressés à ces changements et les ont exploités pour proposer des
+partitionnements d'espaces.  \`A ce propos, nous verrons quelques
+méthodes provenant de la recherche en architecture et d'autres provenant
+de l'infographie.
+
+
+\section{Séquence picturale}
+
+À la manière d'une caméra, notre système visuel nous fournit des images
+de la ville en mouvement autour de nous.  Pour capturer le mouvement, la
+caméra le décompose en succession d'images fixes, formant ainsi une
+\emph{séquence picturale}.  Si nous considérons un événement visuel
+comme tous les changements intervenant dans la morphologie de l'espace,
+les formes, les couleurs et les textures, la séquence picturale est une
+représentation implicite des événements visuels.  En effet, elle
+n'indique pas directement à quel endroit se situe les événements visuels
+ni quelle est leur nature: c'est au spectateur de les deviner.
+
+\begin{figure}[p]
+\begin{center}
+  \includegraphics[width=.3\linewidth]{img/event/bossel2.eps}
+\end{center}
+  \caption[Extrait de la promenade dans Venise de Bosselmann]%
+  {Extrait de la promenade dans Venise de Bosselmann (d'après
+    \cite{bosselmann:1998}).}
+  \label{fig:survey:bosselmann}
+\end{figure}
+
+En urbanisme, plusieurs chercheurs se sont intéressés aux séquences
+picturales.  Au début des années soixantes, Cullen a réalisé quelques
+études de cas en analysant succinctement des espaces urbains le long
+d'un chemin au travers de dessins ou de photographies
+\cite{cullen:1971}.  Il a mis en avant le fait que les scènes urbaines
+se révèlent par une série de saccades ou par révélations, même si
+l'observateur traverse les espaces urbains à une vitesse uniforme.
+Cullen a appelé cela la \emph{vision en série}.  En travaillant sur la
+perception visuelle des routes, Lynch \emph{et al.} s'est intéressé aux
+séries de photographies prises à bord d'une voiture le long d'un
+parcours sur une portion de route à la place du conducteur
+\cite{lynch:1966}.  Plus tard, dans les années 70, une équipe de
+chercheurs à Berkeley accompagnés de réalisateurs de films a tenté de
+reproduire l'expérience en utilisant une caméra évoluant dans un modèle
+réduit d'espace urbain \cite{bosselmann:1998}.  Cependant, comme le
+champ de vision de la caméra était trop étroit, la vitesse de
+déplacement semblait supérieure à la vitesse réelle et, privé de vision
+périphérique, le spectateur se sentait mal à l'aise lorsque la caméra
+abordait un virage.  Des expériences similaires ont été tentées plus
+récemment avec des environnements virtuels, mais ce type malaise
+apparaissait à chaque fois \cite{may:2000}.
+
+Bosselmann s'est aussi intéressé à la représentation par série d'images
+\cite{bosselmann:1998}.  Cette fois, les images sont des dessins des
+espaces ouverts urbains vus par un piéton.  Les images sont organisées
+par page en partant du bas de la page et en remontant
+(figure~\ref{fig:survey:bosselmann}).  Selon Bosselmann, cette
+disposition permet une meilleure \og immersion \fg du lecteur dans la
+scène.  En regardant une séquence picturale, le lecteur rassemble les
+images et aura ainsi l'illusion du mouvement dans la scène:
+
+\begin{quotation}\em
+\begin{otherlanguage}{english}
+  ``Reading the pictorial sequences quickly is similar to watching a
+  motion picture film.  Like a film, the pictorial sequences transport
+  the viewer into the scene.''\footnote{\selectlanguage{francais} \og
+    Lire des séquences picturales rapidement équivaut à regarder un
+    film.  Comme un film, les séquences picturales transportent le
+    lecteur dans la scène. \fg}
+\end{otherlanguage}
+\cite{bosselmann:1998}
+\end{quotation}
+
+Le défaut de cette méthode, remarqué par Bosselmann, est que la
+direction du regard dans les images doit suivre le sens de déplacement
+de l'observateur.  Une image ne peut représenter de scènes ni sur la
+gauche ni sur la droite ni dans la moindre direction autre que celle de
+l'avant \cite{bosselmann:1998}.  Pour résoudre ce problème, l'équipe de
+Dupagne s'est intéressée aux séquences picturales en utilisant des
+projections hémisphériques faisant face à l'observateur
+\cite{dupagne:1997}.  Toutefois, comme cela a été le cas pour Lynch
+\emph{et al.} \cite{lynch:1966}, les images obtenues ne suffisent pas à
+décrire ce qui se passe dans la scène.  Les séquences picturales doivent
+souvent être accompagnées d'un texte donnant des indications
+supplémentaires et parfois plus pertinentes.
+
+\section{Analyse séquentielle des espaces ouverts urbains}
+\label{sec:survey:panerai}
+
+Panerai s'est aussi intéressé à l'étude des séquences picturales pour
+l'analyse des espaces ouverts urbains \cite{panerai:1999}.  En
+s'inspirant de l'ouvrage de de~Wolfe \cite{dewolfe:1963}, Panerai adapte
+la notion de plan séquence, inspirée du cinéma, qui pour lui correspond
+à des dispositions schématiques codifiées du paysage.  Chaque plan
+peuvent exprimer une configuration urbaine de symétrie ou de
+dissymétrie, d'ouverture, d'ondulation, de compétition, d'étranglement,
+de dérobée, de diaphragme, etc.  Un extrait de ces plans apparaît dans
+la figure~\ref{fig:survey:panerai}.
+
+\begin{figure}[p]
+  \begin{center}
+  \includegraphics[width=.45\linewidth]{img/event/panerai3.eps}
+  \quad
+  \includegraphics[width=.45\linewidth]{img/event/panerai4.eps}
+  \end{center}
+  \caption[Éléments picturaux formant les plans de l'analyse
+    séquentielle de Panerai]%
+  {Éléments picturaux formant les plans de l'analyse
+    séquentielle de Panerai (d'après \cite{panerai:1999}).}
+  \label{fig:survey:panerai}
+\end{figure}
+
+Une suite particulière de plans forme un enchaînement.  Dans le cas
+d'une scène pittoresque, l'enchaînement est marqué par des plans
+différents avec des ruptures assez fortes sur de courtes distances.
+Dans le cas d'un effet monumental, les plans seront beaucoup plus
+similaires avec des successions assez lentes.  Les enchaînements et les
+plans peuvent ensuite être regroupés en unités plus importantes afin de
+permettre l'analyse de séquences entières.  Ceci permet de définir des
+séquences d'approche ou des séquences d'accès, si les plans sont liés à
+un même objet, et des coupures selon la parenté entre les plans.
+
+La méthode de Panerai permet d'introduire un véritable langage basé sur
+la notion de plan et de séquence que nous pouvons faire correspondre à
+ce qui est perçu de l'environnement urbain et à la pratique que nous en
+avons.  Toutefois, Dupagne \emph{et al.} émettent une critique sur cette
+méthode en affirmant qu'il ne s'agit pas vraiment d'un outil d'aide à la
+décision, mais plutôt \og d'un outil qui va servir de base à la
+réflexion, voire à la présentation des intentions d'un projet \fg
+\cite{dupagne:1997}.
+
+
+\section{Notation pour les événements visuels}
+
+En se basant sur les notations utilisées en musique et en chorégraphie,
+Thiel s'est intéressé au développement d'un système de signes graphiques
+\og comme moyen technique utilisé pour analyser et créer des
+environnements physiques, s'appuyant sur une expérience séquentielle en
+temps réel \fg \cite{thiel:1969}.  Thiel se base sur des projections
+hémisphériques en \og bouclier \fg face à l'observateur.  Les éléments
+de l'espace sont classés entre ceux qui déterminent l'espace, appelés
+SEE (\emph{Space Establishment Elements}), et ceux qui ne le déterminent
+pas.  Un élément est un SEE si sa disparition influence la perception de
+l'espace.  Les SEE peuvent être décrits par leur nombre, leurs
+dimensions, leur position par rapport à l'observateur, leur forme, leur
+direction déterminée par leur plus grande dimension, leur couleur et
+leur texture.  La position des SEE est notée par des schémas appelés
+SEEPI (\emph{Space Establishment Elements Position Indicator}).
+
+Les différents SEEPI sont regroupés le long d'une droite représentant
+les différents instants d'un parcours.  Parallèlement, d'autres droites
+peuvent se superposer pour indiquer les différentes indications ou
+actions liées au déplacement (marche, arrêt, montée, temps, etc.), à
+l'orientation (rotation, repère, croisement, quartier, etc.) ou à la
+lumière (position, type, tonalité, etc.).  Les différentes composantes
+de la perception visuelle en mouvement dans les espaces urbains sont
+représentées au travers de différents canaux.
+
+Plus tard, suite à des premiers travaux \cite{lynch:1960}, Lynch
+\emph{et al.} ont repris la notation de Thiel afin de disposer d'une
+notation permettant d'analyser et d'améliorer la perception visuelle des
+routes pour les conducteurs \cite{lynch:1966}.  Lynch \emph{et al.} ont
+alors réalisé un classement de différents types de mouvements et
+d'indices d'orientation.  Selon eux, la sensation de mouvement inclut:
+
+\begin{itemize}
+\item les sensations de notre propre mouvement (changement de vitesse,
+  de direction, d'altitude, etc.),
+\item du mouvement apparent des éléments extérieurs (déformations
+  diverses, rotations, translations, etc.)
+\item un ensemble de caractéristiques spatiales, comme la position des
+  éléments extérieurs, la qualité de la lumière ou les relations qui
+  lient les environnements dans une séquence, fournissant des indices
+  supplémentaires sur la sensation de mouvement.
+\end{itemize}
+
+\noindent%
+Concernant l'orientation, Lynch \emph{et al.} considèrent trois aspects:
+
+\begin{itemize}
+\item la séquence des éléments associée au parcours caractérisant la
+  force de l'image, la continuité et les points où le conducteur doit
+  prendre des décisions,
+\item les buts principaux le long du parcours, leur visibilité, leurs
+  chevauchements, leurs successions, etc.
+\item la position, les relations et la force des éléments de l'image
+  mentale de l'environnement incluant les instants où il y a une perte
+  de contact.
+\end{itemize}
+
+Les notations misent au point par Thiel et l'équipe de Lynch permettent
+de décrire plus ou moins simplement ce qui est perçu par un observateur
+le long d'un parcours dans un espace ouvert urbain.  Ces notations
+étendent véritablement notre langage en permettant aux concepteurs
+urbains d'exprimer ce qui ne peut être dit ou écrit.  Ces notations sont
+comparables à des partitions de musique faisant intervenir plusieurs
+instruments, au point qu'il est possible de se rendre compte de \og
+l'harmonie \fg et du \og rythme \fg d'un parcours et de l'améliorer en
+modifiant certaines \og notes \fg.  Cependant, les outils développés par
+Thiel et l'équipe de Lynch nécessitent un apprentissage qui rend leur
+accès difficile.  De plus, comme pour les séquences picturales, les
+notations doivent être accompagnées d'un texte pour orienter le lecteur,
+pour situer la scène, pour ajouter des détails qui ne pouvaient
+apparaître, car les interprétations peuvent être nombreuses.
+
+
+\section{Événements visuels et partitionnement de l'espace}
+\label{sec:survey:visual-event}
+
+Le mouvement d'un observateur dans un espace architectural ou urbain
+génère des changements dans son monde visuel.  Selon Peponis \emph{et
+  al.}, le champ visuel est exposé à deux sortes de changements
+\cite{peponis:1997}.  La première sorte de changement peut être appelée
+\emph{changement continu} et correspond au changement de perspective
+dans notre perception visuelle des surfaces ou d'une partie de ces
+surfaces.  Dans ce cas, la topologie, aussi appelée \emph{aspect}, du
+monde visuel reste inchangée.  La deuxième sorte de changement peut être
+appelée \emph{changement discret}, ou transition, et est associée avec
+l'apparition ou la disparition d'éléments de l'espace facilement
+identifiables et finis, que Peponis \emph{et al.} appellent
+\emph{discontinuités}.  Ces discontinuités incluent les extrémités de
+murs et les coins formés par l'intersection de deux murs.  La transition
+est marquée par un changement dans l'ensemble des discontinuités
+visibles, dans la topologie de l'image visible: ceci est appelé
+\emph{événement visuel} \cite{durand:2000}.
+
+Sur la figure~\ref{fig:survey:vevent}, nous voyons une pyramide cachée
+derrière un mur.  L'{\oe}il d'un observateur se déplace du dessus vers
+le dessous du mur. Entre les points de vue~1 et~2, il n'y a pas de
+changement topologique de la scène: il s'agit d'un changement continu.
+Par contre, entre les positions~2 et~4, la pyramide a disparu: il s'agit
+d'un changement discret.  Ce changement est caractérisé par un événement
+visuel qui s'est produit lorsque l'{\oe}il de l'observateur était en
+position~3.  Pour cet événement, le sommet supérieur de la pyramide et
+l'arête supérieure du coin sont les \emph{générateurs} de l'événement
+visuel qui s'est produit \cite{durand:2000}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.5\linewidth]{img/event/vevent.eps}
+  \caption[Événement visuel]%
+  {Événement visuel.  Les vues des quatre points de vue sont
+  représentées à droite.  Lorsque l'{\oe}il se déplace vers le bas, le
+  sommet de la pyramide disparaît.  Au point de vue numéro 3, se produit
+  un événement visuel.}
+  \label{fig:survey:vevent}
+\end{figure}
+
+\subsection{Méthodes de partitionnement convexe}
+
+Peponis \emph{et al.} ont proposés à la fin des années quatre-vingt-dix
+une méthode pour partager l'espace en fonction des événements visuels
+\cite{peponis:1997}.  Pour définir leur méthode, Peponis \emph{et al.}
+décrivent l'espace selon une configuration de zones convexes.  La
+définition d'un espace convexe est donnée ci-dessous:
+
+\begin{definition}[Espace architectural convexe]
+  Un espace $E$ est dit convexe lorsque toute paire $p$ et $q$ de points
+  de $E$ peut être joint par un segment de droite entièrement contenu
+  dans $E$ sans traverser de murs.
+\end{definition}
+
+\begin{definition}[Espaces architecturaux adjacents]
+  Deux espaces convexes $E$ et $F$ sont adjacents si et seulement si ils
+  partagent au moins un côté et si une partie de ce côté partagé n'est
+  pas entièrement recouvert par un mur.
+\end{definition}
+
+\noindent%
+Ainsi, une transition est le résultat d'un mouvement entre deux espaces
+convexes adjacents.
+
+Selon Hillier et Hanson, les espaces convexes correspondent à notre
+perception des unités spatiales en deux dimensions qui sont complètement
+disponibles à notre expérience \cite{hillier:1984}.  Toutefois, la
+difficulté qui reste à traiter est de savoir de quelle manière nous
+devons partitionner l'espace pour obtenir un ensemble d'espaces
+convexes.
+
+\subsubsection{Méthode des disques}
+
+Hillier et Hanson ont suggéré que la représentation doit correspondre au
+plus petit ensemble des espaces convexes les plus volumineux couvrant le
+plan \cite{hillier:1984}.  Selon cette approche, si les distinctions
+visuelles entre les espaces convexes sont difficiles, le plan peut être
+divisé en recherchant le ou les plus grands disques maximaux.  En
+utilisant des tangentes à ces disques, nous traçons les espaces
+convexes.  Cependant, cette méthode ne fournit pas de solution unique,
+comme le montre la figure~\ref{fig:survey:circle}.  Dans cette figure,
+nous cherchons à diviser un environnement en forme de T en espaces
+convexes.  Si nous cherchons le plus petit ensemble des espaces
+convexes, nous obtenons la configuration à gauche.  Par contre, si nous
+recherchons le plus grand disque maximal, nous obtenons la configuration
+de droite.  Enfin, la méthode des disques n'est pas liée aux événements
+visuels.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.50\linewidth]{img/event/circle.eps}
+  \caption[Deux partitionnements convexes d'un même espace à partir de
+  la méthode des disques]%
+  {Deux partitionnements convexes d'un même espace à partir de la
+    méthode des disques.}
+  \label{fig:survey:circle}
+\end{figure}
+
+\subsubsection{Découpage convexe basé sur la structure de l'environnement}
+  
+Au lieu de se baser sur une forme géométrique comme le disque pour
+construire les espaces convexes, Hillier propose une méthode utilisant
+directement la structure de l'espace \cite{hillier:1996}.  Pour cela, il
+part du principe que les contours des espaces convexes doivent être
+colinéaires aux droites obtenues en étendant les murs.  Les espaces
+convexes sont eux-mêmes étendus jusqu'à ce qu'ils atteignent un autre
+mur.  La figure~\ref{fig:survey:overlap} montre le partitionnement d'un
+environnement par cette méthode et la décomposition en espaces convexes.
+Sur cette figure, nous remarquons que les espaces convexes se
+chevauchent et partagent des sous espaces communs.  Il ne s'agit plus
+d'un partitionnement.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.50\linewidth]{img/event/overlap.eps}
+  \caption[Découpage convexe d'un espace à partir de la méthode des
+  espaces recouvrants]%
+  {Découpage convexe d'un espace à partir de la méthode des espaces
+    recouvrants.}
+  \label{fig:survey:overlap}
+\end{figure}
+
+\subsubsection{Partitionnement convexe minimal}
+
+Le principe de cette méthode est de découper l'environnement en un
+nombre minimum d'espaces convexes \cite{peponis:1997}.  De cette façon,
+les espaces convexes occupent en moyenne une surface maximale.
+
+La méthode proposée par Peponis \emph{et al.} consiste tout d'abord à
+dessiner les droites qui peuvent connecter les angles réflexes deux à
+deux (un angle réflexe étant un angle de plus de 180°; quelques angles
+de ce type apparaissent dans la figure~\ref{fig:survey:mspace}).  Si
+certaines lignes se croisent ou partagent une terminaison commune, on
+procède à des éliminations, le but étant de garder un maximum de lignes
+qui ne se croisent pas ou qui ne partagent pas de terminaisons.  Pour
+tous les murs restants représentant un angle réflexe, étendre l'un de
+leur côté jusqu'à rencontrer un mur ou une ligne précédemment dessinée.
+Enfin, il faut vérifier que les espaces convexes adjacents ne partageant
+pas de murs peuvent fusionner pour former un seul espace
+\cite{peponis:1997}.  Cependant, le partitionnement minimal d'un
+environnement n'est pas forcément unique
+(figure~\ref{fig:survey:mspace}).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.6\linewidth]{img/event/mspace.eps}
+  \caption[Différents partitionnements convexes minimal d'un même
+  espace]%
+  {Différents partitionnements convexes minimaux d'un même espace.  La
+    figure montre en plus quelques angles réflexes.}
+  \label{fig:survey:mspace}
+\end{figure}
+
+\subsubsection{S-partitionnement}
+
+Peponis \emph{et al.} proposent une autre méthode qui consiste à étendre
+les angles réflexes et porte le nom de \emph{s-partitionnement}
+\cite{peponis:1997}.  Le principe d'extension des angles réflexes
+apparaît à gauche de la figure~\ref{fig:survey:extend}.  La
+figure~\ref{fig:survey:sspace} montre quelques résultats du
+s-partitionnement.  Avec cette méthode, les espaces convexes ne se
+chevauchent pas et la solution est unique pour chaque environnement.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.6\linewidth]{img/event/sspace.eps}
+  \caption[S-partitionnement de différents environnements]%
+  {S-partitionnement de différents environnements.}
+  \label{fig:survey:sspace}
+\end{figure}
+
+Il est intéressant de constater que cette méthode permet de prendre en
+compte certains événements visuels.  Chaque fois qu'un observateur passe
+d'un espace convexe à un autre, une nouvelle surface apparaît dans son
+champ de vision ou en sort.  Ainsi, la transition d'un espace convexe à
+un autre est marquée par le changement au sein des informations
+visuelles de l'environnement.  Cependant, la réciproque n'est pas
+forcément vraie: des surfaces ou des parties de surfaces peuvent
+apparaître ou disparaître sans que l'observateur ait traversé une
+transition.  De ce fait, les points d'un même espace convexe ne sont pas
+tous liés au même ensemble de discontinuités de la forme construite.
+
+\subsubsection{E-partitionnement}
+
+En partant de la méthode du s-partitionnement, Peponis \emph{et al.}
+proposent de considérer les diagonales \cite{peponis:1997}.  Une
+diagonale est un segment qui rejoint deux discontinuités (de type coin
+ou angle réflexe) sans traverser de murs (un exemple de diagonale
+apparaît à droite de la figure~\ref{fig:survey:extend} en pointillé).
+Si les diagonales peuvent être étendues à l'intérieur de
+l'environnement, à la manière de la figure~\ref{fig:survey:extend}, on
+rajoute alors les extensions de la diagonale au s-partitionnement.  La
+nouvelle configuration est appelée \emph{e-partitionnement}.  La
+figure~\ref{fig:survey:espace} montre quelques exemples de
+e-partitionnements.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.6\linewidth]{img/event/extend.eps}
+  \caption[Principe d'extension des discontinuités pour le
+  partitionnement convexe]%
+  {Principe d'extension des discontinuités pour le partitionnement
+    convexe.  À gauche, nous voyons l'extension des angles réflexes et à
+    droite nous voyons l'extension des diagonales.}
+  \label{fig:survey:extend}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.6\linewidth]{img/event/espace.eps}
+  \caption[E-partitionnement de différents environnements]%
+  {E-partitionnement de différents environnements.}
+  \label{fig:survey:espace}
+\end{figure}
+
+L'avantage de ce partitionnement est que non seulement la transition
+d'un espace convexe à un autre est marqué, comme pour le
+s-partitionnement, par un événement visuel, mais aussi tous les
+événements visuels tels qu'ils ont été définis plus haut sont
+représentés par une transition entre des partitions.  Peponis \emph{et
+  al.} utilisent ce partitionnement dans les espaces architecturaux et
+proposent une série d'indicateurs.  Parmi ces indicateurs, signalons à
+titre d'exemple le nombre de discontinuités visibles à partir de chaque
+partition.  Cet indicateur permet d'estimer la \og centralité \fg d'un
+partitionnement dans un environnement: plus la valeur de l'indicateur
+est élevée plus il est possible de voir de discontinuités à partir de la
+partition mesurée.
+
+Nous pouvons voir avec cette méthode une certaine complexité dans la
+partition de l'espace.  La méthode semble suffisante pour des espaces
+architecturaux, mais mal adaptée pour des espaces urbains, pour lesquels
+le partitionnement risque de devenir inintelligible.  De plus, d'après
+Teller, la qualité de ces analyses dépend étroitement de la rigueur avec
+laquelle la modélisation a été réalisée \cite{teller-phd:2001}.
+Celui-ci ajoute que tout manque d'homogénéité dans le niveau de détail
+de l'ensemble du modèle est susceptible d'induire des aberrations assez
+importantes.  Ainsi, le fait d'ajouter un meuble de façon détaillée dans
+les mesures d'un espace risque d'augmenter artificiellement la valeur de
+l'indice de centralité.
+
+\subsection{Partitionnement de l'environnement dans le domaine de
+  l'informatique}
+
+Le e-partitionnement n'est pas sans rappeler les notions de graphe
+d'aspects de Koenderink et van Doorn
+\cite{koenderink:1976,koenderink:1979}, de squelette de visibilité de
+Durand \emph{et al.} \cite{durand:1997} ou le complexe de visibilité de
+Pocchiola et Vegter et de Durand \emph{et al.}
+\cite{durand:1996,pocchiola:1996}.  De la même manière, dans chacune de
+ces méthodes, on cherche à savoir à quels moments se produit un
+événement visuel et en quelles positions de l'environnement l'aspect
+visuel de la scène semble inchangée.  Toutefois, les applications de ces
+méthodes s'étendent au delà du domaine de l'urbanisme.  Elles servent en
+infographie pour le calcul des faces cachées ou pour la génération des
+ombres, en analyse d'images pour la reconnaissance d'un modèle ou en
+robotique pour la planification de parcours \cite{durand:2000}.
+
+\subsubsection{Graphe d'aspect}
+
+L'observateur évolue dans un environnement donné, dans lequel il ne peut
+atteindre que des positions qui ne sont pas occupées par un objet.
+L'ensemble des positions auxquelles l'{\oe}il de l'observateur peut
+prendre place est nommé \emph{l'espace des points de vue}.  Les
+paramètres de l'espace des points de vue varient selon le type de
+projection considérée.  S'il s'agit d'une projection orthographique,
+l'espace des points de vue est une sphère infinie et un point de vue est
+représenté par une direction d'observation caractérisée par un angle
+horizontal (la longitude) et un angle vertical (l'azimut).  Dans ce
+modèle toutes les lignes de vues sont parallèles.  S'il s'agit d'une
+projection perspective, l'espace des points de vue est un sous-ensemble
+des points de l'environnement $\mathbbm{R}^3$.  Toutes les lignes de vue
+ont pour origine le point de vue.  Le graphe d'aspect consiste à un
+partitionnement de l'espace des points de vue sous la forme d'un graphe
+selon les événements visuels.  Dans ce graphe, chaque n{\oe}ud
+représente un aspect de la scène et chaque arête représente un événement
+visuel.  Le graphe d'aspect est le dual du partitionnement de l'espace
+des points de vue.  La figure~\ref{fig:survey:aspg} montre un graphe
+d'aspect pour un cube en projection orthographique.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.67\linewidth]{img/event/aspg.eps}
+  \caption[Graphe d'aspect d'un cube en projection orthographique]%
+  {Graphe d'aspect d'un cube en projection orthographique.}
+  \label{fig:survey:aspg}
+\end{figure}
+
+\subsubsection{Complexe de visibilité}
+
+En 2D, le \emph{graphe de visibilité}\footnote{Ce type de graphe de
+  visibilité n'a pas vraiment de rapport avec les graphes de visibilité
+  de Turner \emph{et al.} \cite{turner:2001}.} est un graphe dont les
+n{\oe}uds correspondent aux sommets des polygones de la scène.  Deux
+n{\oe}uds sont liés par une arête si le segment délimité par les
+sommets, représentés par ces deux n{\oe}uds, ne traverse aucun polygone
+de la scène.  Il est possible de construire des graphes de visibilité
+pour des objets incurvés en utilisant des segments bitangents.  L'une
+des méthodes pour construire un graphe de visibilité est d'utiliser le
+\emph{complexe de visibilité} 2D \cite{pocchiola:1996,riviere-phd:1997}.
+Il s'agit en fait de se baser sur un espace dual dans lequel les
+dimensions des objets sont inversées: les points sont transformés en
+droites et les droites sont transformées en points.  La transformation
+est notée $*$.  Ainsi, il est simple de savoir si une droite traverse un
+objet: dans ce cas, son dual (i.e.~un point) se trouve à l'intérieur du
+dual de l'objet qui est un autre objet (figure~\ref{fig:survey:dual}).
+À partir de l'espace dual, Pocchiola et Vegter proposent d'étudier les
+\emph{segments libres maximaux}, aussi appelés \emph{rayons}
+\cite{pocchiola:1996}.  Ce sont des segments qui n'ont pas
+d'intersection avec l'intérieur des objets de la scène.  Un rayon ayant
+deux degrés de liberté forme une face du complexe (dimension~2).  Les
+faces sont délimitées par des arêtes, qui sont des rayons tangents avec
+un degré de liberté (dimension~1), et par des sommets, qui sont des
+rayons bitangents dont la direction est fixée (dimension~0).  Dans sa
+thèse, Rivière montre comment utiliser le complexe de visibilité pour
+obtenir le polygone de visibilité 2D à partir d'un point et pour
+calculer la vue autour d'un point en mouvement \cite{riviere-phd:1997}.
+
+\begin{figure}[htbp]
+  \centering
+  \input{img/event/vcomplex.pstex_t}
+  \caption[Éléments du complexe de visibilité et leur correspondance
+  dans l'espace dual]%
+  {Éléments du complexe de visibilité et leur correspondance dans
+    l'espace dual.}
+  \label{fig:survey:dual}
+\end{figure}
+
+Une structure similaire pour la 3D, appelée \emph{asp}, a été présentée
+par Plantinga et Dyer dans le domaine de la vision par ordinateur
+\cite{plantinga:1990}.  L'asp permet de calculer le graphe d'aspect
+d'une scène.  De leur côté, Durand \emph{et al.} ont proposé d'utiliser
+le complexe de visibilité pour des scènes 3D composées d'objets lisses
+et polygonaux \cite{durand:1996}.  L'ensemble des segments est un
+sur-ensemble de dimension~4 (voire 5 pour certains éléments du
+complexe).  Les faces du complexe sont délimitées par des rayons
+tangents (dimension~3), des rayons bitangents (dimension~2), des rayons
+tritangents (dimension~1) et des sommets quadritangents.
+
+Le complexe de visibilité n'est pas vraiment une méthode de
+partitionnement de l'environnement.  Toutefois, elle peut être dérivée
+afin d'obtenir un partitionnement, soit sous forme de graphe de
+visibilité soit sous forme de graphe d'aspect.
+
+
+\subsubsection{Squelette de visibilité}
+
+Le squelette de visibilité a été défini par Durand \emph{et al.} et peut
+être vu comme une simplification du complexe de visibilité 3D ou comme
+un graphe défini par les événements visuels
+\cite{duguet-dea:2001,durand:2000,durand:1997}.  Les changements de
+visibilité ont souvent été caractérisés dans le domaine de
+l'informatique par des éléments comme les \emph{ensembles de droites
+  critiques}, ou \emph{surfaces critiques}, et les \emph{droites
+  poignardantes extrêmes}.  Les droites poignardantes extrêmes sont des
+droites passant par quatre arêtes: il peut s'agir de deux sommets de
+polygones, d'un sommet et deux arêtes ou de quatre arêtes.  Une surface
+critique est la surface décrite par une droite poignardante extrême
+lorsque l'une des contraintes liées à l'une des quatre arêtes est
+relâchée.  En recherchant toutes les surfaces critiques adjacentes à une
+droite poignardante extrême, nous constituons un graphe dont les
+n{\oe}uds représentent une droite poignardante extrême et dont les
+arêtes sont les surfaces critiques (figure~\ref{fig:survey:vis-skel}).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.51\linewidth]{img/event/vis-skel.eps}
+  \caption{Graphe de visibilité}
+  \label{fig:survey:vis-skel}
+\end{figure}
+
+Le squelette de visibilité est une structure d'information simple sur la
+visibilité qui permet un partitionnement de l'environnement en fonction
+des événements visuels.  La première version de cette méthode a
+initialement été présentée par Durand
+\cite{durand-phd:1999,durand:1997}.  Elle a été étendue par Duguet car
+la version initiale souffrait d'un manque de robustesse
+\cite{duguet-dea:2001}.
+
+\subsection{Conclusion}
+
+Nous avons décrit différentes manière de diviser un environnement
+architectural ou urbain 2D ou 3D en un ensemble d'espaces.  Il est
+intéressant de constater que certaines de ces méthodes sont déterminées
+par les événements visuels.  Dans ce cas, il est possible de déterminer
+à quel moment un observateur rencontrera une transition dans
+l'environnement.  Cependant, les méthodes de partitionnement possèdent
+différents inconvénient par rapport à l'analyse des espaces ouverts
+urbains le long de parcours.  Un premier inconvénient est qu'elles sont
+difficilement applicables aux environnements urbains car ce type de
+méthode nécessite des quantités importantes de mémoire pour contenir le
+partitionnement d'un environnement aussi vaste et utilise un temps de
+calcul trop long (quadratique ou plus en dimension~3).  Deuxièmement, le
+partitionnement des espaces ouverts urbains n'est pas vraiment
+concevable étant donné que ces espaces ont des limites floues, ambiguës,
+voire inexistantes \cite{teller:2003}.  Les méthodes de partitionnement
+proposent en effet des limites trop brutales.  De plus, nous pensons que
+la perception des changements continus ont leur importance dans la
+perception visuelle des espaces ouverts urbains.  Ceux-ci indiquent au
+moins à l'observateur qu'il avance dans l'espace et qu'il ne reste pas
+sur place.  Avec les méthodes de partitionnement, les espaces ouverts
+urbains ne sont plus considérés comme des flux continus d'attributs mais
+selon une trame discrète.  Enfin, les méthodes de partitionnement ont la
+possibilité de décrire le lieu et les générateurs d'un événement visuel,
+mais elles ne leur associent aucun poids.  Nous pouvons très bien
+imaginer donner à chaque type d'événements visuels une valeur indiquant
+son importance, car certains événements visuels attirent notre regard,
+d'autres nous éloignent et d'autres encore nous laissent indifférents.
+Par exemple, un événement visuel produit par l'apparition d'une grande
+avenue sera plus important à nos yeux que celui produit par une petite
+rue ou, dans un cas extrême, par un simple lampadaire.  Il est difficile
+de réaliser ce type de déduction à partir des méthodes de
+partitionnement.
+
+% Local variables:
+% mode: latex
+% fill-column: 72
+% End:

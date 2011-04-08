@@ -1,0 +1,179 @@
+%!PS-Adobe-2.0 EPSF-2.0
+%%Title: graph
+%%BoundingBox: 0 0 590 358
+%%Magnification: 1.0
+%%EndComments
+save
+/reencdict 12 dict def /ReEncode { reencdict begin
+/newcodesandnames exch def /newfontname exch def /basefontname exch def
+/basefontdict basefontname findfont def /newfont basefontdict maxlength dict def
+basefontdict { exch dup /FID ne { dup /Encoding eq
+{ exch dup length array copy newfont 3 1 roll put }
+{ exch newfont 3 1 roll put } ifelse } { pop pop } ifelse } forall
+newfont /FontName newfontname put newcodesandnames aload pop
+128 1 255 { newfont /Encoding get exch /.notdef put } for
+newcodesandnames length 2 idiv { newfont /Encoding get 3 1 roll put } repeat
+newfontname newfont definefont pop end } def
+/isovec [
+8#055 /minus 8#200 /grave 8#201 /acute 8#202 /circumflex 8#203 /tilde
+8#204 /macron 8#205 /breve 8#206 /dotaccent 8#207 /dieresis
+8#210 /ring 8#211 /cedilla 8#212 /hungarumlaut 8#213 /ogonek 8#214 /caron
+8#220 /dotlessi 8#230 /oe 8#231 /OE
+8#240 /space 8#241 /exclamdown 8#242 /cent 8#243 /sterling
+8#244 /currency 8#245 /yen 8#246 /brokenbar 8#247 /section 8#250 /dieresis
+8#251 /copyright 8#252 /ordfeminine 8#253 /guillemotleft 8#254 /logicalnot
+8#255 /hyphen 8#256 /registered 8#257 /macron 8#260 /degree 8#261 /plusminus
+8#262 /twosuperior 8#263 /threesuperior 8#264 /acute 8#265 /mu 8#266 /paragraph
+8#267 /periodcentered 8#270 /cedilla 8#271 /onesuperior 8#272 /ordmasculine
+8#273 /guillemotright 8#274 /onequarter 8#275 /onehalf
+8#276 /threequarters 8#277 /questiondown 8#300 /Agrave 8#301 /Aacute
+8#302 /Acircumflex 8#303 /Atilde 8#304 /Adieresis 8#305 /Aring
+8#306 /AE 8#307 /Ccedilla 8#310 /Egrave 8#311 /Eacute
+8#312 /Ecircumflex 8#313 /Edieresis 8#314 /Igrave 8#315 /Iacute
+8#316 /Icircumflex 8#317 /Idieresis 8#320 /Eth 8#321 /Ntilde 8#322 /Ograve
+8#323 /Oacute 8#324 /Ocircumflex 8#325 /Otilde 8#326 /Odieresis 8#327 /multiply
+8#330 /Oslash 8#331 /Ugrave 8#332 /Uacute 8#333 /Ucircumflex
+8#334 /Udieresis 8#335 /Yacute 8#336 /Thorn 8#337 /germandbls 8#340 /agrave
+8#341 /aacute 8#342 /acircumflex 8#343 /atilde 8#344 /adieresis 8#345 /aring
+8#346 /ae 8#347 /ccedilla 8#350 /egrave 8#351 /eacute
+8#352 /ecircumflex 8#353 /edieresis 8#354 /igrave 8#355 /iacute
+8#356 /icircumflex 8#357 /idieresis 8#360 /eth 8#361 /ntilde 8#362 /ograve
+8#363 /oacute 8#364 /ocircumflex 8#365 /otilde 8#366 /odieresis 8#367 /divide
+8#370 /oslash 8#371 /ugrave 8#372 /uacute 8#373 /ucircumflex
+8#374 /udieresis 8#375 /yacute 8#376 /thorn 8#377 /ydieresis ] def
+/Helvetica /Helvetica-iso isovec ReEncode
+/Helvetica-Bold /Helvetica-Bold-iso isovec ReEncode
+/Helvetica-iso findfont 12 scalefont setfont
+
+/nstr 7 string def
+/cshowint {
+  nstr cvs
+  dup stringwidth pop 2 div
+  currentpoint 3 1 roll exch sub exch moveto
+  show
+} def
+/rshow {
+  dup stringwidth pop
+  currentpoint 3 1 roll exch sub exch moveto
+  show
+} def
+/rshowint {
+  nstr cvs
+  rshow
+} def
+/drawLine {
+  % dx, dy, x, y
+  newpath
+  moveto
+  rlineto
+  stroke
+} def
+
+65 50 translate
+gsave
+[2 5] 2 setdash 0.5 setlinewidth 
+/Helvetica-iso findfont 12 scalefont setfont
+0 2.0 24.0 {
+  dup 12.0 mul dup
+  500.0 10 add exch 0 exch -10 exch drawLine
+  3 sub -10 exch moveto
+  0.0 add rshowint
+} for
+0 10.0 100.0 {
+  dup 5.0 mul dup
+  0 exch 288.0 10 add exch -10 drawLine
+  -20 moveto
+  0.0 add cshowint
+} for
+/Helvetica-Bold-iso findfont 14 scalefont setfont
+(Position (%)) dup stringwidth pop 2 div
+500.0 2 div exch sub -45 moveto show
+(Différence) dup stringwidth pop 2 div
+288.0 2 div exch sub -50 exch moveto
+gsave 90 rotate show grestore
+grestore
+gsave
+0.5 setlinewidth 
+0 288.0 -0.0 0 drawLine
+500.0 0 0 -0.0 drawLine
+grestore
+gsave
+0.0 setgray 0.5 setlinewidth 
+newpath
+0.0 168.095361732 moveto
+10.6382978723 82.588943903 lineto
+21.2765957447 196.690198937 lineto
+31.914893617 131.805437875 lineto
+42.5531914894 150.97227646 lineto
+53.1914893615 77.9737685218 lineto
+63.829787234 86.2198406598 lineto
+74.4680851065 128.315696965 lineto
+85.1063829785 105.058521358 lineto
+95.744680851 81.9359723856 lineto
+106.382978724 71.8799676767 lineto
+117.021276595 70.593080027 lineto
+127.659574468 79.5363318833 lineto
+138.29787234 79.9011025164 lineto
+148.936170213 68.6285855177 lineto
+159.574468085 67.2171458368 lineto
+170.212765957 67.872053708 lineto
+180.85106383 64.745962028 lineto
+191.489361702 74.6251343249 lineto
+202.127659575 100.629725424 lineto
+212.765957447 264.395479198 lineto
+223.404255319 120.06550825 lineto
+234.042553191 199.485498859 lineto
+244.680851064 104.656405085 lineto
+255.319148936 100.543763885 lineto
+265.957446808 90.225486539 lineto
+276.595744681 89.6123889612 lineto
+287.234042553 106.625430839 lineto
+297.872340425 112.92404106 lineto
+308.510638298 95.669502637 lineto
+319.14893617 103.752272967 lineto
+329.787234042 153.863805383 lineto
+340.425531915 104.068853202 lineto
+351.063829787 107.506629457 lineto
+361.702127659 86.8202050001 lineto
+372.340425532 77.2433051459 lineto
+382.978723404 73.6176471848 lineto
+393.617021276 82.5353234263 lineto
+404.255319149 134.033112253 lineto
+414.893617022 112.090243287 lineto
+425.531914894 153.710994703 lineto
+436.170212766 122.822558843 lineto
+446.808510639 97.7842672805 lineto
+457.44680851 61.1448617659 lineto
+468.085106383 70.4806070303 lineto
+478.723404255 83.1502982659 lineto
+489.361702127 234.562351164 lineto
+500.0 262.595860846 lineto
+stroke
+grestore
+/maxv (Distance moyenne de mouvement) stringwidth pop def
+maxv 50 add /boxSize exch def
+gsave
+newpath 255.0 252.0 moveto
+boxSize 0 rlineto
+0 16 1 mul rlineto
+boxSize neg 0 rlineto
+closepath gsave 1 setgray fill grestore stroke
+260.0 maxv add 257.0 moveto
+(Distance moyenne de mouvement) rshow
+gsave
+0.0 setgray 0.5 setlinewidth 
+newpath 270.0 maxv add 260.0 moveto
+20 0 rlineto stroke
+grestore
+grestore
+gsave
+2 setlinewidth 
+newpath 0 0 moveto
+500.0 0 rlineto
+0 288.0 rlineto
+-500.0 0 rlineto
+closepath stroke
+grestore
+restore
+showpage
+

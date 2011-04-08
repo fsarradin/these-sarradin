@@ -1,0 +1,29 @@
+\begin{picture}(0,0)%
+\includegraphics{img/skeleton/fire-front.pstex}%
+\end{picture}%
+\setlength{\unitlength}{2960sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(8771,1666)(568,-3194)
+\put(1576,-3136){\makebox(0,0)[b]{\smash{{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}(a) $t=0$}%
+}}}}
+\put(3976,-3136){\makebox(0,0)[b]{\smash{{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}(b)}%
+}}}}
+\put(6376,-3136){\makebox(0,0)[b]{\smash{{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}(c)}%
+}}}}
+\put(8401,-2386){\makebox(0,0)[lb]{\smash{{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}squelette}%
+}}}}
+\put(8401,-2086){\makebox(0,0)[lb]{\smash{{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}feu}%
+}}}}
+\put(8401,-1786){\makebox(0,0)[lb]{\smash{{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}herbe s\`eche}%
+}}}}
+\put(1576,-2236){\makebox(0,0)[b]{\smash{{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$S$}%
+}}}}
+\put(6451,-2461){\makebox(0,0)[b]{\smash{{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\mathbf{MA}(S)$}%
+}}}}
+\end{picture}%

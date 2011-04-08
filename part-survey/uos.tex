@@ -1,0 +1,1058 @@
+% uos.tex - Rapport sur les mesures applicables
+%
+% Copyright (C) 2004 - François Sarradin
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \title{Méthodes de caractérisation des espaces ouverts urbains
+   orientées champ}
+\author{François Sarradin}
+\laboratory{
+  CNRS -- CERMA UMR 1563 \\
+  École d'Architecture de Nantes \\
+  Rue Massenet -- BP 81\,931 \\
+  44\,319 NANTES CEDEX 3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sloppy
+\makeheader
+
+\label{chap:uos}
+
+\begin{reflexion}
+Tout est logique. Comprendre, c'est justifier. \par
+\raggedleft Eugène Ionesco, Rhinocéros \par
+\end{reflexion}
+
+\begin{intropar}
+  {S}\textsc{elon} Cullen, c'est par la vision que l'espace urbain est
+  d'abord appréhendé \cite{cullen:1971}.  En effet, les espaces urbains
+  proposent une grande diversité de formes qui est essentiellement due à
+  la culture locale, au contexte politique et économique, à la
+  géographie ou à l'histoire.  D'une rue à l'autre, d'un quartier à
+  l'autre, d'une ville à l'autre, l'aspect visuel de chaque composant
+  des espaces urbains est unique.  Afin de mieux comprendre la structure
+  des villes et de mieux expliquer la perception que nous en avons,
+  plusieurs chercheurs ont proposé des mesures de l'espace urbain.
+\end{intropar}
+
+Dans ce chapitre, nous allons nous intéresser à une catégorie de
+méthodes dites orientées champ.  Nous commencerons par définir ce type
+de méthode et par en donner les motivations.  Puis nous nous
+intéresserons à une méthode orientée champ bien connue appelée isovist
+et à une méthode qui en a été dérivée récemment, connue sous le nom de
+graphe de visibilité.  Nous découvrirons ensuite une autre méthode
+utilisant des projections sphériques de la forme du ciel pour analyser
+les espaces urbains.  Enfin, avant de conclure, nous terminerons par
+deux autres méthodes, l'une basée sur des outils d'analyse d'images et
+l'autre sur le potentiel de visibilité des points de l'espace.
+
+
+\section{Motivation des approches orientées champ}
+\label{sec:survey:uos}
+
+Les espaces ouverts urbains peuvent être vus comme des ensembles de
+volumes géométriques.  Les caractéristiques de ces volumes peuvent être
+déduites par des rapports euclidiens comme en proposent les théories
+albertiennes.  Cependant, selon Teller, une telle représentation des
+espaces ouverts n'est pas neutre car elle tend à favoriser les
+configurations spatiales dominantes, dans lesquelles l'espace ouvert
+détermine la forme de l'espace \cite{teller:2003}.  Elle ne considère
+pas vraiment les configurations résiduelles, dans lesquelles les objets
+architecturaux sont construits indépendamment des caractéristiques des
+espaces ouverts.  Les espaces ouverts urbains sont par nature continus.
+La recherche des limites de tels espaces n'est pas une investigation
+triviale, puisqu'elles sont plutôt virtuelles et souvent assez ambiguës
+à la différence des éléments pleins qui les entourent, parfaitement
+délimités par leur surface.  Ce qui ne peut être représenté par des
+volumes.  Ainsi, les outils traditionnels de quantification des espaces
+urbains, comme ceux basés sur le rapport Hauteur/Largeur ou le
+coefficient d'occupation des sols, ne traitent que des éléments
+construits et ignorent la nature spécifique des espaces ouverts.
+
+Pour tenter de caractériser les espaces ouverts urbains, il semble plus
+naturel de les considérer selon le point de vue de la conception
+\emph{plenum} de l'espace \cite{teller-phd:2001}.  D'après Couclelis, il
+est possible de considérer deux ontologies spatiales
+\cite{couclelis:1992}: la conception atomiste de l'espace et la
+conception plenum.  Dans la conception atomiste, l'espace est assimilé à
+un simple référentiel où les objets sont identifiés et définis par des
+limites claires et stables (un point, une ligne, une surface).  Les
+objets existent indépendamment de leurs attributs (couleur, texture,
+etc.) et peuvent être manipulés dans l'espace par différentes
+transformations (translation, rotation, homothétie, etc.) sans altérer
+leur identité.  En principe, les espaces ouverts urbains n'appartiennent
+pas à ce type d'objets.  En effet, leurs contours ne sont pas
+entièrement matériels et ils ne peuvent être manipulés de cette manière.
+Dans la conception plenum, l'espace n'existe pas \emph{a priori}.  Bien
+au contraire, selon cette conception, la définition d'un espace résulte
+d'une combinaison singulière de toute une série de facteurs, comme les
+axes dominants, la répartition des masses construites, etc.  Ces
+différents facteurs tendent à affecter les attributs qui peuvent être
+plus ou moins homogènes et stables.  Ainsi, l'ontologie plenum consiste
+à comprendre l'espace comme un champ continu, telle l'image d'un champ
+magnétique, par exemple.  Dans cette conception de l'espace, il est
+facile de concevoir que les limites d'un espace ouvert urbain soient
+floues et fortement liées à des contraintes externes ---~toute
+modification de la masse construite en un point du système, par exemple,
+intervient indirectement sur les espaces ouverts urbains qui
+l'entourent.  Cette ontologie permet aussi le chevauchement de
+différents espaces ouverts.  Enfin l'ontologie plenum semble
+correspondre au modèle écologique de la perception visuel proposé par
+Gibson, puisqu'il tend à considérer les variations dynamiques comme une
+interaction importante avec l'environnement \cite{gibson:1979}.
+
+La particularité des espaces ouverts urbains rend la recherche directe
+de leurs caractéristiques difficile.  Afin de caractériser ces espaces,
+nous devons réfléchir à un mode de représentation de l'environnement
+urbain qui ne les exclut pas les espaces ouverts.  Les méthodes
+orientées champ se basent sur l'ontologie plenum et comprennent les
+espaces ouverts urbains comme des champs continus d'attributs.  De tels
+méthodes existent déjà dans les domaines de l'aéraulique ou de la
+thermique pour étudier la ventilation ou la répartition calorifique des
+rues en divers points.  Dans le domaine de la perception visuelle dans
+les milieux architecturaux et urbains, d'autres méthodes existent.  Nous
+allons décrire dans les sections suivantes certaines de ces méthodes et
+discuter des caractéristiques qu'elles mesurent.
+
+
+\section[Méthodes 2D d'analyse visuelle des espaces ouverts urbains]%
+{Méthodes d'analyse visuelle des espaces ouverts urbains basées sur la
+  représentation 2D des espaces urbains}
+\label{sec:survey:foa}
+
+La conception plenum de l'espace est sous-jacente à un ensemble de
+méthodes récentes d'analyse des espaces architecturaux et urbains
+\cite{sarradin:2002,turner:2003}.  Dans cette section, nous décrivons
+quelques-unes de ces méthodes se basant sur la représentation en deux
+dimensions des espaces urbains.
+
+\subsection{Isovist}
+\label{subsec:survey:isovist}
+
+Le terme \emph{isovist} a été introduit à la fin des années soixante par
+Tandy pour l'analyse des paysages \cite{tandy:1967}.  Ce terme a été
+repris plus tard à la fin des années soixante-dix par Benedikt afin de
+constituer un outil d'analyse des espaces architecturaux et urbains.
+Benedikt se base sur la théorie de Gibson \cite{gibson:1966} qui
+considère l'environnement visuel comme une configuration ambiante de
+surfaces qui structure la lumière réfléchie.  En se basant sur cette
+hypothèse, la question que pose Benedikt est de savoir quelles
+informations de l'environnement sont disponibles au niveau d'un point de
+l'espace urbain ou architectural \cite{benedikt:1979}.  Il propose pour
+cela un outil appelé \emph{isovist} qu'il définit comme suit:
+
+\begin{quotation}\em
+\begin{otherlanguage}{english}
+  ``The environment is defined as a collection of visible real surfaces
+  in space.  An isovist is the set of all points visible from a given
+  vantage point in space and with respect to an
+  environment.''\footnote{\selectlanguage{francais} \og L'environnement
+    est défini comme un ensemble de surfaces réelles et visibles dans
+    l'espace.  Un isovist est l'ensemble de tous les points appartenant
+    à un environnement et visibles à partir d'un point de vue donné de
+    cet environnement.\fg}
+\end{otherlanguage}
+\cite{benedikt:1979}
+\end{quotation}
+
+Initialement, les isovists ont été conçus pour la caractérisation
+d'environnement en trois dimensions.  Mais étant donné la complexité
+qu'apporte ce type d'espace, seule l'application aux espaces 2D a été
+réalisée jusqu'à maintenant.
+
+\begin{definition}[Isovist]
+  Soit $E\subseteq\mathbbm{R}^2$ un environnement et $p\in E$ un point
+  de cet environnement. L'isovist $V_E(p)$ est défini par
+   \begin{equation}
+  V_E(p) = \left\{ q \in E | [pq] \cap E = [pq] \right\}.
+  \end{equation}
+\end{definition}
+
+\noindent%
+La figure~\ref{fig:survey:isovist} représente une série d'isovists dans
+un même environnement.  La forme de ces isovists varie beaucoup même si
+les déplacements sont minimes.  Ces déformations importantes semblent
+témoigner des événements complexes qui apparaissent aux yeux d'un
+observateur lorsqu'il se déplace.
+
+\begin{figure}[ht]
+  \begin{center}
+    \includegraphics[width=.9\linewidth]{img/uos/survey-isovist.eps}
+  \end{center}
+  \caption[Série d'isovists dans un environnement en forme de T]
+  {Série d'isovists dans un environnement en forme de T.  L'isovist
+    correspond à la surface visible par l'observateur dans un espace
+    depuis un point donné.}
+  \label{fig:survey:isovist}
+\end{figure}
+
+\begin{figure}[p]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/uos/isovist/tshape1-graph.eps}\\[6pt]
+  \includegraphics[width=.75\linewidth]{img/uos/isovist/tshape2-graph.eps}\\[6pt]
+  \includegraphics[width=.75\linewidth]{img/uos/isovist/tshape3-graph.eps}
+  \end{center}
+  \caption[Profils des isovists dans l'environnement de la
+           figure~\ref{fig:survey:isovist}]%
+           {Profils des isovists dans l'environnement de la
+             figure~\ref{fig:survey:isovist}.  L'orientation de
+             l'observateur pour le rayon situé au degré $0$ est vers la
+             droite de l'environnement.  Le degré $90$ est situé vers le
+             haut de l'environnement et le degré $-90$ est situé vers le
+             bas.}
+  \label{fig:survey:isovist-curve}
+\end{figure}
+
+Benedikt et Davis ont proposé un algorithme pour calculer des isovists
+dans des espaces fermés \cite{benedikt:1979a}.  Il est basé sur la
+recherche des segments qui composent le contour de l'isovist.  Une autre
+méthode consiste à calculer tous les rayons qui sont situés autour du
+point de vue et qui s'étendent jusqu'à un obstacle à la lumière.  Avec
+cette dernière méthode, nous pouvons établir un diagramme affichant la
+longueur des rayons en fonction de la direction du regard de
+l'observateur, formant ainsi ce que nous appelons des \emph{profils}
+d'isovists.  La figure~\ref{fig:survey:isovist-curve} présentent les
+profils des trois isovists de la figure~\ref{fig:survey:isovist}.  Ces
+trois profils montrent à nouveau l'importante différence qu'il existe
+entre les trois points de vue.  Par moment, sur ces graphiques, nous
+voyons des segments verticaux.  Cela correspond aux zones occlusives qui
+sont des régions invisibles à l'observateur et provoquant des
+irrégularités dans l'isovist.  Le graphique de la
+figure~\ref{fig:survey:surf-isovist} montre la capture d'une série
+d'isovists le long d'un chemin.  Plus exactement, il indique les
+variations des isovists entre les configurations du milieu et de droite
+dans la figure~\ref{fig:survey:isovist}.
+
+\begin{figure}[p]
+  \begin{center}
+  \includegraphics[width=.9\linewidth]{img/uos/isovist/tshape-isov.eps}
+  \end{center}
+  \caption[Série d'isovists pour un parcours dans l'environnement de la
+           figure~\ref{fig:survey:isovist}]%
+           {Série d'isovists pour un parcours dans l'environnement de la
+             figure~\ref{fig:survey:isovist}.  Le parcours correspond au
+             plus court chemin entre les points des configurations du
+             milieu et de droite dans la
+             figure~\ref{fig:survey:isovist}.}
+  \label{fig:survey:surf-isovist}
+\end{figure}
+
+\begin{algorithm}[ht]
+\caption{Algorithme de calcul d'un isovist dans un polygone.}%
+[Cet algorithme prend en paramètre un polygone $E$ représenté par une
+suite de point $\{q_0, q_1, \ldots, q_n \}$ et un point d'observation
+$p$.  Il renvoie le polygone de l'isovist représenté par la suite de
+points contenus dans $V$.]
+\bgroup \obeylines\obeyspaces %
+$S\leftarrow\emptyset$
+\textbf{pour tout} $q_i \in E$ \textbf{faire}
+\hspace*{2em} \textbf{si} $[pq_i]\cap E = [pq_i]$ \textbf{alors}
+  \hspace*{4em} $S \leftarrow S + \{ i \}$
+\hspace*{2em} \textbf{finsi}
+\textbf{finpour}
+$V\leftarrow\emptyset$
+\textbf{pour tout} $j \in \{ 0, \ldots, |S| \}$ \textbf{faire}
+\hspace*{2em} $V\leftarrow V + q_{S(j)}$
+\hspace*{2em} \textbf{si} $S(j+1) \neq S(j)+1 \pmod{|S|}$ \textbf{alors}
+  \hspace*{4em} \textbf{si} $[pq_{S(j)})\cap E \neq\emptyset$ \textbf{alors}
+    \hspace*{6em} $V\leftarrow V + [pq_{S(j)})\cap E$
+  \hspace*{4em} \textbf{finsi}
+  \hspace*{4em} \textbf{si} $[pq_{S(j+1)})\cap E \neq\emptyset$ \textbf{alors}
+    \hspace*{6em} $V\leftarrow V + [pq_{S(j+1)})\cap E$
+  \hspace*{4em} \textbf{finsi}
+\hspace*{2em} \textbf{finsi}
+\textbf{finpour}
+\egroup
+\label{algo:isovist}
+\end{algorithm}
+
+Cependant, un isovist n'est pas suffisant pour étudier un espace.  Pour
+cela, Benedikt propose de rassembler les isovists calculés dans un
+environnement entier ou le long d'un chemin \cite{benedikt:1979}.  Il
+forme ainsi ce qu'il appelle les \emph{champs d'isovists}.  Il s'agit
+pour chaque point de l'espace de calculer l'isovist correspondant et d'y
+associer un ensemble de descripteurs.  Chacune des valeurs numériques
+obtenues par les descripteurs est une quantité variant dans l'espace et
+définissant un champ de scalaires.
+
+\subsubsection{Expérimentations sur les isovists}
+
+Afin de réaliser une analyse dynamique des isovists, nous nous sommes
+intéressés au suivi de leurs transformations le long de parcours.  Pour
+cela, nous avons réalisé notre propre implémentation.  Ce qui a permis
+d'obtenir les graphiques des figures~\ref{fig:survey:isovist} et
+\ref{fig:survey:surf-isovist}.  Le graphique de la
+figure~\ref{fig:survey:surf-isovist} montre bien l'apparition de coins,
+leurs disparitions ou leurs déplacements le long du parcours.
+
+Ce que nous reprochons à la méthode de Benedikt est d'être limitée à la
+2D.  Même si cette méthode peut être appliquée à la 3D, aucune
+véritable implémentation n'existe actuellement.  Dans le cas de la 2D,
+si nous considérons les espaces urbains, il convient de représenter un
+environnement plus grand que celui qui est étudié pour ne pas se
+retrouver avec des isovists infinis.  Sinon, il est possible, comme
+l'ont proposés Benedikt et Davis, de limiter l'isovist par un \og
+horizon virtuel \fg \cite{benedikt:1979a}.  Dans le cas de la 3D, cet
+horizon est nécessaire pour limiter les parties de l'isovist orientées
+vers le ciel.
+
+
+\subsection{Graphes de visibilité}
+\label{susec:survey:vgraph}
+
+La théorie des graphes a souvent été utilisée en architecture et en
+urbanisme.  Les graphes facilitent en effet la représentation de
+réseaux, c'est-à-dire un ensemble d'éléments liés entre eux par une
+relation.  Turner \emph{et al.} ont étendu la notion d'isovist en
+utilisant la théorie des graphes \cite{turner:2001}.
+
+Un graphe est un ensemble de points et de lignes liant ces points,
+formant ainsi un réseau.  Les points du graphe sont souvent appelés des
+\emph{sommets} ou des \emph{n{\oe}uds}.  Les lignes reliant les sommets
+d'un graphe sont souvent appelées des \emph{arêtes} ou des \emph{arcs}.
+Un graphe peut être noté $G=(V,E)$ où $V$ est l'ensemble des sommets et
+où $E$ est l'ensemble des arêtes.  Selon la définition de \emph{Turner
+  et al.}, un graphe de visibilité $G=(V,E)$ est un graphe pour lequel
+chaque sommet $v_i\in V$ représente une position possible d'un
+observateur sur un plan.  Deux positions $v_i$ et $v_j$ de $V$ sont
+reliées par une arête $e_{ij}\in E$ si et seulement si $v_j$ est visible
+à partir de $v_i$.  Ici, la relation de visibilité est symétrique, donc
+si $e_{ij}$ est une arête du graphe $G$ alors $e_{ji}$ en est une autre.
+Le graphe de visibilité est donc un graphe non-orienté.
+
+La figure~\ref{fig:survey:vgraph} représente un graphe de visibilité
+dans un environnement en forme de T. Ce graphe contient 80 sommets et
+1\,421 arêtes. Si l'environnement mesure 10~m~$\times$~10~m, chaque
+sommet couvre une zone de 1~$\mbox{m}^2$. La zone en gris représente
+l'isovist visible à partir du sommet blanc. Les sommets noirs sont les
+sommets directement visibles depuis ce sommet. Les autres lui sont
+cachés. Malgré la faible quantité de sommets, le réseau d'arêtes est
+très dense et complexe.
+
+\begin{figure}[ht]
+  \begin{center}
+    \includegraphics[width=.9\linewidth]{img/uos/vgraph.eps}
+  \end{center}
+  \caption[Graphe de visibilité dans un environnement en forme de T]
+  {Graphe de visibilité dans un environnement en forme de T.  Le graphe
+    de visibilité apparaît sous la forme d'un réseau complexe. La zone
+    en gris représente l'isovist du sommet blanc. Cette zone est assez
+    similaire avec la zone couverte par les sommets noirs.  Il existe
+    toutefois une différence entre la zone en gris et la zone couverte
+    par les sommets noirs car chaque sommet noir représente une portion
+    de forme carré autour du sommet. Les sommets noirs sont les voisins
+    directs du sommet blanc.}
+  \label{fig:survey:vgraph}
+\end{figure}
+
+\subsubsection{Taille du voisinage}
+
+Le \emph{voisinage} d'un sommet $v_i$ de $V$ , noté $\mathcal{N}(v_i)$,
+est l'ensemble des sommets $v_j$ de $V$ reliés à $v_i$ par une arête.
+Le nombre de voisins d'un sommet $v_i$, noté $|\mathcal{N}(v_i)|$,
+permet de connaître le nombre de sommets visibles directement à partir
+d'une position donnée.  Sachant que chaque sommet du graphe de
+visibilité couvre une surface identique aux autres sommets, il est
+possible d'estimer l'aire visible dans une portion donnée du graphe.
+Autrement dit, la taille du voisinage d'un sommet fournit une estimation
+de l'aire de l'isovist en ce point:
+
+\begin{equation}
+\mathcal{A}(V_E(v_i))\approx (|\mathcal{N}(v_i)|+1).c_v,
+\end{equation}
+
+\noindent%
+où $V_E(v_i)$ est l'isovist au sommet $v_i$ et $c_v$ représente la
+surface couverte par un sommet (cette valeur est constante car le
+maillage est régulier).
+
+Dans la figure~\ref{fig:survey:vgraph}, la taille du voisinage du sommet
+blanc est égal à 35.  Il correspond au nombre de sommets noirs.  Avec
+les dimensions données auparavant, l'isovist du sommet blanc couvre une
+surface approximative de 36~$\mbox{m}^2$.
+
+\subsubsection{Coefficient de groupement}
+
+Le coefficient de groupement d'un sommet $v_i$, noté $\Gamma(v_i)$,
+correspond au rapport entre le nombre d'arêtes liant les sommets du
+voisinage de $v_i$, d'une part, et le carré du nombre de voisins,
+d'autre part:
+
+\begin{equation}
+\Gamma(v_i) = \frac{|\{e_{jk}\in E: v_j, v_k\in\mathcal{N}(v_i)\}|}%
+                   {|\mathcal{N}(v_i)|^2}.
+\end{equation}
+
+En théorie des graphes, le carré du nombre de sommets d'un sous-graphe
+correspond au nombre d'arêtes dans ce sous-graphe s'il était complet.
+Un graphe complet est un graphe dans lequel toute paire de sommets est
+liée par une arête.  Le graphe complet contient le nombre maximum
+d'arêtes que le graphe peut contenir sans qu'il y ait de doublons.
+
+Le sous-graphe considéré par $\Gamma(v_i)$ est le voisinage de $v_i$.
+Le calcul de $\Gamma(v_i)$ est donc le rapport entre le nombre d'arêtes
+entre les sommets dans ce voisinage et le nombre d'arêtes si le
+sous-graphe du voisinage était complet.  La valeur de $\Gamma$ varie
+entre 0 et 1.  Cette valeur est inférieure à 1 lorsqu'il existe dans le
+sous-graphe du voisinage au moins deux sommets qui ne sont pas liés par
+une arête.  Sachant que les sommets sont disposés sur un quadrillage, ce
+cas apparaît lorsque l'environnement possède localement des concavités,
+ou plus exactement lorsque l'isovist au sommet $v_i$ possède des
+concavités.  Ainsi, $\Gamma$ fourni un indice relatif à la convexité de
+l'environnement dans le voisinage d'une position donnée.
+
+Dans la figure~\ref{fig:survey:vgraph}, le coefficient de groupement
+pour le sommet blanc vaut environ $0,838$.  Cela signifie que l'aspect
+de l'environnement est plutôt convexe qu'étoilé.
+
+\subsubsection{Distances}
+
+Batty a introduit d'autres mesures qui permettent de réaliser des
+calculs sur des isovists à partir des graphes de visibilité
+\cite{batty:2001}.  À la manière de Benedikt \cite{benedikt:1979}, elles
+reposent sur la géométrie euclidienne de l'environnement.  Batty propose
+trois mesures basées sur la distance radiale à partir du point de vue.
+Il s'agit du plus grand rayon, du plus petit rayon et du rayon moyen.
+La première et la troisième mesure peuvent être définies comme suit:
+
+\begin{align}
+D^{\max}(v_i) &= \max_{v_j\in\mathcal{N}(v_i)} d_E(v_i, v_j), \\
+\bar{D}(v_i)  &= \frac{\sum_{v_j\in\mathcal{N}(v_i)} d_E(v_i, v_j)}%
+{|\mathcal{N}(v_i)|}.
+\end{align}
+
+\noindent%
+La distance minimum est définie par Batty par
+$D^{\min}(v_i)=\min_{v_j\in\mathcal{N}(v_i)} d_E(v_i,v_j)$
+\cite{batty:2001}.  Ceci est assez étonnant car d'après cette
+définition, $D^{\min}$ a toujours pour résultat $1$, alors que Batty
+trouve des valeurs différentes!
+
+L'ensemble de ces distances permettent de décrire l'écart qui nous
+sépare du contour de l'isovist (autrement dit, du contour de la partie
+visible de l'environnement).  Nous avons introduit ci-dessous le calcul
+de l'écart type des distances radiales \cite{sarradin:2002}:
+
+\begin{equation}
+\bar{D}^\sigma(v_i) = \sqrt{\frac{\sum_{v_j\in\mathcal{N}(v_i)}
+                                  (d_E(v_i, v_j) - \bar{D}(v_i))^2}%
+                                 {|\mathcal{N}(v_i)|}}.
+\end{equation}
+
+\noindent%
+Cette mesure détermine la régularité de l'environnement visible.
+
+\begin{figure}[p]{\em
+(a)\quad\includegraphics[width=.4\linewidth]{img/uos/vgraph-t/result_area.ps}\quad
+(b)\quad\includegraphics[width=.4\linewidth]{img/uos/vgraph-t/result_cluster.ps}\\
+(c)\quad\includegraphics[width=.4\linewidth]{img/uos/vgraph-t/result_max.ps}\quad
+(d)\quad\includegraphics[width=.4\linewidth]{img/uos/vgraph-t/result_avg.ps}\\
+(e)\quad\includegraphics[width=.4\linewidth]{img/uos/vgraph-t/result_disp.ps}
+}
+  \caption[Quelques mesures obtenues à partir d'un graphe de
+           visibilité]%
+           {Quelques mesures obtenues à partir d'un graphe de
+             visibilité.  Chaque mesure a été obtenue à partir d'un
+             graphe de 5\,120 sommets. \emph{(a)} taille du voisinage,
+             \emph{(b)} coefficient de groupement, \emph{(c)} distance
+             maximale, \emph{(d)} distance moyenne, \emph{(e)}
+             écart-type des distances.}
+  \label{fig:survey:vgraph-result}
+\end{figure}
+
+Des résultats de ces mesures et des précédentes sur l'environnement en T
+sont présentées dans la figure~\ref{fig:survey:vgraph-result}.  Plus
+exactement, la figure représente les variations des indicateurs vus
+précédemment.  Dans chaque schéma, plus le point est clair plus sa
+valeur est importante, sauf pour le coefficient de regroupement (b), qui
+pour un point clair indique un espace plutôt étoilé.
+
+\subsubsection{Expérimentation}
+
+Nous avons développé une application basée sur les graphes de visibilité
+pour des tests.  Cette application a été écrite en C essentiellement
+pour les systèmes Unix.  Elle analyse des environnements urbains
+modélisés dans des fichiers XML \cite{xml} et fournit à la fois des
+résultats numériques et des aperçus des mesures au format PostScript
+\cite{postscript:plrm}.  Afin de faciliter les accès à la mémoire et
+d'optimiser l'espace occupé par le graphe de visibilité, nous nous
+sommes basé sur une structure de données de type liste d'adjacence avec
+une allocation de la mémoire par bloc.  Les listes d'adjacence ne
+représentent en mémoire que les arêtes existantes, ce qui permet d'avoir
+une représentation condensée du graphe.  Les sommets sont indicés par
+des entiers codés sur 16~bits, ce qui limite le nombre de sommets à
+65\,536, mais aussi d'alléger l'occupation de la mémoire\footnote{Cette
+  implémentation a été utilisée durant le projet de DEA de Boukhezer
+  \cite{boukhezer:2002}.  Ce travail consistait à caractériser
+  différents tissus urbains à partir de différents indicateurs
+  environnementaux (énergétique, ensoleillement, aérodynamique,
+  visibilité, sonore).}.  Les performances obtenues par notre
+implémentation sont à peu près comparables à celles obtenues par Turner
+\cite{turner:2001a}.
+
+Après avoir utilisé notre outil sur différents exemples, nous avons pu
+remarquer la quantité excessive de mémoire qu'il fallait allouer pour
+avoir des résultats suffisamment précis dans des espaces urbains.  Pour
+un système possédant 256~Mo de mémoire vive, le nombre maximum de
+sommets que peut enregistrer l'application est d'environ 20\,000 selon
+la complexité de l'environnement.  Dans le cadre de l'analyse d'espaces
+urbains, la méthode des graphes de visibilité nécessite de modéliser un
+sur-ensemble de l'espace étudier.  Ce qui est normal car les éléments en
+dehors de l'espace étudié peuvent influencer la perception visuelle de
+cet espace.  De plus, un graphe de tout le sur-ensemble doit être créé.
+Pour une limite de 20\,000 sommets avec une précision de 1 à
+5~$\mbox{m}^2$, l'espace urbain à analyser doit être relativement
+restreint (2 à 10 hectares pour le sur-ensemble).  Aussi, dans un tissu
+urbain de faible densité, les mesures peuvent être faussées.  Mais de
+manière générale, La complexité du réseau des graphes de visibilité
+apparaîtra toujours comme un problème majeur dans le cadre d'analyses
+sur de grands espaces nécessitant une forte précision, comme les espaces
+urbains.
+
+\subsubsection{Conclusion}
+
+La méthode de Turner permet de compléter la méthode des isovists de
+Benedikt.  Elle offre des indicateurs plus simples et plus étendus,
+basés sur la théorie des graphes.  Turner a développé d'autres mesures
+destinées cette fois à des études sociologiques en se basant sur les
+théories de Hillier et Hanson \cite{hillier:1984}.  Mais, sur le plan de
+l'analyse visuelle des espaces urbains, la méthode des graphes de
+visibilité souffre de deux lacunes importantes: une lacune liée à la
+représentation utilisée qui ne permet pas d'étudier l'espace urbain avec
+suffisamment de précision, une autre vient du fait que cette méthode ne
+considèrent l'espace que par un plan en deux dimensions.  Cette dernière
+remarque est aussi valable pour la méthode des isovists.
+
+
+\section{Indicateurs basés sur l'analyse sphérique}
+\label{subsec:survey:teller}
+
+Teller a développé une métrique des espaces ouverts urbains basée sur
+les projections sphériques.  Les projections sphériques ont déjà été
+utilisées dans le cadre de l'urbanisme pour des analyses énergétiques et
+d'ensoleillement \cite{bosselmann:1998,markus:1980}.  Pour ce qui
+concerne l'analyse de la perception visuelle, les projections sphériques
+sont comparables aux isovists dans le sens où elles permettent de
+connaître l'ensemble des informations disponibles en un point de
+l'espace.  Toutefois, la projection sphérique fournit directement des
+informations sur l'espace tridimensionnel.  La principale originalité de
+la méthode de Teller tient dans le développement d'indicateurs
+morphologiques dérivés des vues sphériques et dans leur application à
+l'analyse orientée champ des espaces ouverts.  Par rapport à la méthode
+de Fisher-Gewirtzman basée sur une projection de rayons en 3D
+(cf.~§\ref{subsec:survey:fisher}), l'utilisation des projections
+sphériques permet de résoudre le problème de la complexité des
+algorithmes, qui ont tendance à ralentir les calculs.
+
+\subsection{Principes et définitions}
+\label{subsec:survey:algo-sph}
+
+La méthode utilisée par Teller consiste à projeter tous les points d'un
+environnement sur une sphère.  Dans le cadre de l'analyse des espaces
+urbains, Teller considère plus précisément des projections
+hémisphériques.  Cette transformation est suivie par une seconde
+projection permettant d'obtenir un ensemble de points sur un plan, plus
+facile à exploiter.  Cette projection, dite projection \og
+d'aplanissement \fg, permet de fournir d'autres propriétés aux
+projections hémisphériques.  Ainsi, la projection équidistante respecte
+les distances angulaires, la projection isoaire conserve les angles
+solides interceptés sur la sphère et la projection stéréographique
+conserve \og l'apparence \fg.  Chaque type de projection permet
+d'analyser des relations spécifiques entre les éléments pleins et les
+espaces ouverts.  Ces relations peuvent être formalisées par des
+paramètres directement mesurés dans les vues sphériques, comme
+l'ouverture de ciel.  Lorsqu'ils sont répétés pour un grand nombre de
+points, les projections hémisphériques permettent d'étudier les
+variations d'un paramètre à travers les espaces ouverts urbains.  En
+tant que telle, la métrique sphérique est proche des champs d'isovists
+de Benedikt \cite{benedikt:1979}, des théories sur l'écologie de la
+vision de Gibson \cite{gibson:1979} et d'autres théories sur la
+perception visuelle \cite{lehar:2003,heelan:1983}.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.50\linewidth]{img/uos/sphere/teller1.eps}
+  \end{center}
+  \caption[Quelques projections sphériques d'espaces urbains]%
+  {Quelques projections sphériques d'espaces urbains (d'après
+    \cite{teller-phd:2001}).  En haut à droite et en bas à gauche sont
+    deux projections stéréographiques, la première orientée vers le sol
+    et l'autre vers le ciel.}
+  \label{fig:survey:spherical}
+\end{figure}
+
+Le calcul d'une projection hémisphérique d'une scène urbaine peut se
+faire face par face, et pour chaque face, segment par segment.  Un
+traitement peut être fait pour chaque face afin de ne considérer que les
+parties qui seront projetées.  L'algorithme décrit par Teller et Azar
+dans \cite{teller:2001} pour calculer la projection sphérique d'un
+segment de droite est repris dans l'algorithme~\ref{algo:projseg-rec}.
+La procédure \textbf{projeterSegmentRec()} prend en argument un segment
+de droite tridimensionnel noté $L$, deux paramètres $t_1$ et $t_2$ de ce
+segment tel que $0 \leq t_1 < t_2 \leq 1$ et la fonction
+\textbf{projeter()} qui calcule la composée de la projection sphérique
+d'un point et d'une projection d'aplanissement.  Cette procédure renvoie
+une courbe 2D $C$ correspondant à une suite de points et représentant la
+projection sphérique de $L$.  La fonction \textbf{projeter()} prend en
+entrée un point 3D et renvoie un point 2D.  Elle varie selon le type
+d'aplanissement à appliquer (projection stéréographique, équidistante,
+isoaire, etc.).  Le premier appel à \textbf{projeterSegmentRec()} se
+fait en donnant à $t_1$ et $t_2$ les valeurs 0 et 1, respectivement, qui
+correspondent aux extrémités de $L$.  Pour que tous les points soient
+projeter, il faut ajouter dans $C$ le point \textbf{projeter}$(L(0))$
+avant l'appel de la procédure et le point \textbf{projeter}$(L(1))$
+après l'appel.  Les appels récursifs s'arrêtent lorsque la distance
+entre les points projetés est inférieure à la taille d'un pixel
+(c'est-à-dire 1).  La procédure \textbf{projeterSegmentRec()} propose
+une approximation de la projection sphérique d'un segment droite, mais
+suffisant pour un support d'image composé de pixels.  Des résultats de
+cet algorithme appliqué à une scène urbaine sont montrés dans la
+figure~\ref{fig:survey:spherical}.
+
+\begin{algorithm}[htbp]
+\caption{Algorithme récursif de projection d'un segment de droite.}%
+[Cet algorithme prend en paramètre un segment de droite $L$ paramétré.
+$t_1$ et $t_2$ sont deux paramètres entre 0 et 1 tel que $t_1 < t_2$.
+\og projeter \fg est une fonction qui calcule la projection sphérique
+d'un point.  $C$ est l'ensemble de points contenant les points du
+segment projeté.]
+\bgroup \obeylines\obeyspaces %
+\textbf{procédure} projeterSegmentRec ($L$, $t_1$, $t_2$, projeter, $C$)
+\textbf{début}
+\hspace*{2em} \textbf{si} $t_1 \neq t_2$ \textbf{alors}
+  \hspace*{4em} $p_1 \leftarrow \text{ projeter } (L(t_1))$
+  \hspace*{4em} $p_2 \leftarrow \text{ projeter } (L(t_2))$
+  \hspace*{4em} $t   \leftarrow \frac{t_1 + t_2}{2}$
+  \hspace*{4em} \textbf{si} $d_E(p_1,p_2) < 1$ \textbf{alors}
+    \hspace*{6em} $C \leftarrow C + \{ \text{ projeter } (L(t)) \}$
+  \hspace*{4em} \textbf{sinon}
+    \hspace*{6em} $\text{ projeterSegmentRec } (L, t_1, t, \mbox{projeter}, C)$
+    \hspace*{6em} $\text{ projeterSegmentRec } (L, t, t_2, \mbox{projeter}, C)$
+  \hspace*{4em} \textbf{finsi}
+\hspace*{2em} \textbf{finsi}
+\textbf{fin}
+\egroup
+\label{algo:projseg-rec}
+\end{algorithm}
+
+Les projections hémisphériques sont calculées à partir d'espaces ouverts
+urbains.  Ces espaces ouverts sont des éléments d'un environnement
+urbain.
+
+\begin{definition}[Environnement]
+  Un \emph{environnement} est un ensemble de faces considérées comme des
+  obstacles à la lumière.
+\end{definition}
+
+Dans un espace ouvert urbain, les projections hémisphériques orientées
+vers le zénith fournissent d'une part une image du masque des objets
+pleins (bâtiments, végétation, mobilier, etc.) et de l'autre une image
+du ciel découpée par ce masque.  Soit $E$ un environnement construit par
+une combinaison de faces représentant des obstacles à la lumière.  Une
+projection hémisphérique projète l'environnement $E$ sur un disque
+$D_{\mathrm{PS}}$ indépendant de $E$ et du centre de la projection.  Si
+on note $\mathrm{PS}_E(p)$ la projection hémisphérique de
+l'environnement $E$ au point $p$, $\mathrm{PS}_E(p)$ correspond à
+l'union entre le masque des objets pleins, noté $\mathcal{B}_E(p)$, et
+la projection du ciel, notée $\mathcal{S}_E(p)$:
+
+\begin{equation}
+\mathrm{PS}_E(p) = \mathcal{B}_E(p) \cup \mathcal{S}_E(p).
+\end{equation}
+
+\noindent%
+De plus, $\mathcal{B}_E(p) \cap \mathcal{S}_E(p) = \emptyset$.  Puisque
+le ciel est uniforme, nous pouvons considérer que la projection du ciel
+correspond à la part du disque de projection $D_{\mathrm{PS}}$ qui n'est
+pas couverte par $\mathcal{B}_E(p)$:
+
+\begin{equation}
+\mathcal{S}_E(p) = D_{\mathrm{PS}} - \mathcal{B}_E(p).
+\end{equation}
+
+\subsection{Indicateurs morphologiques}
+
+\subsubsection{Rapport de masse}
+
+La portion de surface de ciel $\Omega_E(p)$ dans une projection
+sphérique d'un environnement $E$ en un point $p$ correspond au rapport
+entre la surface de la forme de ciel $\mathcal{S}_E(p)$ au point $p$ et
+la surface du disque de projection $D_{\mathrm{PS}}$:
+
+\begin{equation}
+\Omega_E(p) = \frac{\mathcal{A}(\mathcal{S}_E(p))}{\pi.r_{\mathrm{PS}}^2},
+\end{equation}
+
+\noindent%
+où $r_{\mathrm{PS}}$ est le rayon du disque de projection
+$D_{\mathrm{PS}}$.  Le rapport de masse est calculé en utilisant une
+projection stéréographique qui permet de conserver l'apparence des
+formes.  Cet indicateur varie en fonction du facteur de masse
+caractérisant la relation entre les bâtiments et les espaces ouverts.
+S'il tend vers $0$, l'espace est totalement fermé et aucune portion de
+ciel n'est visible.  S'il tend vers $1$, l'espace est totalement vierge,
+il ne contient aucune construction.  Selon Teller, en tant que tel, cet
+indicateur est une estimation de la sensation d'ouverture que nous
+pouvons ressentir en un point de l'environnement, même si nous savons
+que cette sensation est liée à un grand nombre de facteurs, comme la
+couleur des façades, la présence de fenêtres, la déclivité du sol, etc.
+\cite{teller:2003}.  Les variations spatiales de l'ouverture de ciel
+sont caractéristiques des modifications du facteur de masse dans un
+espace.  Un exemple d'application de cet indicateur est donné dans les
+images de la figure~\ref{fig:survey:openness}.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/uos/sphere/teller2.eps}
+  \end{center}
+  \caption[Variation de l'indicateur de rapport de masse dans différents
+  espaces urbains]%
+  {Variation de l'indicateur de rapport de masse dans différents espaces
+    urbains (d'après \cite{teller-phd:2001}).}
+  \label{fig:survey:openness}
+\end{figure}
+
+\subsubsection{Longueur de vue}
+
+Le rapport de masse ne permet pas de faire la différence entre des
+éléments de grande taille éloignés et des éléments de petite taille
+rapprochés.  La relativité de cet indicateur néglige ainsi l'échelle
+urbaine.  Selon Teller, il faudrait considérer la distance qui sépare
+l'observateur des bâtiments.
+
+À partir d'un point d'observation $p$ de l'environnement $E$, il est
+possible de percevoir un ensemble de faces.  Soit $F_E(p)$ l'ensemble
+des faces ou des portions de faces de l'environnement $E$ visibles à
+partir de $p$.  La longueur de vue moyenne $L_E$ et la longueur de vue
+caractéristique $\overline{L_E}$ en un point $p$ sont définies par
+
+\begin{align}
+L_E(p) &= \frac{\sum_{f\in F_E(p)}\mathcal{A}(f).d_E(p,f)}%
+              {\sum_{f\in F_E(p)}\mathcal{A}(f)} \\
+\overline{L_E}(p) &= \frac{L_E(p)\cdot\Omega_E(p)}%
+                         {\sum_{f\in F_E(p)}\mathcal{A}(f)}.
+\end{align}
+
+Selon Teller, la longueur de vue moyenne est très proche du calcul
+d'aire des isovists \cite{teller-phd:2001}.  En effet, celle-ci permet
+d'estimer la dimension de l'espace ouvert.  La longueur de vue
+caractérisque correspond à la longueur de vue moyenne pondérée par
+l'aire moyenne du masque.  Ceci permet de faire la différence entre des
+situations qui sont équivalentes pour la longueur de vue moyenne.  Par
+exemple, la longueur de vue moyenne d'un masque situé à 50~mètres de
+l'observateur et occupant 80~\% de la surface du ciel est égale à celle
+d'un masque situé à la même distance mais occupant 20~\% de la surface
+du ciel \cite{teller-phd:2001}.
+
+\subsubsection{Excentricité et étalement}
+
+Si nous nous intéressons à la régularité d'un espace urbain, les
+indicateurs cartésiens traitent la régularité des hauteurs des bâtiments
+en termes mono-dimensionnels.  Mais il peut être plus intéressant de
+considérer cette régularité telle qu'elle est perçue par l'observateur.
+Pour cela, nous pouvons nous intéresser à des indicateurs statistiques
+tel que la circularité basée sur la distribution des hauteurs
+angulaires.  Appliqué aux projections sphériques, les outils
+statistiques rendent compte de la régularité de la ligne de ciel.
+Cependant, ce type de mesure est particulièrement sensible au bruit.
+Par exemple, pour la circularité qui correspond au rapport
+$\mathcal{A}/\mathcal{P}^2$, si des pics apparaissent sur le contour de
+la forme, le périmètre augmentera plus rapidement que l'aire.  Afin de
+minimiser les effets du bruit, Teller propose de calculer le moment
+d'inertie des formes de ciel.
+
+Le moment d'inertie correspond à un ensemble de mesures utilisées en
+mécanique et en analyse d'images uniquement basées sur le contenu des
+formes.  Le moment d'inertie $\mu_{ij}$ d'ordre $i+j$ d'une surface $S$
+est défini par
+
+\begin{equation}
+\mu_{ij}(S) = \iint_S x^i y^j\,dx\,dy.
+\end{equation}
+
+\begin{nota}
+  Le moment d'inertie $\mu_{00}$ correspond à la fonction qui calcule
+  l'aire d'une surface.  Ainsi, $\mu_{00} = \mathcal{A}(S)$.  Quant à
+  l'application $(\mu_{10}/\mu_{00},\mu_{01}/\mu_{00})$, elle permet de
+  situer le barycentre d'une forme.
+\end{nota}
+
+Les moments d'inertie d'ordre 2 ($\mu_{20}$, $\mu_{11}$ et $\mu_{02}$)
+sont sensibles à l'orientation de la forme par rapport aux axes du
+repère.  Cette orientation est calculée à partir de la matrice d'inertie
+d'ordre 2, définie par
+
+\begin{equation}
+\left(
+  \begin{array}{cc}
+  \mu_{20} & \mu_{11} \\
+  \mu_{11} & \mu_{02}
+  \end{array}
+\right).
+\end{equation}
+
+\noindent%
+Les valeurs propres de la matrice sont données par
+
+\begin{align}
+I_1 &\equiv \frac{\mu_{20} + \mu_{02}
+                  - \sqrt{(\mu_{20} - \mu_{02})^2 + 4\mu_{11}}}%
+                 {2}, \\
+I_2 &\equiv \frac{\mu_{20} + \mu_{02}
+                  + \sqrt{(\mu_{20} - \mu_{02})^2 + 4\mu_{11}}}%
+                 {2}.
+\end{align}
+
+Ces deux fonctions sont utilisées en analyse d'images.  À partir de $I_1$
+et $I_2$, il est possible de calculer deux paramètres appelés
+excentricité ($\mathrm{E}$) et étalement ($\mathrm{S}$)
+
+\begin{align}
+\mathrm{E}(S) &= \frac{I_1(S)}{I_2(S)}, \\
+\mathrm{S}(S) &= \frac{I_1(S) + I_2(S)}{\mathcal{A}^2(S)}.
+\end{align}
+
+\noindent%
+L'excentricité $\mathrm{E}(S)$ a une valeur qui est supérieure à 1.  Si
+$\mathrm{E}(S)$ vaut 1, alors la forme $S$ est parfaitement symétrique
+vis-à-vis de son centre de gravité, c'est-à-dire que si nous disposons
+d'un repère orthonormal centré au niveau du centre de symétrie, alors
+pour tout point $(x,y)$ de $S$, il existe aussi un point $(-x,-y)$ qui
+soit élément de $S$.  Si la valeur de $\mathrm{E}(S)$ est strictement
+supérieure à 1, alors une dissymétrie apparaît.  Ainsi, l'excentricité
+est appliquée aux formes de ciel, elle peut être considérée comme une
+mesure caractérisant l'anisotropie de l'espace.  Un exemple
+d'application de cette mesure est donné dans la
+figure~\ref{fig:survey:eccentricity}.
+
+\begin{figure}[ht]
+  \begin{center}
+  \includegraphics[width=.5\linewidth]{img/uos/sphere/teller3.eps}
+  \end{center}
+  \caption[Variation de l'indicateur d'excentricité]%
+  {Variation de l'indicateur d'excentricité (d'après
+    \cite{teller-phd:2001}).}
+  \label{fig:survey:eccentricity}
+\end{figure}
+
+L'étalement est une mesure complémentaire qui permet de mesurer la
+dispersion de la masse d'une forme donnée.  Cet indicateur est assez
+proche de l'indicateur donné par le rapport de aire sur le carré du
+périmètre.  Mais il s'en distingue par le fait qu'elle est indépendante
+du périmètre, valeur trop instable par rapport à la précision des
+projections.  Dans le cadre des projections sphériques, l'étalement a
+une valeur minimale de $1/2\pi$, ce qui correspond à un disque.  Pour
+les autres formes, l'étalement a une valeur supérieure à celle du
+disque.
+
+\subsection{Discussion}
+
+Nous avons vu ici une méthode d'analyse des espaces ouverts urbains
+utilisant des projections sphériques.  Cette méthode est la première
+méthode utilisant une représentation en trois dimensions que nous
+rencontrons ici.  En quelque sorte, les projections sphériques peuvent
+être vues comme des isovists 3D sans horizon, permettant de représenter
+tous les objets quelque soit leur distance.  De plus, nous sommes placés
+au plus près de l'observateur pour effectuer des analyses des espaces
+ouverts urbains.  Avec l'algorithme que nous avons présenté
+précédemment, la méthode des projections sphériques est une méthode
+simple et qui permet d'obtenir des analyses rapidement.  Une telle
+méthode offre des perspectives intéressantes dans le cadre de notre
+projet.
+
+
+\section{Autres méthodes}
+
+\subsection{Analyse urbaine basée sur l'analyse d'images}
+\label{subsec:survey:ratti}
+
+La représentation la plus simple de la texture urbaine est d'utiliser
+une image discrète binaire, où chaque pixel est associé à deux valeurs
+possibles: 1 si le pixel représente une surface contenant une
+construction et 0 sinon.  Par contre, si l'information de hauteur est
+associée à chaque pixel, nous obtenons un \emph{modèle digital
+  d'élévation} (DEM).  Ces deux représentations des espaces urbains
+peuvent être considérées comme des tableaux bidimensionnels de pixels
+(figure~\ref{fig:survey:ratti-dem}).  Ratti et Richens ont proposé
+d'utiliser des outils de traitement d'images pour les analyser
+\cite{ratti:2004}.
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=.80\linewidth]{img/uos/ratti-dem.eps}
+  \caption[Cartes d'un environnement urbain du centre de Londres]%
+  {Cartes d'un environnement urbain du centre de Londres (d'après
+    \cite{ratti:2004}).  La carte de gauche représente les volumes
+    construits en noir et les espaces ouverts en blanc.  La carte de
+    droite représente la hauteur des bâtiments en niveaux de gris.  Il
+    s'agit du modèle digital d'élévation de la carte de droite, sachant
+    que plus un élément est noir plus il est haut.}
+  \label{fig:survey:ratti-dem}
+\end{figure}
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=.6\linewidth]{img/uos/ratti-svf.eps}
+  \caption[Facteurs de vue du ciel au sol d'un environnement urbain du
+  centre de Londres]%
+  {Facteurs de vue du ciel au sol d'un environnement urbain du centre de
+    Londres (d'après \cite{ratti:2004}).}
+  \label{fig:survey:ratti-svf}
+\end{figure}
+
+En comptant les points qui n'ont pas la valeur 0, nous obtenons la
+surface du volume construit ou en cumulant toutes les hauteurs, nous
+obtenons la quantité de volume construit.  Grâce aux hauteurs, il est
+possible de calculer l'ombre d'un bâtiment et si ce calcul est répété
+plusieurs fois, il est possible d'obtenir l'indicateur de facteur de vue
+du ciel (figure~\ref{fig:survey:ratti-svf}), qui peut être comparé à
+l'indicateur de rapport de masse développé par Teller \cite{teller:2003}
+(cf.~§\ref{subsec:survey:teller}).
+
+La méthode développée par Ratti et Richens est intéressante car elle
+prend en compte la hauteur des bâtiments dans l'analyse des espaces
+urbains.  De plus les algorithmes utilisés sont simples et rapides
+\cite{ratti:2004}.  Toutefois, la méthode ne peut prendre en compte la
+hauteur du sol.  De plus, elle se base dès le départ sur des
+informations discrètes, représentées par la hauteur des volumes
+construits.  Enfin, elle ne prend pas en compte les éléments de façade
+et n'effectue qu'une approximation des éléments en pente.
+
+
+\subsection{Indicateurs d'ouverture d'espace}
+\label{subsec:survey:fisher}
+
+Fisher-Gewirtzman a proposé une alternative aux méthodes
+bidimensionnelles \cite{fisher-phd:1998}.  Celle-ci consiste à calculer
+un indicateur d'ouverture d'espace, noté SOI \emph{(Spatial Openness
+  Index)}, représentant les volumes des espaces ouverts potentiellement
+visibles à partir d'un point.
+
+Dans cette méthode, l'espace ouvert $E$ est représenté par un maillage
+tridimensionnel et le ciel est représenté par un hémisphère supposé être
+à une distance finie.  Cet hémisphère est considéré comme une limite
+pour les calculs.  Un ensemble de volumes construits $B = \{ b_1, b_2,
+\ldots, b_n \} \subset \mathbbm{Z}^3$ remplissent les cases de l'espace
+ouvert $E$.  Cette représentation des espaces urbains ressemble un peu à
+la représentation de Ratti et Richens \cite{ratti:2004} appliquée à la
+3D, dans le sens où les deux méthodes utilise un modèle discret de
+l'environnement.  Cependant, dans cette représentation, les bâtiments ne
+sont pas forcément complètement rattachés au sol.
+
+La fonction $\mathrm{SOI}$ calcule pour chaque position $p$ de l'espace
+le nombre de points de l'environnement $E$ qui y sont visibles.  Son
+principe apparaît dans la figure~\ref{fig:survey:soi} et il est calculé
+de la manière suivante:
+
+\begin{equation}
+\mathrm{SOI}(p) = \sum_{q\in E} v(p,q),
+\end{equation}
+
+\noindent%
+où $v$ est la relation d'intervisibilité entre deux points, c'est-à-dire
+que pour tous points $p$ et $q$
+
+\begin{equation}
+v(p,q) = \left\{
+  \begin{array}{ll}
+  1 & \text{si $q$ est visible depuis $p$,} \\
+  0 & \text{sinon.}
+  \end{array}
+\right.
+\end{equation}
+
+\noindent%
+$p$ est visible depuis $q$ si le segment $[pq]$ ne traverse pas de
+volume construit.
+
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.4\linewidth]{img/uos/soi.eps}
+  \caption[Calcul de l'indicateurs d'ouverture d'espace en un point]%
+  {Calcul de l'indicateurs d'ouverture d'espace en un point.  Dans la
+    figure, nous cherchons à calculer l'indicateur $\mathrm{SOI}$ au
+    point $p$, sachant que l'élément en hachuré représente un bâtiment.
+    Il suffit de compter le nombre de carrés à l'intérieur du disque en
+    pointillé, représentant la ligne d'horizon, et de retirer du compte
+    les carrés en gris foncé, qui ne peuvent être vus à partir du point
+    $p$.}
+  \label{fig:survey:soi}
+\end{figure}
+
+De ce fait, la méthode de Fisher-Gewirtzman est en quelque sorte une
+implémentation de la méthode des isovists dans un environnement 3D avec
+un «~horizon~» (l'hémisphère représentant le ciel).  Toutefois, il est
+principalement reproché à cette méthode d'être lente \cite{turner:2003}
+et elle peut être gourmande en mémoire si un niveau de détail important
+est nécessaire.  Un algorithme plus efficace a été proposé récemment
+\cite{fischer:2002}.  Des tests ont été effectués avec cette méthode,
+mais seulement sur des exemples simples \cite{fischer:2003}.
+
+
+\section{Conclusion}
+
+Dans cette section, nous avons décrit différentes méthodes d'analyse
+des espaces ouverts urbains basées sur le concept d'approche orientée
+champ.  Les méthodes peuvent être divisées entre celles qui se basent
+sur un environnement en deux dimensions et celles qui prennent en compte
+les trois dimensions.
+
+Le principaux inconvénients des méthodes basées sur la 2D sont qu'elles
+ne peuvent considérer ni la hauteur des bâtiments (et spécialement les
+variations de ces hauteurs) ni le relief du terrain sur lequel repose
+les objets urbains.  En effet, pour ces méthodes, la ville est composée
+de bâtiments d'une hauteur infinie et censée reposer sur un sol
+parfaitement plat.  Ceci a pour effet de produire parfois des
+incohérences entre le résultat des méthodes et ce qui est perçu.  De
+telles incohérences pourraient apparaître dans des villes comme
+Luxembourg, Lyon ou Salzbourg qui possèdent beaucoup de relief.  Même si
+des auteurs comme Ratti et Richens proposent dans ce cas de mettre au
+même niveau les bâtiments \cite{ratti:2004}, cela provoque des
+transformations dans le paysage urbain qui n'existent pas et seraient
+totalement incohérentes avec la réalité.
+
+Nous avons examiné deux méthodes basées sur une discrétisation de
+l'espace urbain en deux dimensions (§\ref{subsec:survey:ratti}) et en
+trois dimensions (§\ref{subsec:survey:fisher}).  Cependant, ce mode de
+représentation comporte un certain nombre de défauts selon Foley
+\emph{et al.} \cite{foley:1996}.  En général, les éléments présentant
+des courbures ne sont représentés que partiellement.  Il est possible
+d'augmenter la précision de la représentation en diminuant la taille des
+pixels ou des voxels, mais il faut alors calculer des images plus
+spacieuses et les algorithmes sont par conséquent plus longs.
+
+La méthode de Teller semble avoir beaucoup plus d'avantages dans le
+cadre de notre projet.  Elle permet des analyses dans un espace 3D, au
+plus près de l'observateur.  Elle est la seule qui soit réellement
+capable de considérer des éléments quelque soit leur distance, sans
+utiliser d'horizon, dans un environnement urbain 3D.  En utilisant des
+projections sur un plan discret, la méthode de Teller est aussi la seule
+à considérer au mieux une particularité assez importante du système
+visuel humain, consistant à attribuer une importance différente ente les
+éléments proches et les éléments lointains.  Les informations sont ainsi
+classées selon leur distance.  Enfin, la représentation sphérique du
+monde visuel coïncide avec différentes théories de la perception
+visuelle, que nous avons décrites en introduction de ce mémoire
+(cf.~\ref{subsec:intro:visual-psy}).
+
+Par la suite, nous découvrirons de quelle manière nous utilisons les
+projections sphériques de la forme du ciel pour caractériser les
+variations de la morphologie des espaces ouverts urbains le long de
+parcours.  Toutefois, il ne s'agit pas ici d'une première tentative.
+Teller a déjà effectuer une comparaison des variations de son indicateur
+de rapport de masse sur parcours \cite{teller-phd:2001} et Batty a
+réaliser des études similaires avec les graphes de visibilité
+\cite{batty:2001}.  Cependant, nous avons vu que ces méthodes ne sont
+pas réellement adaptés à l'analyse des variations morphologiques car
+elles ne permettent pas de suivre indépendamment tous les déplacements
+des éléments composant les espaces urbains.  Nous proposons ici une
+méthode proposant une solution à ce problème.
+
+% Local Variables:
+% mode: latex
+% fill-column: 72
+% End:

@@ -1,0 +1,25 @@
+\begin{picture}(0,0)%
+\includegraphics{img/measure/mes-hausdorff.pstex}%
+\end{picture}%
+\setlength{\unitlength}{2960sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(8630,4270)(158,-4169)
+\put(4951,-1636){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\epsilon$}%
+}}}
+\put(8401,-1186){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\epsilon'$}%
+}}}
+\put(2476,-3661){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}point de $T$}%
+}}}
+\put(2476,-4111){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}point de $S$}%
+}}}
+\put(4501,-3661){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\mathcal{H}(S|T)=\epsilon$}%
+}}}
+\put(4501,-4111){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\mathcal{H}(T|S)=\epsilon'$}%
+}}}
+\end{picture}

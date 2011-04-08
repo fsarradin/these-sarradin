@@ -1,0 +1,19 @@
+\begin{picture}(0,0)%
+\includegraphics{img/survey-ccl/observer.pstex}%
+\end{picture}%
+\setlength{\unitlength}{2072sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(11425,4395)(242,-3776)
+\put(6001,-946){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\sfdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\mathcal{C}(0)$}%
+}}}
+\put(11645,-2589){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\sfdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\mathcal{C}(1)$}%
+}}}
+\put(6858,-2518){\makebox(0,0)[rb]{\smash{\SetFigFont{12}{14.4}{\sfdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\mathcal{C}$}%
+}}}
+\end{picture}

@@ -1,0 +1,19 @@
+\begin{picture}(0,0)%
+\includegraphics{img/skeleton/ske-shape.pstex}%
+\end{picture}%
+\setlength{\unitlength}{2960sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(2712,1524)(1189,-1873)
+\put(1201,-736){\makebox(0,0)[rb]{\smash{\SetFigFont{11}{13.2}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\partial S$}%
+}}}
+\put(2101,-1261){\makebox(0,0)[b]{\smash{\SetFigFont{11}{13.2}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\mathrm{int}(S)$}%
+}}}
+\put(3901,-1186){\makebox(0,0)[lb]{\smash{\SetFigFont{11}{13.2}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\overline{S}$}%
+}}}
+\end{picture}

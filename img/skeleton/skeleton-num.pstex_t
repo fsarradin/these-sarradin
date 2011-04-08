@@ -1,0 +1,15 @@
+\begin{picture}(0,0)%
+\includegraphics{img/skeleton/skeleton-num.pstex}%
+\end{picture}%
+\setlength{\unitlength}{1973sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(6394,3586)(390,-3736)
+\put(2551,-3736){\makebox(0,0)[b]{\smash{{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}discr\'etisation}%
+}}}}
+\end{picture}%

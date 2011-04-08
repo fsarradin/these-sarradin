@@ -1,0 +1,21 @@
+\begin{picture}(0,0)%
+\includegraphics{img/skel-cmp/vor-ex.pstex}%
+\end{picture}%
+\setlength{\unitlength}{2960sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(6924,2016)(139,-1615)
+\put(901,-1561){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}(a)}%
+}}}
+\put(2701,-1561){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}(b)}%
+}}}
+\put(4501,-1561){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}(c)}%
+}}}
+\put(6301,-1561){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}(d)}%
+}}}
+\end{picture}

@@ -1,0 +1,173 @@
+%!PS-Adobe-2.0 EPSF-2.0
+%%Title: propag.pstex
+%%Creator: fig2dev Version 3.2 Patchlevel 3d
+%%CreationDate: Mon Aug  2 10:21:52 2004
+%%For: fs@drakkar.cerma.archi.fr (Francois Sarradin)
+%%BoundingBox: 0 0 138 133
+%%Magnification: 0.5000
+%%EndComments
+/$F2psDict 200 dict def
+$F2psDict begin
+$F2psDict /mtrx matrix put
+/col-1 {0 setgray} bind def
+/col0 {0.000 0.000 0.000 srgb} bind def
+/col1 {0.000 0.000 1.000 srgb} bind def
+/col2 {0.000 1.000 0.000 srgb} bind def
+/col3 {0.000 1.000 1.000 srgb} bind def
+/col4 {1.000 0.000 0.000 srgb} bind def
+/col5 {1.000 0.000 1.000 srgb} bind def
+/col6 {1.000 1.000 0.000 srgb} bind def
+/col7 {1.000 1.000 1.000 srgb} bind def
+/col8 {0.000 0.000 0.560 srgb} bind def
+/col9 {0.000 0.000 0.690 srgb} bind def
+/col10 {0.000 0.000 0.820 srgb} bind def
+/col11 {0.530 0.810 1.000 srgb} bind def
+/col12 {0.000 0.560 0.000 srgb} bind def
+/col13 {0.000 0.690 0.000 srgb} bind def
+/col14 {0.000 0.820 0.000 srgb} bind def
+/col15 {0.000 0.560 0.560 srgb} bind def
+/col16 {0.000 0.690 0.690 srgb} bind def
+/col17 {0.000 0.820 0.820 srgb} bind def
+/col18 {0.560 0.000 0.000 srgb} bind def
+/col19 {0.690 0.000 0.000 srgb} bind def
+/col20 {0.820 0.000 0.000 srgb} bind def
+/col21 {0.560 0.000 0.560 srgb} bind def
+/col22 {0.690 0.000 0.690 srgb} bind def
+/col23 {0.820 0.000 0.820 srgb} bind def
+/col24 {0.500 0.190 0.000 srgb} bind def
+/col25 {0.630 0.250 0.000 srgb} bind def
+/col26 {0.750 0.380 0.000 srgb} bind def
+/col27 {1.000 0.500 0.500 srgb} bind def
+/col28 {1.000 0.630 0.630 srgb} bind def
+/col29 {1.000 0.750 0.750 srgb} bind def
+/col30 {1.000 0.880 0.880 srgb} bind def
+/col31 {1.000 0.840 0.000 srgb} bind def
+
+end
+save
+newpath 0 133 moveto 0 0 lineto 138 0 lineto 138 133 lineto closepath clip newpath
+-14.4 146.5 translate
+1 -1 scale
+
+/cp {closepath} bind def
+/ef {eofill} bind def
+/gr {grestore} bind def
+/gs {gsave} bind def
+/sa {save} bind def
+/rs {restore} bind def
+/l {lineto} bind def
+/m {moveto} bind def
+/rm {rmoveto} bind def
+/n {newpath} bind def
+/s {stroke} bind def
+/sh {show} bind def
+/slc {setlinecap} bind def
+/slj {setlinejoin} bind def
+/slw {setlinewidth} bind def
+/srgb {setrgbcolor} bind def
+/rot {rotate} bind def
+/sc {scale} bind def
+/sd {setdash} bind def
+/ff {findfont} bind def
+/sf {setfont} bind def
+/scf {scalefont} bind def
+/sw {stringwidth} bind def
+/tr {translate} bind def
+/tnt {dup dup currentrgbcolor
+  4 -2 roll dup 1 exch sub 3 -1 roll mul add
+  4 -2 roll dup 1 exch sub 3 -1 roll mul add
+  4 -2 roll dup 1 exch sub 3 -1 roll mul add srgb}
+  bind def
+/shd {dup dup currentrgbcolor 4 -2 roll mul 4 -2 roll mul
+  4 -2 roll mul srgb} bind def
+ /DrawEllipse {
+	/endangle exch def
+	/startangle exch def
+	/yrad exch def
+	/xrad exch def
+	/y exch def
+	/x exch def
+	/savematrix mtrx currentmatrix def
+	x y tr xrad yrad sc 0 0 1 startangle endangle arc
+	closepath
+	savematrix setmatrix
+	} def
+
+/$F2psBegin {$F2psDict begin /$F2psEnteredState save def} def
+/$F2psEnd {$F2psEnteredState restore end} def
+
+$F2psBegin
+10 setmiterlimit
+ 0.03000 0.03000 sc
+%
+% Fig objects follow
+%
+7.500 slw
+% Ellipse
+n 2400 2700 1645 1645 0 360 DrawEllipse gs col0 s gr
+
+% Ellipse
+n 3600 3300 309 309 0 360 DrawEllipse gs col0 s gr
+
+% Polyline
+gs  clippath
+2420 2626 m 2353 2760 l 2536 2852 l 2409 2705 l 2603 2718 l cp
+eoclip
+n 3600 3300 m
+ 2400 2700 l gs col0 s gr gr
+
+% arrowhead
+n 2603 2718 m 2409 2705 l 2536 2852 l 2603 2718 l  cp gs col7 1.00 shd ef gr  col0 s
+% Polyline
+2 slj
+45.000 slw
+n 525 4425 m 526 4425 l 528 4426 l 531 4428 l 537 4430 l 545 4433 l
+ 557 4438 l 571 4443 l 589 4450 l 610 4458 l 635 4468 l
+ 664 4479 l 696 4491 l 732 4504 l 772 4519 l 814 4534 l
+ 860 4550 l 908 4567 l 959 4585 l 1013 4603 l 1068 4621 l
+ 1126 4639 l 1184 4658 l 1245 4676 l 1306 4694 l 1368 4711 l
+ 1432 4727 l 1496 4743 l 1560 4759 l 1626 4773 l 1692 4786 l
+ 1758 4798 l 1826 4809 l 1894 4818 l 1963 4826 l 2032 4832 l
+ 2103 4836 l 2174 4839 l 2247 4839 l 2320 4838 l 2394 4833 l
+ 2469 4827 l 2545 4817 l 2622 4805 l 2698 4790 l 2775 4772 l
+ 2851 4750 l 2925 4725 l 3007 4693 l 3086 4657 l 3159 4620 l
+ 3227 4582 l 3289 4543 l 3346 4505 l 3396 4468 l 3440 4432 l
+ 3478 4398 l 3511 4365 l 3539 4334 l 3562 4306 l 3581 4279 l
+ 3596 4253 l 3608 4230 l 3616 4207 l 3622 4186 l 3627 4165 l
+ 3629 4145 l 3631 4126 l 3631 4106 l 3632 4086 l 3632 4066 l
+ 3633 4044 l 3635 4021 l 3638 3996 l 3643 3969 l 3650 3940 l
+ 3660 3908 l 3671 3873 l 3686 3834 l 3704 3792 l 3725 3746 l
+ 3750 3695 l 3778 3640 l 3809 3581 l 3844 3518 l 3882 3450 l
+ 3922 3379 l 3964 3305 l 4007 3228 l 4050 3150 l 4089 3078 l
+ 4127 3007 l 4164 2938 l 4200 2871 l 4235 2808 l 4270 2747 l
+ 4305 2691 l 4338 2638 l 4372 2590 l 4404 2545 l 4437 2504 l
+ 4469 2467 l 4500 2434 l 4532 2404 l 4563 2377 l 4594 2352 l
+ 4624 2330 l 4655 2311 l 4685 2292 l 4714 2276 l 4743 2260 l
+ 4772 2246 l 4800 2231 l 4827 2217 l 4854 2203 l 4879 2188 l
+ 4904 2172 l 4927 2154 l 4949 2136 l 4968 2115 l 4986 2093 l
+ 5001 2068 l 5014 2040 l 5023 2010 l 5029 1976 l 5031 1940 l
+ 5029 1900 l 5022 1857 l 5009 1811 l 4990 1762 l 4965 1709 l
+ 4932 1655 l 4893 1598 l 4845 1541 l 4789 1483 l 4725 1425 l
+ 4672 1383 l 4615 1342 l 4554 1303 l 4490 1264 l 4423 1227 l
+ 4353 1192 l 4282 1158 l 4209 1125 l 4134 1094 l 4057 1065 l
+ 3979 1036 l 3900 1009 l 3820 984 l 3740 959 l 3658 936 l
+ 3575 913 l 3492 892 l 3408 872 l 3323 852 l 3238 833 l
+ 3152 816 l 3065 798 l 2978 782 l 2891 766 l 2804 751 l
+ 2716 737 l 2628 723 l 2540 710 l 2452 697 l 2365 684 l
+ 2278 673 l 2192 661 l 2107 650 l 2023 640 l 1940 630 l
+ 1859 621 l 1780 612 l 1703 603 l 1629 595 l 1557 587 l
+ 1488 580 l 1423 574 l 1361 567 l 1302 562 l 1248 556 l
+ 1197 552 l 1151 547 l 1109 543 l 1071 540 l 1038 537 l
+ 1009 534 l 983 532 l 962 530 l 944 529 l 930 528 l
+ 920 527 l 912 526 l 906 525 l 903 525 l 901 525 l
+
+ 900 525 l gs col0 s gr 
+7.500 slw
+% Ellipse
+n 3600 3300 50 50 0 360 DrawEllipse gs 0.00 setgray ef gr gs col0 s gr
+
+% Ellipse
+n 2400 2700 50 50 0 360 DrawEllipse gs 0.00 setgray ef gr gs col0 s gr
+
+$F2psEnd
+rs

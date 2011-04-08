@@ -1,0 +1,19 @@
+\begin{picture}(0,0)%
+\includegraphics{img/skel-cmp/voro-voro.pstex}%
+\end{picture}%
+\setlength{\unitlength}{2960sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(5591,4282)(410,-3852)
+\put(6001,-886){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}contour}%
+}}}
+\put(6001,-436){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}point du contour}%
+}}}
+\put(6001,-1336){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}axe median discret de Voronoi}%
+}}}
+\end{picture}

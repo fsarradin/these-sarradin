@@ -1,0 +1,1321 @@
+% measure.tex - Rapport sur les mesures applicables
+%
+% Copyright (C) 2004 - François Sarradin
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \title{Mesure des squelettes de la forme de ciel}
+\author{François Sarradin}
+\laboratory{%
+  CNRS -- CERMA UMR 1563 \\
+  \'Ecole d'Architecture de Nantes \\
+  Rue Massenet -- BP 81\,931 \\
+  44\,319 NANTES CEDEX 3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sloppy
+\makeheader
+
+\label{chap:measure}
+
+%\begin{reflexion}
+%  Attendre et espérer. \par
+%\raggedleft Alexandre Dumas, Le Comte de Monte-Cristo
+%\end{reflexion}
+
+\begin{intropar}
+  {U}\textsc{n} squelette est un descripteur de forme qui fournit une
+  grande quantité de caractéristiques, ne pouvant être directement
+  obtenues à partir de la forme elle-même.  Définie par Blum à la fin
+  des années soixante, la squelettisation consiste en quelque sorte à
+  amincir une forme jusqu'à obtenir un ensemble de lignes centrées,
+  appelé squelette \cite{blum:1967}.  Actuellement, la plupart des
+  efforts se concentrent au niveau des algorithmes de squelettisation.
+  Cependant, la littérature scientifique fournit très peu de méthodes
+  pour interpréter les squelettes.  Certes il en existent quelques unes,
+  mais elles se limitent souvent à des reconstructions de formes
+  \cite{tek:1999} ou à la reconnaissance d'objets
+  \cite{klein:2000,ogniewicz-phd:1993}.  Ces méthodes ne permettent pas
+  de décrire des attributs particuliers d'une forme ou d'analyser les
+  modifications qui apparaissent le long d'une série de squelettes.
+\end{intropar}
+
+Nous proposons ci-dessous un ensemble de mesures que nous avons testé.
+Ces mesures n'ont pas vraiment pour but de décrire les squelettes en
+général, mais elles permettent d'interpréter le résultat de la
+squelettisation de formes de ciel discrètes obtenues à partir de
+projections sphériques de l'environnement construit le long de parcours
+urbains.  Nous commencerons par découvrir des mesures qui traitent
+chaque squelette indépendamment des autres: ces descripteurs permettent
+de faire des analyses à des positions précises le long d'un parcours.
+Puis, nous verrons différentes mesures permettant d'effectuer des études
+le long de parcours dans des espaces ouverts urbains.  Ce chapitre
+présente seulement la conception de nos mesures et leur comportement.
+L'évaluation de ces mesures fait l'objet du chapitre suivant.
+
+Plus précisément, comme nous appliquerons nos mesures à des parcours
+dans des espaces urbains, nous commencerons dans ce chapitre par définir
+le type de parcours que nous utiliserons et décrire le comportement d'un
+observateur virtuel qui suivra ce parcours.  Ensuite, nous présenterons
+les différentes mesures que nous utiliserons en commençant par une
+critique de certaines mesures simples applicables aux squelettes.  Nous
+découvrirons alors d'autres mesures qui se basent sur l'élément le plus
+stable du squelette.  Puis nous nous interrogerons sur les méthodes
+existantes de comparaison de squelettes d'une succession d'images basées
+sur des distances de similarité et à leur application dans l'analyse des
+variations morphologiques des espaces ouverts urbains dans les parcours.
+À cette occasion nous verrons une nouvelle distance de similarité
+adaptée tout particulièrement à ce type d'analyse.
+
+
+\section{Éléments du parcours}
+\label{sec:survey:path-elem}
+
+Nous allons ici décrire l'environnement de l'observateur et formaliser
+la notion de parcours.  Pour cela, nous imaginerons un observateur
+virtuel à peu près identique à celui de la
+figure~\ref{fig:survey:vobserver}: ne faisant que suivre un parcours que
+nous lui avons ordonné de suivre et ne visualisant son environnement
+qu'à partir de projections sphériques.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.35\linewidth]{img/survey-ccl/dumm.eps}
+  \caption[Notre observateur virtuel]%
+  {Notre observateur virtuel.}
+  \label{fig:survey:vobserver}
+\end{figure}
+
+\subsection{Espace de l'observateur}
+
+L'observateur évolue dans un environnement urbain.  Cet environnement
+est un sous-ensemble de l'espace réel $\mathbbm{R}^3$ constitué d'un
+ensemble de parois.  Ces parois sont des obstacles à la lumière sans
+distinction ---~un mur en bois ou en béton, le sol et un toit sont pour
+nous des parois~--- et l'observateur peut les identifier simplement.
+Plus exactement, nous ne considérons que les observateurs évoluant dans
+l'ensemble des espaces ouverts urbains. L'intérieur des bâtiments,
+délimités par des parois, lui sont interdits.
+
+L'observateur est caractérisé par sa \emph{posture}.  La posture est à
+la fois la position des yeux qui est représentée par un point en
+dimension~3 dans l'ensemble des espaces ouverts urbains et par la
+direction du déplacement qui est représentée par un angle en
+dimension~1.  Comme nous utilisons des projections hémisphériques
+orientées vers le zénith, la direction ne devrait pas avoir
+d'importance.  Toutefois, par convention, nous orienterons la projection
+hémisphérique autour de l'axe du zénith selon la direction de
+l'observateur.  La direction est donnée par un angle en fonction du nord
+de la scène (figure~\ref{fig:survey:observer}).  De cette façon, les
+projections hémisphériques sont divisées en deux parties: une partie
+représente ce qui est en face de l'observateur, l'autre partie
+représente ce qui est derrière.  Ces deux parties sont situées au même
+endroit dans toutes les projections.  Enfin, nous considérons que les
+yeux sont à 1,60~m au-dessus du sol.  Nous venons ainsi de définir
+l'espace des points de vue pour notre problème.  Chaque élément de cet
+espace est de dimension~4 (position et direction).
+
+\begin{figure}[htbp]
+  \centering
+  \input{img/survey-ccl/observer.pstex_t}
+  \caption[Paramètres de l'observateur]%
+  {Paramètres de l'observateur.}
+  \label{fig:survey:observer}
+\end{figure}
+
+\subsection{Parcours de l'observateur dans les espaces ouverts urbains}
+
+Le mouvement de l'observateur suit un parcours donné.  Le parcours
+$\mathcal{C}$ de l'observateur est défini sur l'intervalle $[0;1]$ par
+une courbe continue $C^1$ au moins et de dimension~4.  Elle donne à
+chaque instant $t$ du parcours la posture $(p,\theta)$ de l'observateur.
+Nous considérons que l'instant $t$ est une valeur qui varie entre 0
+correspondant au début du parcours et $1$ qui correspond à la fin du
+parcours (figure~\ref{fig:survey:observer}).
+
+Ici, nous considérons que l'observateur perçoit l'espace par une
+succession d'images.  Autrement dit, le parcours d'un observateur dans
+un environnement urbain est découpé en une succession de projections
+hémisphériques.  Pour cela, nous nous servons d'un
+\emph{échantillonnage}.  Nous définissons un échantillonnage $\nu$ comme
+une fonction de $\mathbbm{R}$ vers $\mathbbm{N}$ (l'ensemble des entiers
+naturels), discontinue ($C^0$), croissante, avec $\nu(0) = 0$.
+L'échantillonnage donne à chaque instant du parcours le numéro de
+projection hémisphérique.  Généralement, nous utiliserons un
+échantillonnage constant: soit $f$ la fréquence des projections à
+réaliser par l'observateur, $\nu_{f}(t) = \lfloor t/f \rfloor$, où
+$\lfloor\cdot\rfloor$ est le symbole de la fonction qui renvoie le plus
+grand entier inférieur.  Le paramètre $f$ utilisé ici est aussi
+l'indicateur de la vitesse de déplacement de l'observateur.
+
+Enfin, nous considérons que la direction est déterminée en fonction de
+la tangente de la partie de la courbe qui détermine la position de
+l'observateur:
+
+\begin{equation}
+\theta(t)= \left\{
+  \begin{array}{ll}
+  \frac{\pi}{2} - \tan^{-1}\left(\frac{\dot{y}(t)}{\dot{x}(t)} \right) &
+  \text{si $\dot{y}(t) > 0$,}\\
+  \frac{3\pi}{2} - \tan^{-1}\left(\frac{\dot{y}(t)}{\dot{x}(t)} \right) &
+  \text{sinon,}
+  \end{array}
+\right.
+\end{equation}
+
+où $y(t)$ et $x(t)$ sont les positions de l'observateur sur le plan
+horizontal.
+
+
+\section{Mesure des espaces ouverts urbains par les squelettes}
+\label{sec:measure:one}
+
+\subsection{Qualité des mesures sur les squelettes}
+\label{subsec:measure:quality}
+
+Le squelette possède des instabilités que les mesures doivent éviter de
+considérer.  En particulier, la squelettisation est une transformation
+semi-continue.  Ce qui implique qu'ils sont particulièrement sensibles
+aux perturbations de la forme, surtout dans les espaces discrets.
+Malheureusement, il est difficile de détecter avec exactitude dans le
+squelette les points ou même les branches qui ont subit ces
+perturbations.  Toutefois, nous savons que le bruit agit différemment
+sur des parties spécifiques du squelette: le bruit est beaucoup plus
+influant sur les extrémités du squelette que sur les parties qui sont
+plus éloignées du contour de la forme.
+
+Considérons la mesure simple permettant de calculer le nombre
+d'extrémités ou le nombre de points terminaux qui apparaissent dans un
+squelette.  Cette mesure est très instable car les branches aux
+extrémités du squelette sont sensibles aux perturbations de la forme,
+qui provoquent des effets néfastes dans le squelette: chaque pic qui
+apparaît ou disparaît dans le contour crée une nouvelle branche ou en
+supprime une autre.  Si nous ramenons notre réflexion en terme d'analyse
+de la forme du ciel, les perturbations dues à la discrétisation ne sont
+pas révélatrices de la forme du ciel apparaissant en un point de
+l'espace urbain.  En effet, le calcul du nombre de terminaisons dans le
+squelette de la forme discrète du ciel peut ne pas correspondre au
+nombre de branche du squelette de la forme réelle du ciel.  Nous pouvons
+utiliser le nombre d'extrémités d'un squelette pour estimer la stabilité
+d'une méthode de squelettisation.  Mais dans notre cas, nous ne pouvons
+nous fier à ce nombre pour analyser la forme de ciel.
+
+Ces instabilités apparaissent dans d'autres mesures simples, comme le
+nombre de branches ou le diamètre du squelette.  Ces inconvénients
+viennent du fait que les perturbations influencent beaucoup les
+squelettes.  De plus, les squelettes de deux formes presque identiques
+peuvent présenter des aspects très différents.  Par exemple, le nombre
+de branches ne sera pas le même ou les branches correspondantes entre
+les squelettes ne seront pas de même longueur.  Un autre élément du
+squelette susceptible de perturber les mesures correspond au nombre de
+connexions ou de branches.  Le moindre déplacement d'un pic dans le
+contour peut faire apparaître ou disparaître une branche entière et
+changer l'aspect du squelette sans correspondance apparente par rapport
+aux transformations que la forme d'origine a subies.  Ces instabilités
+sont dénommées \emph{formes de transition} par Giblin et Kimia
+\cite{giblin:2002}.  Nous devons donc éviter si possible de considérer
+ces instabilités si nous souhaitons développer une mesure des squelettes
+qui soit suffisamment cohérente.
+
+Pour terminer, les mesures tel que le nombre d'extrémités ou le nombre
+de branches dans le squelette sont des mesures symétriques.
+C'est-à-dire que pour un parcours donné, quelque soit le sens suivi par
+l'observateur, les valeurs et leurs variations de la mesure seront
+identiques.  Ceci est quelque peu contradictoire avec le fait que
+lorsqu'un parcours est visité dans un sens, les sensations ne sont pas
+forcément les mêmes que lorsqu'il est parcouru dans l'autre sens.  De ce
+fait, une mesure asymétrique (fournissant des valeurs différentes pour
+un sens et pour l'autre d'un parcours) pourrait être plus adaptée à
+l'analyse des parcours dans les espaces ouverts.
+
+\subsection{Plus grand disque maximal}
+\label{sec:measure:gmd}
+
+Comme nous l'avons vu dans la section précédente, les mesures se basant
+sur le nombre d'extrémités ou le nombre de branches d'un squelette sont
+particulièrement sensibles aux perturbations du contour.  Nous avons
+proposé une autre mesure liée cette fois aux parties centrales du
+squelette \cite{sarradin:2003,sarradin:2003a}.  Elle consiste en fait à
+rechercher dans le squelette le point le plus éloigné du contour.  À
+partir de ce point, nous pouvons tracer le cercle inscrit dans la forme
+ayant le plus grand rayon, d'où le nom de \emph{plus grand disque
+  maximal} donné à cette mesure.  Son principal intérêt est de détecter
+la plus grande ouverture du ciel visible à partir d'une position dans
+l'espace ouvert urbain.
+
+\begin{definition}[Plus grands disques maximaux]
+  Soit $S$ une forme. L'ensemble des \emph{plus grands disques maximaux}
+  de $S$, noté $\mathbf{GMD}(S)$, est défini comme l'ensemble des
+  couples point et distance du squelette $\mathbf{MAT}(S)$ définis par
+
+\begin{equation}
+\mathbf{GMD}(S) = \left\{ (p,r)\in\mathbf{MAT}(S) | r = \Gamma_S \right\},
+\end{equation}
+
+\noindent%
+où $\Gamma_S$ est le rayon des plus grands disques maximaux de $S$.  Le
+nombre $\Gamma_S$ est défini par
+
+\begin{equation}
+\Gamma_S = \max \{ r | (p,r)\in \mathbf{MAT}(S) \}.
+\end{equation}
+\end{definition}
+
+    L'algorithme~\ref{algo:gmd} permet de calculer le $\mathbf{GMD}$
+d'un squelette.  La recherche du $\mathbf{GMD}$ se divise en deux
+étapes: la première calcule le plus grand rayon $\Gamma$ apparaissant
+dans le squelette et la seconde recherche tous les points squelettaux
+dont le rayon est égal à $\Gamma$ pour les ajouter au $\mathbf{GMD}$.
+
+\begin{algorithm}[htbp]
+  \caption{Recherche du plus grand disque maximal dans un squelette.}%
+[Cet algorithme prend en paramètre un squelette $\textrm{MAT}$.]
+\bgroup \obeylines\obeyspaces %
+\textbf{fonction} obtenirGMD ($\mathrm{MAT}$)
+\textbf{début}
+\hspace*{2em} $\Gamma \leftarrow 0$
+\hspace*{2em} \textbf{pour tout} $(x, y, r)\in\mathrm{MAT}$ \textbf{faire}
+  \hspace*{4em} \textbf{si} $r > \Gamma$ \textbf{alors}
+    \hspace*{6em} $\Gamma \leftarrow r$
+  \hspace*{4em} \textbf{finsi}
+\hspace*{2em} \textbf{finpour}
+\hspace*{2em} $\mathrm{GMD} \leftarrow \emptyset$
+\hspace*{2em} \textbf{pour tout} $(p, r)\in\mathrm{MAT}$ \textbf{faire}
+  \hspace*{4em} \textbf{si} $r = \Gamma$ \textbf{alors}
+    \hspace*{6em} $\mathrm{GMD} \leftarrow \mathrm{GMD} \cup \{ (p, r) \}$
+  \hspace*{4em} \textbf{finsi}
+\hspace*{2em} \textbf{finpour}
+\hspace*{2em} \textbf{retourner} $\mathrm{GMD}$
+\textbf{fin}
+\egroup
+\label{algo:gmd}
+\end{algorithm}
+
+Alors que $\Gamma_S$ ne représente qu'une seule valeur,
+$\mathbf{GMD}(S)$ est un ensemble de points du squelette de $S$, car il
+se peut qu'il y ait en différentes positions du squelette des points de
+même rayon.  Si nous avons besoin d'un seul élément, nous pouvons donner
+la préférence au point du $\mathbf{GMD}$ étant le plus en face de
+l'observateur, c'est-à-dire que si le point d'observation est situé à
+droite de la projection sphérique, on préférera le point d'abscisse la
+plus élevée et d'ordonnée proche de l'ordonnée du zénith dans la
+projection.  Nous appellerons ce point le $\mathbf{GMD}$ visible.
+
+\begin{definition}[$\mathbf{GMD}$ visible]
+  Soit $S$ une forme. Le \emph{$\mathbf{GMD}$ visible} de $S$, noté
+  $\mathbf{GMD_V}$, est le point du $\mathbf{MAT}(S)$ dont l'abcsisse
+  est la plus grande et dont l'ordonnée est la plus proche de l'ordonnée
+  du zénith dans la projection sphérique.
+\end{definition}
+
+\noindent%
+Le principal avantage du $\mathbf{GMD_V}$ est de ne se rapporter qu'aux
+parties du squelette les plus distantes du contour.  Comme nous l'avons
+vu précédemment, ces parties sont très peu influencées par les
+perturbations du contour.  De ce fait, le $\mathbf{GMD_V}$ est une
+mesure très stable.
+
+L'un des éléments que nous pouvons extraire du $\mathbf{GMD_V}$ est son
+rayon.  Le rayon du $\mathbf{GMD_V}$ est une mesure assez similaire à la
+mesure du rapport de masse dans la métrique sphérique de Teller
+\cite{teller:2003}.  La différence se situe dans le fait que le rapport
+de masse mesure globalement un rapport entre deux surfaces, alors que le
+rayon du $\mathbf{GMD_V}$ ne correspond dans l'espace qu'à la taille de
+la plus grande ouverture.  Le rayon du $\mathbf{GMD_V}$ est donc une
+mesure qui intervient sur des propriétés locales de la forme.  Autre
+différence, le rayon du $\mathbf{GMD_V}$ peut varier alors que la
+surface du ciel reste inchangée, et inversement, la surface du ciel peut
+varier sans modifier le rayon du $\mathbf{GMD_V}$, comme le montre la
+figure~\ref{fig:measure:gmd-evol}.  Le maximum théorique du rayon du
+$\mathbf{GMD_V}$ correspond au diamètre du disque de la projection.
+Cette situation est atteinte lorsque l'espace est complètement vierge.
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[width=.75\linewidth]{img/measure/gmd-evol.eps}
+  \end{center}
+  \caption[Différence entre le rayon du $\mathbf{GMD_V}$ et la surface de
+           ciel]%
+          {Différence entre le rayon du $\mathbf{GMD_V}$ et la surface de
+           ciel.  Nous considérons la situation de base \emph{(a)} où le
+           ciel apparaît en blanc et le disque du $\mathbf{GMD_V}$ en
+           pointillé.  La situation \emph{(b)} représente la cas où
+           seule la surface de ciel évolue et la situation \emph{(c)}
+           représente le cas où seule le rayon du $\mathbf{GMD_V}$
+           évolue.}
+  \label{fig:measure:gmd-evol}
+\end{figure}
+
+Une autre mesure consiste à comparer la position en abscisse du
+$\mathbf{GMD_V}$ par rapport à l'abscisse du zénith de l'observateur
+dans la projection sphérique.  De ce fait, en supposant que
+l'observateur à un champ visuel s'étendant à 180° sur les côtés et à 90°
+vers le haut, nous pouvons savoir s'il voit ou non le $\mathbf{GMD_V}$
+en face.  Le maximum théorique de cette mesure correspond au rayon du
+disque de la projection.  Cette situation est obtenue lorsque
+l'observateur est situé au bout d'un très long tunnel droit, sans issue
+et possédant une petite entrée à l'horizon.  En faisant le rapport entre
+l'abscisse du $\mathbf{GMD_V}$ et ce maximum, nous obtenons un taux de
+proximité du $\mathbf{GMD_V}$ par rapport à la ligne d'horizon de
+l'observateur.  Si cette mesure tend vers $1$, le $\mathbf{GMD_V}$ est
+situé devant l'observateur près de la ligne d'horizon.  Si elle vaut
+$0$, le $\mathbf{GMD_V}$ est situé exactement au zénith de
+l'observateur. Enfin, si elle tend vers $-1$, le $\mathbf{GMD_V}$ est
+situé derrière l'observateur près de la ligne d'horizon.
+
+Nous avons testé la sensibilité des mesures par rapport au niveau de
+définition des projections sphériques.  Pour cela, nous avons réalisé un
+ensemble de projections sphériques dans une configuration que nous avons
+appelé \textsf{Droit} (figure~\ref{fig:measure:droit}) et qui représente
+une rue droite de 110~mètres de long, délimitée par deux murs parallèles
+de 10~mètres de haut et espacés de 10~mètres.  L'observateur parcourt
+l'espace de la gauche vers la droite de la configuration à mi-distance
+des murs.  Le graphique de la figure~\ref{fig:measure:droitn-gmd-size}
+présente l'évolution de la taille du $\mathbf{GMD_V}$ pour trois
+diamètres de projection sphérique différents: 100~pixels
+(\textsf{Droit100}), 200~pixels (\textsf{Droit200}) et 400~pixels
+(\textsf{Droit400}).  Nous remarquons que les trois courbes
+correspondent avec moins de 1,5~\% d'erreur au maximum.  Toutefois,
+l'observateur est dans une configuration où rien ne se passe, hormis le
+fait qu'il rentre dans la rue et qu'il en sort.  Ces deux moments du
+parcours sont représentés par des valeurs élevées de la courbe.  Pour
+le reste du parcours, la taille du $\mathbf{GMD_V}$ doit fournir des
+valeurs faibles et uniformes.  Par rapport à cette remarque, nous
+pouvons en déduire que la courbe la moins sensible au bruit est celle
+dont le diamètre des projections sphériques est le plus élevé.  Il
+convient donc d'utiliser un diamètre de projection sphérique
+suffisamment élevé pour avoir des mesures suffisamment précises.  Dans
+le cas de la taille du $\mathbf{GMD_V}$, un diamètre de 400~pixels
+devrait être suffisant.  En ce qui concerne l'allure des courbes, elles
+sont identiques.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.33\linewidth]{img/measure/droit-conf.eps}
+  \end{center}
+  \caption[Configuration d'un espace avec une rue simple]%
+          {Configuration d'un espace avec une rue simple.}
+  \label{fig:measure:droit}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.75\linewidth]{img/measure/droit/droitn-gmd-size.eps}
+  \caption[Variation de la taille du $\mathbf{GMD_V}$ dans la
+  configuration \textsf{Droit} pour différents niveaux de résolution des
+  projections sphériques]%
+  {Variation de la taille du $\mathbf{GMD_V}$ dans la configuration
+    \textsf{Droit} pour différents niveaux de résolution des projections
+    sphériques.}
+  \label{fig:measure:droitn-gmd-size}
+\end{figure}
+
+Les deux mesures développées autour du $\mathbf{GMD_V}$ sont basées sur
+un point du squelette quasiment insensible aux perturbations de la forme
+du ciel.  Elles permettent de réaliser des analyses situées selon deux
+critères: par rapport à la plus grande ouverture visible en un point de
+l'espace et selon la position de cette ouverture par rapport à
+l'orientation de l'observateur.  Il est intéressant de constater que la
+deuxième mesure est totalement liée à la direction suivie par
+l'observateur dans le parcours.  Ceci rejoint la remarque que nous
+avions faite à la fin du §\ref{subsec:measure:quality}, concernant le
+fait qu'il était préférable que les mesures soient asymétriques.
+
+Dans la section suivante, nous allons voir des mesures permettant de
+réaliser des études suivies de parcours urbains.  Contrairement aux
+mesures que nous avons vues jusqu'ici, celles-ci permettent de
+quantifier les variations morphologiques des espaces ouverts urbains le
+long de parcours.
+
+
+\section{Mesure des variations morphologiques des espaces ouverts
+  urbains le long de parcours}
+\label{sec:measure:seq}
+
+Pour mesurer les variations morphologiques des espaces ouverts urbains
+le long de parcours, nous proposons de nous baser sur la similarité d'un
+couple de squelettes successifs.  L'idée consiste à considérer les
+squelettes comme des éléments d'un espace métrique et d'évaluer leur
+degré de similarité simplement en calculant la distance entre eux.
+
+Il existe actuellement différentes méthodes de calcul de la similarité
+de deux formes ou de deux ensembles de points en général
+\cite{alt:1996,rucklidge:1996,veltkamp:2001}.  Certaines de ces méthodes
+se basent sur la correspondance d'un ensemble de moments $\mu_{ij}$ de
+la forme, sur la suite d'angles de rotation entre les segments composant
+le contour des formes \cite{arkin:1991} ou simplement en utilisant un
+descripteur de Fourier \cite{otterloo:1992}.  Cependant, les squelettes
+présentent une particularité qui n'est pas souvent prise en compte dans
+les travaux concernant la correspondance de formes: un squelette est un
+ensemble de courbes, souvent liées, dont le nombre peut varier d'un
+squelette à l'autre.  Bien s\^ur, les critères sur les mesures annoncées
+dans le §\ref{subsec:measure:quality} valent aussi pour ce type de
+mesure.  Par exemple, si les mesures se basent sur les variations des
+extrémités du squelette d'image à une autre, il est certain que les
+résultats obtenus seront très instables.  D'autres critères sont décrits
+par Veltkamp et Hagedoorn pour ce qui concerne les mesures de similarité
+\cite{veltkamp:2000}.
+
+Ici, nous verrons les méthodes de calcul de similarité qui nous sont
+apparues suffisamment adaptées à l'étude de ressemblance entre
+squelettes, dont la distance d'édition et la distance de Fréchet.  Nous
+verrons plus en détail la distance de Hausdorff et comment nous l'avons
+adaptée pour qu'elle produise un indicateur suffisamment pertinent pour
+l'analyse des variations morphologiques des espaces ouverts urbains le
+long de parcours.
+
+
+\subsection{Distance d'édition}
+
+La \emph{distance d'édition} permet de calculer la distance entre deux
+graphes en se basant sur des \emph{opérations d'édition} comme l'ajout
+ou la suppression d'un n{\oe}ud ou d'une arête, leur transformation dans
+l'espace, la modification de leur valeur, etc.  Le passage d'un graphe à
+un autre peut être fait en utilisant ces opérations.  Si nous associons
+à chaque opération un \emph{coût} attribué arbitrairement, il est
+possible de calculer un coût total pour un ensemble d'opérations
+d'édition qui ont permis de transformer le graphe.  La distance
+d'édition entre deux graphes $G_1$ et $G_2$ est définie comme la somme
+des coûts des opérations d'édition, permettant de transformer $G_1$ en
+$G_2$ et $G_2$ en $G_1$, et minimisant ce coût. Cette distance a été
+développée par Wagner et Fisher \cite{wagner:1974}, et était utilisée
+pour comparer deux chaînes de caractères.  L'algorithme a été repris et
+étendu afin d'être utilisé pour la comparaison de graphes
+\cite{messmer:1993}.
+
+Il est difficile de calculer la distance d'édition d'un squelette car si
+nous souhaitons en conserver le maximum d'informations, le squelette
+représentera alors un graphe possédant une infinité de sommets et
+d'arêtes.  Toutefois, il est possible de calculer la distance d'édition
+en se basant sur une représentation simplifiée du squelette.  L'idée qui
+a été proposée consiste à distinguer certains points squelettaux en
+fonction de leur date d'apparition au cours du processus de
+squelettisation, basée sur l'analogie du feu de prairie
+\cite{kimia:1995,siddiqi:1995}.  Ces points sont le résultat du \og choc
+\fg entre deux fronts enflammés.  Kimia \emph{et al.} définissent quatre
+types de choc illustrés par la figure~\ref{fig:mes-shock}:
+
+\begin{itemize}
+\item Le \emph{choc de premier ordre} est dû à une discontinuité dans le
+  contour de la forme.  Ce type de choc produit au fur et à mesure des
+  points squelettaux qui se suivent dans une direction donnée, créant à
+  la fin un segment de squelette.
+\item Le \emph{choc de deuxième ordre} est formé lorsque dans le
+  processus du feu de prairie deux points du contour qui ne sont pas
+  voisins se rencontrent et que les points autour n'ont pas encore
+  provoqué de chocs.  Le point squelettal formé est un minimum local
+  dans la sarte de distances.
+\item Le \emph{choc de troisième ordre} apparaît lorsque des points du
+  contour qui ne sont pas voisins se rencontrent en même temps que les
+  points du contour qui les entourent.  Ce type de choc forme un segment
+  de squelette dont les points sont apparus en même temps.
+\item Le \emph{choc de quatrième ordre} est formé lorsque le processus
+  du feu de prairie résulte en un seul point.  Il peut aussi
+  correspondre à un sommet local dans la carte de distance de la forme.
+\end{itemize}
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[width=.55\linewidth]{img/measure/mes-shock.eps}
+  \end{center}
+  \caption[Les quatre types de choc dans le processus de
+          squelettisation]
+          {Les quatre types de choc dans le processus de
+          squelettisation.}
+  \label{fig:mes-shock}
+\end{figure}
+
+Les chocs de deuxième et de quatrième ordre font apparaître des points
+squelettaux localement uniques, dans le sens où ces points sont des
+extrémums locaux.  Alors que les ensembles de points squelettaux du
+premier et du troisième ordre forment des ensembles de segments du
+squelette \cite{siddiqi:1997}.  Dans chaque squelette, il est possible
+de retrouver au moins un type de choc.  L'apparition au fur et à mesure
+des différents chocs permet de former un graphe orienté et sans cycle
+appelé \emph{graphe de choc}, où chaque sommet représente un choc et
+chaque arête une succession entre deux chocs.  Les sommets de ce graphe
+sont valués en fonction de la catégorie du choc.  Ce graphe est une
+représentation \og dynamique \fg du squelette et unique pour chaque
+forme \cite{siddiqi:1997}, dans le sens où une forme ne peut produire
+deux graphes de choc différents.  Afin de faciliter la comparaison des
+squelettes, les graphes de choc sont convertis sous la forme d'arbre et
+la similarité entre les deux arbres est réalisée en utilisant la
+distance d'édition \cite{klein:2000,sebastian:2002}.
+
+Mais il semble que dans cette méthode deux défauts apparaissent:
+\emph{(i)} étant donné la complexité des scènes urbaines et les divers
+transformations réalisées, il est difficile d'interpréter les opérations
+pour des squelettes obtenus à partir de projections sphériques et de
+trouver les bonnes valeurs pour les coûts; \emph{(ii)} la distance
+d'édition utilise une heuristique.  En effet, il peut être reproché que
+la distance d'édition se base sur une tentative d'interprétation ou
+d'explication des transformations qui apparaissent entre deux squelettes
+successifs, qui ont permis de passer d'une forme à une autre, sans que
+cela corresponde à ce qui s'est réellement passé en réalité. Par
+exemple, si nous prenons le cas des projections sphériques des formes de
+ciel, avec une projection juste avant l'entrée dans une place et une
+autre juste après l'entrée, la forme du ciel va être modifiée parce que
+de nouveaux murs sont apparus, parce que l'espace s'est élargi, que de
+nouveaux éléments vont structurer autrement l'espace, etc.  Ces
+transformations vont créer des modifications dans la structure du
+squelette.  Mais la distance d'édition peut-elle retrouver à coup sûr
+ces transformations ou va-t-elle trouver des transformations qui seront
+le résultat indirect de l'heuristique qu'elle utilise?  Lorsqu'il s'agit
+de squelettes calculés à partir de la forme de ciel dans des espaces
+urbains, les transformations calculées par la distance d'édition ne
+correspondent pas forcément aux transformations qui se sont réellement
+produites.  De ce fait, la distance d'édition ne convient pas au calcul
+de la similarité de squelettes de la forme de ciel.
+
+\subsection{Distance de Hausdorff}
+\label{subsec:measure:hausdorff}
+
+La distance de Hausdorff est utilisée couramment en analyse d'images.
+Elle est parfois perçue comme une mesure naturelle de la similarité
+entre des formes \cite{alt:2001}.  Cette distance est la distance
+maximale d'un ensemble aux points les plus proches d'un autre ensemble.
+Une définition plus formelle de la distance de Hausdorff est donnée
+ci-dessous.
+
+\begin{definition}[Distance de Hausdorff]
+  Soient deux ensembles finis de points $S$ et $T$.  La \emph{distance
+    de Hausdorff} $d_\mathcal{H}$ entre $S$ et $T$ est définie par
+
+  \begin{equation}
+    d_\mathcal{H} (S,T) = \max \{ \mathcal{H}(S|T), \mathcal{H}(T|S) \},
+  \end{equation}
+
+  \noindent%
+  où $\mathcal{H}(S|T)$ est la distance de Hausdorff relative.
+\end{definition}
+
+\begin{definition}[Distance de Hausdorff relative]
+  \label{def:measure:dhr}
+  Soient deux ensembles finis de points $S$ et $T$.  La \emph{distance
+    de Hausdorff relative} de $S$ par rapport à $T$ est définie par
+
+  \begin{equation}
+    \mathcal{H}(S|T) = \max_{p\in S} \left\{ \min_{q\in T}\, d(p, q) \right\},
+  \end{equation}
+
+  \noindent%
+  où $d$ est une distance quelconque.
+\end{definition}
+
+La fonction $\mathcal{H}(S|T)$ est appelée \emph{distance de Hausdorff
+  relative} de $S$ par rapport à $T$, ou distance de Hausdorff orientée.
+Cette fonction n'est pas une distance car elle n'est pas symétrique
+(l'égalité $\mathcal{H}(S|T) = \mathcal{H}(T|S)$ n'est pas toujours
+vérifiée si $S\neq T$).  $\mathcal{H}(S|T) = 0$ si et seulement si
+$S\subseteq T$.  Si $\mathcal{H}(S|T) = \epsilon$ alors les points de
+$S$ ne dépassent une distance $\epsilon$ des points les plus proches de
+$T$ (figure~\ref{fig:measure:hausdorff}).  $d_\mathcal{H}(S,T) = 0$ si
+et seulement si $S = T$.  La figure~\ref{fig:measure:hausdorff} montre
+comment comprendre la distance de Hausdorff et la distance de Hausdorff
+relative.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \input{img/measure/mes-hausdorff.pstex_t}
+  \end{center}
+  \caption[Illustration de $d_\mathcal{H}(S,T)$]%
+  {Illustration de $d_\mathcal{H}(S,T)$.  La partie gauche de la figure
+    représente les deux ensembles de points $S$ et $T$.  Les points de
+    l'ensemble $T$ apparaissent en blanc et les points de l'ensemble $S$
+    apparaissent en gris.  La partie centrale de la figure, illustre
+    $\mathcal{H}(S|T)$.  Les cercles en pointillé délimitent une zone de
+    rayon $\epsilon$ autour de chaque point de $T$.  Tous les points de
+    $S$ sont situés dans au moins une de ces zones.  De la même manière,
+    la partie droite de la figure représente $\mathcal{H}(T|S)$ où tous
+    les points de $T$ sont au plus distants d'une distance $\epsilon'$
+    de tous les points de $S$.  Comme nous avons $\epsilon'>\epsilon$
+    d'après la figure, alors la distance de Haudorff
+    $d_\mathcal{H}(S,T)=\epsilon'$.}
+  \label{fig:measure:hausdorff}
+\end{figure}
+
+La fonction que nous proposons dans l'algorithme~\ref{algo:hausdorff}
+permet de calculer la distance de Hausdorff relative entre deux
+squelettes définis par des ensembles de points.  Elle se base sur la
+structure des squelettes obtenue par l'implémentation de la
+squelettisation d'Hamilton-Jacobi développée par Siddiqi \emph{et al.}
+\cite{siddiqi:2002}.  Cet algorithme a un temps de calcul en $o(n^2)$,
+mais étant donné le nombre de points contenus dans chaque squelette,
+l'algorithme est suffisamment rapide\footnote{Dans notre implémentation
+  en Java, la comparaison de squelettes d'environ 700~points se fait en
+  moins d'une seconde sur un ordinateur de 1,4~GHz.  Il existe toutefois
+  une méthode pour calculer la distance de Hausdorff relative, dans le
+  cas d'images digitales, avec un algorithme linéaire (en $O(n)$) qui
+  consiste à calculer une carte de distance à l'ensemble $T$ (en $O(n)$)
+  et à parcourir ensuite les points de l'ensemble $S$ en relevant la
+  distance maximale à $T$.}.
+
+\begin{algorithm}[htbp]
+\caption{Algorithme de calcul de la distance de Hausdorff relative pour
+  deux squelettes.}%
+[Cet algorithme prend en paramètre deux squelettes $\textrm{MAT}_1$ et
+  $\textrm{MAT}_2$, ainsi qu'une distance $d$.]
+\bgroup \obeylines\obeyspaces %
+\textbf{fonction} hausdorffRel ($\mathrm{MAT}_1$, $\mathrm{MAT}_2$, d)
+\textbf{début}
+\hspace*{2em} $d_{\max} \leftarrow 0$
+\hspace*{2em} \textbf{pour tout} $P_1\in\mathrm{MAT}_1$ \textbf{faire}
+  \hspace*{4em} $d_{\min} \leftarrow +\infty$
+  \hspace*{4em} \textbf{pour tout} $P_2\in\mathrm{MAT}_2$ \textbf{faire}
+    \hspace*{6em} \textbf{si} $d(P_1, P_2) < d_{\min}$ \textbf{alors}
+      \hspace*{8em} $d_{\min} \leftarrow d(P_1, P_2)$
+    \hspace*{6em} \textbf{finsi}
+  \hspace*{4em} \textbf{finpour}
+  \hspace*{4em} \textbf{si} $d_{\min} > d_{\max}$ \textbf{alors}
+    \hspace*{6em} $d_{\max} \leftarrow d_{\min}$
+  \hspace*{4em} \textbf{finsi}
+\hspace*{2em} \textbf{finpour}
+\hspace*{2em} \textbf{retourner} $d_{\max}$
+\textbf{fin}
+\egroup
+\label{algo:hausdorff}
+\end{algorithm}
+
+Des modifications sont parfois apportées à la définition d'origine afin
+de pouvoir utiliser la distance de Hausdorff dans les processus de
+reconnaissance d'images.  Ainsi, Rucklidge recherche l'ensemble des
+transformations géométriques capables de minimiser la distance de
+Hausdorff entre une partie d'une image donnée et un modèle
+\cite{rucklidge:1996}.  De cette manière, il est possible de comparer
+deux images sans se soucier de leur position dans le plan, de leur
+orientation ou leur taille.  Mais, la comparaison de deux projections
+sphériques successives entre elles, tel que nous le faisons pour
+analyser des espaces ouverts urbains, ne nécessite pas ce genre de
+procédure car les projections sont de même taille et à la même position
+dans le plan. De plus, leur orientation est importante pour rendre
+compte d'un changement d'orientation soit de l'espace soit de
+l'observateur.  Toutefois, nous pouvons nous demander si la distance de
+Hausdorff est bien adaptée à la comparaison de squelettes.
+
+
+\subsubsection{Distance de Hausdorff hyperbolique}
+
+La squelettisation est une transformation sensible aux perturbations.
+Même si la forme subit de petites modifications (la distance de
+Hausdorff entre les deux est faible), le squelette peut changer de
+manière importante.  Comme l'ont montré Choi et Seidel, le résultat est
+une grande valeur pour la distance de Hausdorff entre les deux
+squelettes \cite{choi:2001a}.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \input{img/measure/mes-dyper.pstex_t}
+  \end{center}
+  \caption[Distance hyperbolique entre deux disques]%
+          {Distance hyperbolique entre deux disques (d'après
+           \cite{choi:2001a}).}
+  \label{fig:mesaure:dyper}
+\end{figure}
+
+Généralement, la distance de Hausdorff est utilisée avec la distance
+euclidienne $d_E$ pour calculer la ressemblance entre deux ensembles de
+points dans le plan ou dans l'espace.  Cependant, le squelette d'une
+forme fournit une information supplémentaire qui concerne la distance
+des points au contour de la forme.  Cette information doit-elle être
+prise en compte dans la comparaison des squelettes successifs?  Et si
+elle doit l'être, de quelle manière devons-nous la prendre en compte?
+En ce qui concerne la première question, il faut savoir que le squelette
+seul ne suffit pas à décrire une forme, cette information de distance
+indique la position du contour et décrit ainsi la taille ou l'épaisseur
+de la forme initiale.  À partir des squelettes de projections
+sphériques, nous devons donc calculer la distance de Hausdorff pour des
+points en trois dimensions (deux dimensions pour les coordonnées et une
+dimension pour la distance au contour).
+
+En ce qui concerne la prise en compte de la distance au contour dans la
+distance de Hausdorff, Choi et Seidel ont proposé une nouvelle mesure
+appelée la \emph{distance de Hausdorff hyperbolique} qui consiste à
+remplacer la distance euclidienne par la distance hyperbolique
+\cite{choi:2001a}.
+
+\begin{definition}[Distance hyperbolique]
+Soient $P_1(p_1,r_1)$ et $P_2(p_2,r_2)$ deux points de
+$\mathbbm{R}^2\times\mathbbm{R}^+$.  La \emph{distance hyperbolique}
+$d_h$ de $P_1$ à $P_2$ est définie par
+
+\begin{equation}
+d_h (P_1|P_2) = \max \left\{ 0, d_E(p_1,p_2)-\left(r_2-r_1\right) \right\}.
+\end{equation}
+\end{definition}
+
+\noindent%
+La distance hyperbolique est un abus de langage car ce n'est pas une
+distance au sens mathématique du terme.  En effet, nous voyons
+clairement qu'elle n'est pas symétrique
+(cf.~figure~\ref{fig:mesaure:dyper}).
+
+Soient deux points $P_1(p_1,r_1)$ et $P_2(p_2,r_2)$ deux points de
+$\mathbbm{R}^2\times\mathbbm{R}^+$, alors d'après Choi et Seidel,
+$d_h(P1|P2) = \mathcal{H}(B(p_1,r_1)|B(p_2,r_2))$ \cite{choi:2001a}.
+Nous avons $d_h (P_1,P_2) = 0$ si et seulement si $d_E(p1,p2) + r_1 \leq
+r_2$.  Le comportement de la distance hyperbolique est illustré dans la
+figure~\ref{fig:mesaure:dyper}.
+
+Soient $M_1$ et $M_2$ des squelettes de deux formes.  La distance de
+Hausdorff hyperbolique relative $\mathcal{H}_h$ de $M_1$ par rapport à
+$M_2$ est donnée par
+
+\begin{equation}
+\mathcal{H}_h (M_1|M_2) = \max_{P_1\in M_1} \left\{ \min_{P_2\in M_2}
+                          d_h(P_1|P_2) \right\}.
+\end{equation}
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[width=.75\linewidth]{img/measure/haus-diff.eps}
+  \end{center}
+  \caption[Instabilité du squelette]%
+  {Instabilité du squelette.  Cette instabilité du squelette
+    apparaissant pour des formes relativement similaires donne une
+    distance de Hausdorff élevée, alors que la distance de Hausdorff des
+    formes et faible.}
+  \label{fig:measure:haus-diff}
+\end{figure}
+
+Le problème que Choi et Seidel cherchait à résoudre consistait à
+améliorer la comparaison de squelettes pour comparer des formes
+\cite{choi-rr:2000,choi:2001a}.  En effet, si nous considérons deux
+formes quasiment identiques, sachant que la seconde possède des
+perturbations, leurs squelettes seront différents
+(figure~\ref{fig:measure:haus-diff}).  La distance de Hausdorff
+indiquera donc une grande différence entre les deux squelettes alors que
+la distance de Hausdorff des deux formes sera relativement faible.  Une
+limite de l'erreur produite par la distance de Hausdorff relative a été
+obtenue par Choi et Lee \cite{choi:2000}.  Mais il s'agit de la limite
+maximale et elle doit prendre en compte les instabilités du squelette.
+
+La distance de Hausdorff hyperbolique proposée par Choi et Seidel est
+moins sensible aux instabilités du squelette.  Ainsi, la distance de
+Hausdorff hyperbolique entre les squelettes de deux formes permet de
+borner la distance de Hausdorff entre les formes ou leur contour
+\cite{choi:2001a}.  Ainsi, pour deux formes $S_1$ et $S_2$,
+
+\begin{align}
+  \mathcal{H}_h (\mathbf{MAT}(S_1),\mathbf{MAT}(S_2))
+    &\leq 3\cdot \max \{ \mathcal{H} (S_1, S_2),
+                        \mathcal{H} (\partial S_1, \partial S_2)
+                     \}, \\
+  \max \{ \mathcal{H} (S_1, S_2),
+          \mathcal{H} (\partial S_1, \partial S_2)
+       \}
+    &\leq \mathcal{H}_h (\mathbf{MAT}(S_1),\mathbf{MAT}(S_2)).
+\end{align}
+
+\noindent%
+Autrement dit, la distance de Hausdorff hyperbolique de squelettes
+convient pour calculer la similarité entre deux formes.
+
+Afin de nous en convaincre, nous nous sommes intéressés à la comparaison
+des deux distances de Hausdorff sur une suite de squelettes calculés le
+long d'un parcours dans un environnement équivalent à celui de la
+figure~\ref{fig:measure:cote}.  Cette configuration, notée
+\textsf{Cote}, est uniquement composée de deux murs de 10~m de haut,
+dont l'un d'eux possède une ouverture formant une petite place.  On
+suppose que la hauteur des yeux de l'observateur est de 1,60~m et que
+celui-ci parcourt l'espace de la gauche vers la droite sur le schéma.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.35\linewidth]{img/measure/cote-conf.eps}
+  \end{center}
+  \caption[Configuration d'espace avec une petite ouverture sur le
+  côté]%
+  {Configuration d'espace avec une petite ouverture sur le côté.}
+  \label{fig:measure:cote}
+\end{figure}
+
+La comparaison des deux distances de Hausdorff apparaît dans le
+graphique de la figure~\ref{fig:measure:cote-diffhh}.  La distance de
+Haussdorff y est notée \textsf{Cote\_MAT} et son évolution est dessinée
+en pointillé.  La distance de Hausdorff hyperbolique y est notée
+\textsf{Cote\_HH} et son évolution apparaît en trait plein.  Dans ce
+graphique, la partie intéressante est située dans la zone de 35 à 65~\%
+en abscisse.  Tout d'abord les deux pics aux extrémités de cette zone
+sont atténués dans le cas de la distance hyperbolique.  Et entre ces
+deux pics, la distance de Hausdorff donne une courbe perturbée, alors
+que pour la distance hyperbolique la courbe est lisse.  Le comportement
+de la distance de Hausdorff est assez étonnant dans une zone où l'espace
+est relativement uniforme.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.8\linewidth]{img/measure/cote-diffhh.eps}
+  \end{center}
+  \caption[Comparaison entre la distance de Hausdorff et la distance de
+  Hausdorff hyperbolique dans la configuration \textsf{Cote}]%
+  {Comparaison entre la distance de Hausdorff et la distance de
+    Hausdorff hyperbolique dans la configuration \textsf{Cote}.  La
+    distance de Hausdorff est notée \textsf{Cote\_MAT} et son évolution
+    est dessinée en pointillé.  La distance de Hausdorff hyperbolique
+    est notée \textsf{Cote\_HH} et son évolution apparaît en trait
+    plein.}
+  \label{fig:measure:cote-diffhh}
+\end{figure}
+
+\subsubsection{Particularités et inconvénients de la distance Hausdorff}
+
+\paragraph{Similarité entre deux courbes}
+L'un des inconvénients majeurs de la distance de Hausdorff est qu'elle
+ne considère les objets géométriques que comme des ensembles de points.
+Comme le montre la figure~\ref{fig:measure:def-haus}, cette perception
+des objets crée des incohérences dans les mesures par rapport à ce que
+nous pouvons observer.  En effet, les deux courbes de cette figure
+présentent des différences importantes.  Pourtant la distance de
+Hausdorff entre elles est relativement faible.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \input{img/measure/def-haus.pstex_t}
+  \end{center}
+  \caption[Problème avec la distance de Hausdorff]%
+  {Problème avec la distance de Hausdorff.  La différence d'aspect entre
+    les deux courbes $S$ et $T$ est importante, pourtant la distance de
+    Hausdorff $d_{\mathcal{H}}(S,T)$ est relativement faible.}
+   \label{fig:measure:def-haus}
+\end{figure}
+
+\paragraph{Distinction de configurations}
+Entre autres inconvénients, la distance de Hausdorff est basée sur la
+recherche d'une différence maximale entre deux ensembles de points.
+Cette recherche ne concerne qu'une partie des ensembles de points.  En
+somme, la distance de Hausdorff décrit la différence entre les éléments
+les plus éloignés des deux ensembles, mais pas la différence globale
+entre eux.  Ramené à l'analyse des espaces ouverts urbains, ceci revient
+à dire que la distance de Hausdorff ne permet de décrire qu'une seule
+variation visuelle située dans une partie de la scène: la plus
+importante.  De ce fait, des scènes différentes peuvent produire des
+résultats équivalents.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.6\linewidth]{img/measure/croix-te.eps}
+  \end{center}
+  \caption[Configuration de deux espaces avec un carrefour]%
+          {Configuration de deux espaces avec un carrefour.}
+  \label{fig:measure:croix-te}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.8\linewidth]{img/measure/diff-te_croix-mat.eps}
+  \end{center}
+  \caption[Comparaison entre les configurations \textsf{TE} et
+           \textsf{Croix} sur la distance de Hausdorff]%
+          {Comparaison entre les configurations \textsf{TE} et
+           \textsf{Croix} sur la distance de Hausdorff.}
+  \label{fig:measure:te-croix-diffmat}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.8\linewidth]{img/measure/diff-te_croix-hh.eps}
+  \end{center}
+  \caption[Comparaison entre les configurations \textsf{TE} et
+  \textsf{Croix} sur la distance de Hausdorff hyperbolique]%
+  {Comparaison entre les configurations \textsf{TE} et \textsf{Croix}
+    sur la distance de Hausdorff hyperbolique.}
+  \label{fig:measure:te-croix-diffhh}
+\end{figure}
+
+L'exemple de la figure~\ref{fig:measure:croix-te} montre deux
+configurations d'espace urbain avec des murs de 10~m de haut.  La
+première, notée \textsf{Croix}, montre une rue traversée par une autre,
+formant ainsi un carrefour en son centre et la seconde, notée
+\textsf{TE}, montre une même rue mais avec un seul embranchement.  La
+configuration \textsf{Croix} représente en quelque sorte un assemblage
+de la configuration \textsf{TE} et de son symétrique.  Dans ces deux
+configurations, l'observateur effectue le même parcours de la gauche
+vers la droite.  De ce fait, les variations visibles dans \textsf{Croix}
+sont différentes par rapport à \textsf{TE}.
+
+Dans le graphique de la figure~\ref{fig:measure:te-croix-diffmat}, nous
+voyons l'évolution de la distance de Hausdorff pour les deux
+configurations, notées \textsf{Croix MAT} et \textsf{TE MAT}.  Nous
+pouvons remarquer que les deux courbes sont quasiment équivalentes.
+Nous retrouvons de manière équivalente cette ressemblance dans le
+graphique de la figure~\ref{fig:measure:te-croix-diffhh}.  Malgré les
+différences qui apparaissent entre les configurations \textsf{Croix} et
+\textsf{TE}, les deux parcours contiennent des variations visibles
+similaires selon la distance de Hausdorff.
+
+
+\paragraph{Sensibilité par rapport à la résolution}
+Comme pour le $\mathbf{GMD_V}$ (cf.~§\ref{sec:measure:gmd}), nous avons
+testé la sensibilité de la distance de Hausdorff hyperbolique sur le
+parcours de la configuration \textsf{Droit}.  Dans le graphique de la
+figure~\ref{fig:measure:droitn-hh}, nous remarquons ici que les
+différences entre les courbes sont globalement inférieures à 1~\%.  Ici,
+nous pouvons faire les mêmes remarques qu'au §\ref{sec:measure:gmd}.
+Ainsi, un diamètre de projection sphérique de 400~pixels semble
+suffisant pour obtenir des mesures correctes.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.75\linewidth]{img/measure/droit/droitn-hh.eps}
+  \caption[Variation de la distance de Hausdorff hyperbolique dans la
+  configuration \textsf{Droit} pour des résolutions différentes]%
+  {Variation de la distance de Hausdorff hyperbolique dans la
+    configuration \textsf{Droit} pour des résolutions différentes.}
+  \label{fig:measure:droitn-hh}
+\end{figure}
+
+\paragraph{Vitesse du parcours}
+Enfin, nous avons remarqué une dernière particularité à utiliser la
+distance de Hausdorff ou ses dérivées.  La considération de l'espace
+entre deux projections sphériques est importante dans l'évolution de la
+mesure à travers un espace urbain.  Plus l'espacement entre les
+projections est faible, plus elles se ressemblent.  Par conséquent, la
+distance de Hausdorff est aussi beaucoup plus faible entre les
+squelettes.  Cette situation est illustrée dans la
+figure~\ref{fig:measure:droit-droit2-hh}.  Le graphique de cette figure
+a été produit à partir de la configuration \textsf{Droit} de la
+figure~\ref{fig:measure:droit} que nous avons vue auparavant.  Cette
+configuration correspond à une simple rue de 110~m de long bordée de
+murs de 10~m de haut.  L'observateur suit deux parcours dans cette
+configuration partant de la gauche et se dirigeant vers la droite: un
+parcours où les projections sphériques sont espacées de 1,10~m
+(\textsf{Droit}) et un parcours où les projections sphériques sont
+espacées de 0,55~m (\textsf{Droit2}).  La
+figure~\ref{fig:measure:droit-droit2-hh} montre l'évolution de la
+distance de Hausdorff hyperbolique pour les deux parcours.  Nous voyons
+que les valeurs du parcours \textsf{Droit2} qui est suivi plus lentement
+sont plus faibles.  En soi, ce comportement n'est pas un défaut car un
+parcours suivi plus lentement produit des variations moins importantes
+dans le champ visuel de l'observateur que lorsque ce même parcours est
+suivi à une vitesse élevée.  L'espacement entre les projections
+sphériques fait ainsi intervenir la notion de vitesse.
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[width=.8\linewidth]{img/measure/droit-droit2-hh.eps}
+  \end{center}
+  \caption[Comparaison de la configuration \textsf{Droit} avec des
+  espacements différents entre chaque projection]%
+  {Comparaison de la configuration \textsf{Droit}
+    (figure~\ref{fig:measure:droit}) avec des espacements différents
+    entre chaque projection.  Les deux courbes représentent l'évolution
+    de la distance hyperbolique de Hausdorff dans la configuration
+    \textsf{Droit} avec un espacement de 1,10~m (\textsf{Droit\_HH}) et
+    un espacement de 0,55~m (\textsf{Droit2\_HH}) entre chaque
+    projection.}
+  \label{fig:measure:droit-droit2-hh}
+\end{figure}
+
+Plus l'espace entre les projections sphériques est important, moins la
+distance de Hausdorff (ou dérivée) sera précise.  Le principe de la
+distance de Hausdorff est de retrouver parmi un ensemble de points celui
+qui est le plus éloigné d'un point d'un autre ensemble.  Nous pouvons
+nous demander si ce couple de points possède une correspondance dans la
+réalité?  Nous en revenons ainsi à un problème similaire à celui
+rencontré avec la distance d'édition: c'est-à-dire, que la distance de
+Hausdorff apporte sa propre interprétation par rapport aux
+transformations qui se sont produites entre deux squelettes.  Néanmoins,
+la distance de Hausdorff ne se base pas sur une heuristique, comme le
+fait la distance d'édition.  Par rapport à ce fait, la distance de
+Hausdorff est plus sûre en terme de calcul de similarité.
+
+
+\subsection{Distance de Fréchet}
+
+La distance de Fréchet est une solution face aux inconvénients de la
+distance de Hausdorff.  En particulier, nous avons vu que la distance de
+Hausdorff n'est pas adaptée à la mesure de la similarité entre deux
+courbes.  Dans ce cas, la distance de Fréchet convient mieux à ce type
+d'objet géométrique.  Cependant, la distance de Fréchet ne s'applique
+qu'à des courbes et non à des ensembles de courbes.  Elle ne convient
+donc pas à la comparaison de squelettes.  Toutefois nous donnons
+ci-dessous une rapide description de cette distance.
+
+La distance de Fréchet se base sur la nature des courbes qui ne sont pas
+considérées comme un simple ensemble de points, tel que le fait la
+distance de Hausdorff.  Autrement dit, dans le cas de la distance de
+Fréchet, les points d'une courbes sont non seulement traités selon leurs
+coordonnées, mais aussi selon leur position dans la courbe.  Soient deux
+courbes $\mathcal{C}_1$ et $\mathcal{C}_2$, la distance de Fréchet est
+définie par
+
+\begin{equation}
+d_F (\mathcal{C}_1, \mathcal{C}_2)
+  = \min_{f_1:[0;1]\rightarrow[0;N],
+          f_2:[0;1]\rightarrow[0;M]}
+    \left\{
+      \max_{t\in[0;1]} d_E \left(
+                             \mathcal{C}_1\left(f_1(t)\right),
+                             \mathcal{C}_2\left(f_2(t)\right)
+                           \right)
+    \right\},
+\end{equation}
+
+\noindent%
+où $f_1$ et $f_2$ sont deux fonctions continues et strictement
+croissantes.  La distance de Fréchet est souvent illustrée selon
+l'analogie suivante:
+
+\begin{quote}
+  un homme promène son chien en le tenant par une laisse, sachant que
+  l'homme suit une courbe et que le chien en suit une autre.  L'homme et
+  le chien peuvent indépendamment décider de leur propre vitesse, mais
+  ils ne peuvent revenir sur leur pas.  La distance de Fréchet est alors
+  la plus petite longueur de laisse nécessaire.
+\end{quote}
+
+Godau a démontré que le calcul de la distance de Fréchet est un problème
+NP-dur, on ne connaît donc à l'heure actuelle aucun algorithme
+permettant de calculer cette distance avec un temps polynomial
+\cite{godau:1998}.  Aussi, la distance est plutôt utilisée dans le
+problème de décision suivant: $d_F(\mathcal{C}_1,\mathcal{C}_2) <
+\epsilon$.  Une version discrète de la distance de Fréchet a été
+proposée par Eiter et Mannila \cite{eiter:1994}.  La distance de Fréchet
+discrète est une approximation de la distance de Fréchet qui peut être
+plus facilement calculée.
+
+
+\subsection{Distance de Hausdorff modifiée}
+
+La perspective de mouvement est définie par Gibson comme l'ensemble des
+changements graduels apparaissant dans le champ visuel de l'observateur
+lorsqu'il se déplace \cite{gibson:1979}.  Afin de considérer cette
+notion, nous avons tenté de trouver une mesure qui permet de prendre en
+compte ces changements graduels et leur globalité: pour cela nous nous
+sommes intéressés à une catégorie de mesures que nous avons appelée
+\emph{distance de changement}.
+
+Nous avons vu précédemment que la distance de Hausdorff ne permet de
+décrire seulement la variation d'un élément de l'environnement visuel
+urbain, et plus exactement celui où se situe la variation la plus
+importante.  Cet inconvénient est dû au fait que la distance de
+Hausdorff se base sur la recherche de la différence maximale entre les
+ensembles de points comparés.  Elle ne mesure pas la différence globale
+des éléments.  En modifiant légèrement la distance de Hausdorff, nous
+pouvons proposer une nouvelle mesure qui analyse les changements qui se
+sont produits entre deux squelettes.
+
+Si nous reprenons la définition de la distance de Hausdorff relative
+(définition~\ref{def:measure:dhr}), nous pourrions remplacer la fonction
+$\max$ par un calcul de moyenne sur l'ensemble des distances.  La
+distance obtenue a déjà été proposée par Dubuisson et Jain durant les
+années quatre-vingt-dix sous le nom de \emph{distance de Hausdorff
+  modifiée} \cite{dubuisson:1994}.  Ci-dessous, nous définissons cette
+distance, qui se base sur la définition de la distance de Hausdorff.
+
+\begin{definition}[Distance de Hausdorff modifiée]
+\label{def:acd}
+Soient deux ensembles finis non vides de points $S$ et $T$.  La
+\emph{distance de Hausdorff modifiée} $\overline{d_{\mathcal{M}}}$ entre
+$S$ et $T$ est définie par
+
+\begin{equation}
+\overline{d_{\mathcal{M}}} (S,T) = \max \{ \overline{\mathcal{M}} (S|T),
+                                           \overline{\mathcal{M}} (T|S) \}.
+\end{equation}
+
+\noindent%
+$\overline{\mathcal{M}}$ est la distance de Hausdorff modifiée relative.
+Elle est définie par
+
+\begin{equation}
+\overline{\mathcal{M}} (S|T) = \frac{\sum_{p\in S} \min_{q\in T} d(p,q)}%
+                                    {|S|},
+\end{equation}
+
+\noindent%
+où $d$ est une distance.
+\end{definition}
+
+Selon Dubuisson et Jain, la distance de Hausdorff modifiée n'est pas une
+distance car elle ne vérifie pas l'inégalité triangulaire
+\cite{dubuisson:1994}.  Par contre, ils affirment que cette distance à
+un comportement intéressant pour la comparaison de formes: \emph{(i)} la
+valeur de la distance de Hausdorff modifiée augmente de manière monotone
+lorsque la différence entre deux formes augmente, \emph{(ii)} la
+distance est robuste face à des points isolés produits par des
+perturbations.
+
+La différence entre la distance de Hausdorff et la distance de Hausdorff
+modifiée est illustrée dans la figure~\ref{fig:measure:diff-dhdm}.  Dans
+cette figure, nous pouvons remarquer que la distance de Hausdorff est
+invariante d'une configuration à l'autre.  Ceci parce que cette distance
+recherche le plus grand espace parmis tous les espaces qui séparent
+chaque couple de points les plus proches dans les deux ensembles.  Dans
+les trois configurations de la figure~\ref{fig:measure:diff-dhdm} cet
+espace est donné par le couple de points en haut des ensembles $S_i$ et
+$T_i$.  Par contre, la distance de Hausdorff modifiée analyse
+globalement chaque ensemble $S_i$ et $T_i$ en réalisant une moyenne sur
+les distances qui séparent les couples de points les plus proches.  Ce
+qui explique pourquoi la distance de changement varie dans les trois
+configurations de la figure~\ref{fig:measure:diff-dhdm} et pas la
+distance de Hausdorff.
+
+\begin{figure}[htbp]
+  \begin{center}
+    \input{img/measure/diff-dhdm.pstex_t}
+  \end{center}
+  \caption[Différence entre la distance de Hausdorff et la distance de
+  Hausdorff modifiée]%
+  {Différence entre la distance de Hausdorff et la distance de Hausdorff
+    modifiée.  La figure montre six ensembles de points $S_i$ et $T_i$.
+    Nous voyons que pour chaque d'ensemble, la distance de Hausdorff
+    $d_{\mathcal{H}}(S_i,T_i)$ ne varie pas.  Par contre, la distance de
+    Hausdorff modifiée $\overline{d_{\mathcal{M}}}(S_i,T_i)$ est
+    différente dans les trois configurations.}
+  \label{fig:measure:diff-dhdm}
+\end{figure}
+
+\begin{algorithm}[htbp]
+  \caption{Algorithme de calcul de la distance de Hausdorff modifiée
+    relative de changement pour deux squelettes.}%
+  [Cet algorithme prend en paramètre deux squelettes $\textrm{MAT}_1$ et
+  $\textrm{MAT}_2$, ainsi qu'une distance $d$.]
+\bgroup \obeylines\obeyspaces %
+\textbf{fonction} changementRel ($\mathrm{MAT}_1$, $\mathrm{MAT}_2$, d)
+\textbf{début}
+\hspace*{2em} $d_{\Sigma} \leftarrow 0$
+\hspace*{2em} \textbf{pour tout} $P_1\in\mathrm{MAT}_1$ \textbf{faire}
+  \hspace*{4em} $d_{\min} \leftarrow +\infty$
+  \hspace*{4em} \textbf{pour tout} $P_2\in\mathrm{MAT}_2$ \textbf{faire}
+    \hspace*{6em} \textbf{si} $d(P_1, P_2) < d_{\min}$ \textbf{alors}
+      \hspace*{8em} $d_{\min} \leftarrow d(P_1, P_2)$
+    \hspace*{6em} \textbf{finsi}
+  \hspace*{4em} \textbf{finpour}
+  \hspace*{4em} $d_{\Sigma} \leftarrow d_{\Sigma} + d_{\min}$
+  \hspace*{4em} \textbf{finsi}
+\hspace*{2em} \textbf{finpour}
+\hspace*{2em} \textbf{retourner} $\frac{d_{\Sigma}}{|\textrm{MAT}_2|}$
+\textbf{fin}
+\egroup
+\label{algo:motion}
+\end{algorithm}
+
+L'algorithme~\ref{algo:motion} se base sur
+l'algorithme~\ref{algo:hausdorff} vu précédemment.  Il montre une
+fonction permettant de calculer la distance de Hausdorff modifiée
+relative entre deux squelettes.  Cette fonction suppose que la structure
+des squelettes correspond à celle obtenue par l'implémentation de la
+squelettisation d'Hamilton-Jacobi développée par Siddiqi \emph{et al.}
+\cite{siddiqi:2002}.
+
+Par rapport à la comparaison de squelettes, nous retrouvons un
+comportement identique à la distance de Hausdorff, c'est-à-dire que là
+aussi la distance hyperbolique est mieux adaptée pour calculer la
+différence entre deux squelettes.  Dans la définition~\ref{def:acd}, il
+faut donc remplacer $d(\cdot,\cdot)$ par la distance hyperbolique
+$d_h(\cdot,\cdot)$ afin d'avoir une meilleure estimation de la
+similarité entre deux squelettes.  Sinon, pour la même raison que pour
+la distance de Hausdorff, la distance de Hausdorff modifiée a pour
+maximum le diamètre du disque de la projection.  De même, plus la
+distance est faible, plus les squelettes se ressemblent et plus la
+distance moyenne est faible.  Par contre, les valeurs de la distance de
+Haudorff modifiée sont beaucoup plus basses que celles de la distance de
+Hausdorff, car la distance de Hausdorff représente un cas maximal.
+Enfin, la distance de Hausdorff modifiée prend globalement en compte les
+changements qui apparaissent entre deux squelettes.  Autrement dit, elle
+représente mieux les changements globaux qui apparaissent dans un espace
+ouvert urbain.
+
+Par la suite, par abus de langage, nous appelerons distance de Hausdorff
+modifiée cette distance composée avec la distance hyperbolique.
+
+La figure~\ref{fig:measure:diff-tecroix-ahcd} montre une comparaison des
+configurations \textsf{TE} et \textsf{Croix} que nous avons rencontrées
+au §\ref{subsec:measure:hausdorff} (figure~\ref{fig:measure:croix-te}).
+Le graphique de cette figure est à comparer avec ceux des
+figures~\ref{fig:measure:te-croix-diffmat} et
+\ref{fig:measure:te-croix-diffhh}.  Dans le graphique, nous voyons que
+la distance de Hausdorff modifiée détecte mieux la différence de
+caractère entre les deux configurations \textsf{TE} et \textsf{Croix}:
+les événements visuels au centre de \textsf{Croix} sont plus importants
+que ceux de \textsf{TE}.  Ce comportement semble logique au vu de la
+forme des deux environnements.  Par contre, cette différence
+n'apparaissait pas lorsque nous avons utilisé la distance de Hausdorff
+avec la distance hyperbolique ou non.
+
+\begin{figure}[htbp]
+  \begin{center}
+    \includegraphics[width=.8\linewidth]{img/measure/diff-te_croix-ahcd.eps}
+  \end{center}
+  \caption[Comparaison ente les configurations \textsf{TE} et
+  \textsf{Croix} sur la distance de Hausdorff modifiée]%
+  {Comparaison ente les configurations \textsf{TE} et \textsf{Croix}
+    (figure~\ref{fig:measure:croix-te}) sur la distance de Hausdorff
+    modifiée.}
+  \label{fig:measure:diff-tecroix-ahcd}
+\end{figure}
+
+Le graphique de la figure~\ref{fig:measure:droitn-ahcd} représente
+l'évolution de la distance de Hausdorff modifiée dans la configuration
+\textsf{Droit} (figure~\ref{fig:measure:droit}) pour trois diamètres de
+projections sphériques: 400, 200 et 100~pixels.  Les courbes ont peu de
+différence.  Cependant, nous voyons que si l'on diminue la résolution
+des images, du bruit apparaît dans les mesures.  Encore une fois, si
+nous prenons un diamètre de projection sphérique de 400~pixels, les
+mesures devrait être suffisamment précises.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.75\linewidth]{img/measure/droit/droitn-ahcd.eps}
+  \caption[Variation de la distance de Hausdorff modifiée dans la
+  configuration \textsf{Droit} pour différents niveaux de résolution des
+  projections sphériques]%
+  {Variation de la distance de Hausdorff modifiée dans la configuration
+    \textsf{Droit} pour différents niveaux de résolution des projections
+    sphériques.}
+  \label{fig:measure:droitn-ahcd}
+\end{figure}
+
+
+\subsection{Conclusion sur la comparaison de squelettes}
+
+Nous avons vu ici, deux catégories de mesures permettant de caractériser
+un espace urbain à partir d'une succession de squelettes de formes de
+ciel observées le long d'un parcours urbain.  Ces mesures permettent
+d'un côté d'analyser l'espace urbain à chaque pas dans le parcours et de
+l'autre de réaliser une analyse des variations visuelles que produit
+l'espace urbain le long du parcours.  Dans la première catégorie de
+mesures, nous avons discerné certaines analyses qu'il fallait éviter
+afin de ne pas considérer les parties du squelette trop sensibles aux
+perturbations.  Puis, nous avons décrit le plus grand disque maximal ou
+$\mathbf{GMD_V}$ qui détermine le point du squelette décrivant la plus
+grande ouverture visible localement.  Dans la deuxième catégorie de
+mesures, nous nous sommes intéressés à une version de la distance de
+Hausdorff basée sur la distance hyperbolique, définie par Choi et Seidel
+\cite{choi:2001a}.  Celle-ci est plus adaptée à la comparaison de
+squelettes.  Nous avons ainsi pu développer une mesure capable de
+détecter des événements visuels sur la base des différences qui
+apparaissent entre des squelettes successifs.  Toutefois, nous nous
+sommes rendus compte que la distance de Hausdorff ne permet pas de
+distinguer certaines configurations.  Nous nous sommes donc intéressé à
+la distance de Hausdorff modifiée.  La distance de Hausdorff modifiée
+permet de rendre compte du changement global qui semble apparaître entre
+deux squelettes, en se basant, comme pour la distance de Hausdorff, sur
+les éléments des deux squelettes les plus proches, mais cette fois en
+les considérant tous.  Cette différence permet de mieux distinguer
+certaines configurations.  Enfin, toutes les mesures que nous avons
+rencontrées ont une sensibilité faible face au changement de résolution.
+Cependant, nous nous sommes aperçus que des pertubations apparaissaient
+dans les mesures avec des résolutions faibles.  Aussi, pour obtenir des
+valeurs suffisamment précises, il convient d'utiliser des niveaux de
+définition suffisamment forts.
+
+Le $\mathbf{GMD_V}$, la distance de Hausdorff hyperbolique et la
+distance de Hausdorff modifiée représentent pour nous trois mesures de
+base pour analyser les événements visuels des espaces ouverts urbains et
+caractériser des parcours.  L'ensemble de ces mesures est prévu pour
+analyser des espaces urbains denses, regroupant en peu d'espace une
+quantité importante de bâtiments.  Dans le chapitre suivant, nous
+verrons avec plus de détails le comportement de ces mesures au travers
+de divers exemples de ce type.  L'application de nos mesures à des
+espaces urbains éparpillés ou très ouverts, comme les entrées de ville,
+ne fait pas l'objet de cette thèse, mais pourrait faire l'objet de
+futurs travaux.
+
+% Local Variables:
+% mode: latex
+% fill-column: 72
+% End:

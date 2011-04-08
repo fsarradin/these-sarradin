@@ -1,0 +1,682 @@
+% intro.tex - introduction de la thèse
+%
+% Copyright (C) 2003, 2004 - François Sarradin
+%
+
+\title{Introduction}
+\author{François Sarradin}
+\laboratory{%
+  CNRS -- CERMA UMR 1563 \\
+  École d'Architecture de Nantes \\
+  Rue Massenet -- BP 81\,931 \\
+  44\,319 NANTES CEDEX 3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sloppy
+\makeheader
+%\chapter{Introduction}
+%\label{chap:intro}
+
+\kern-48pt
+\begin{reflexion}
+\begin{center}
+Aux Lecteurs,
+
+Amis lecteurs qui ce livre lisez,\\
+Despouillez vous de toute affection.\\
+Et le lisants ne vous scandalisez,\\
+Il ne contient mal ne infection.\\
+Vray est qu'icy peu de perfection\\
+Vous apprendrez, si non en cas de rire.\\
+Aultre argument ne peut mon cueur elire.\\
+Voiant le dueil qui vous mine \& consomme,\\
+Mieulx est de ris que de larmes escrire,\\
+Pour ce que rire est le propre de l'homme.
+
+VIVEZ IOYEUX
+\end{center}
+\raggedleft François Rabelais, \emph{La vie inestimable du grand
+Gargantua, pere de Pantagruel}.\par
+\end{reflexion}
+
+\begin{intropar}
+  {P}\textsc{ar} leur taille et par leur forme, les villes sont des
+  lieux propices à l'étonnement.  Des petites villes, comme Luxembourg
+  ou Louvain, aux grandes métropoles, comme Berlin, Shanghai ou
+  Londres, elles rassemblent de quelques centaines de milliers à
+  plusieurs millions de citadins et témoignent en général de quelques
+  dizaines à quelques milliers d'années d'histoire.  Dans ce contexte,
+  les villes sont le résultat d'organisations sociales, politiques,
+  économiques, voire militaires et géophysiques, qui transparaissent
+  dans leur forme et les images qu'elles nous laissent.  Ainsi, bien
+  plus qu'une simple combinaison d'objets urbains dignes des jeux de
+  briques, les espaces de la ville peuvent nous aider à comprendre la
+  ville elle-même: son passé, son présent et peut-être même son futur.
+  Sachant que c'est par la vue que la ville est appréhendée en premier
+  \cite{cullen:1971}, l'analyse des espaces urbains, et l'analyse de
+  leur perception visuelle en particulier, apparaît comme un acte
+  légitime pour étudier la ville.
+\end{intropar}
+
+Pour analyser la perception visuelle des espaces urbains, il faut
+comprendre notre système visuel.  Que voyons-nous principalement
+lorsque nous sommes en ville?  Est-ce un ensemble de bâtiments, un
+ensemble de rues et de places?  Ou alors est-ce un seul élément
+composé de formes, de couleurs, de textures et aussi de mouvements?
+Nous ne pouvons pas estimer un espace urbain au travers d'une seule
+image.  Une image peut en effet rendre compte du caractère d'un lieu,
+des bâtiments qui s'y trouvent et éventuellement de leur densité.
+Mais elle ne révèle pas la <<~pratique~>>, l'expérience que nous avons
+ou que nous aurions de ce lieu, la manière de le traverser afin
+d'avoir la meilleure vue, comme les sensations que peuvent nous
+procurer différents parcours dans une même place, ou comme la
+détermination du bâtiment qui attire le plus notre regard, etc.  Comme
+l'a écrit Thiel:
+
+\begin{quotation}\em
+\begin{otherlanguage}{english}
+  ``Architecture may well be `frozen music' like a phonograph record;
+  but man is the pickup whose movement realizes the
+  experience.''\footnote{\selectlanguage{francais} \og L'architecture
+    peut bien être de la \emph{musique conservée} comme sur un
+    enregistrement de phonographe; et l'homme est le capteur dont le
+    mouvement fait apparaître l'expérience. \fg}
+\end{otherlanguage}
+\cite{thiel:1961}
+\end{quotation}
+
+\noindent%
+L'analyse des espaces urbains par le mouvement est une voie de
+recherche actuelle.  Les méthodes proposées échouent généralement à
+caractériser cette expérience, car elles se basent sur une description
+globale de l'environnement visuel en des points précis de l'espace
+urbain, indépendemment de tout cheminement.  De ce fait, ces méthodes
+ne prennent pas en compte l'analyse des variations morphologiques des
+éléments des espaces ouverts urbains le long de parcours.
+
+Une autre approche consiste à analyser la trajectoire
+spatio-temporelle d'objets donnés, en faisant provisoirement
+abstraction des autres trajectoires possibles.  Pour faire image, dans
+un domaine étranger à celui qui nous occupe, on peut comparer deux
+mesures dynamiques de la circulation en centre ville.  Une première
+consiste à mesurer le flux de circulation, le nombre de véhicules par
+heure en l'occurence, en une série de points du réseau.  La seconde,
+beaucoup plus riche en terme d'analyse dynamique, consiste à analyser
+la trajectoire, la vitesse et les obstacles rencontrés par un véhicule
+particulier et lui-même <<~pris dans la circulation~>>.  De ces deux
+méthodes, celle permettant une analyse plus objective est certainement
+la première.  Mais la seconde nous offre une analyse au plus près de
+\og l'évolution \fg de l'objet, nous laissant percevoir des phénomènes
+que nous ne pourrions observer avec la première approche.  C'est cette
+deuxième approche que nous avons cherchée à développer au cours de ce
+projet.  Plus exactement, nous nous sommes intéressés au développement
+d'une méthode d'analyse de la perception visuelle dans les espaces
+ouverts urbains le long de parcours qui nous permettrait de mesurer
+les variations de la morphologie et des éléments des espaces urbains.
+
+Dans ce chapitre, nous commencerons par étudier la notion d'espace
+ouvert urbain afin de définir notre champ d'étude.  Nous examinerons
+l'intérêt d'analyser ce type d'espace.  Ensuite, nous continuerons en
+caractérisant la perception visuelle dynamique dans les espaces
+ouverts urbains en commençant par une approche biologique et en
+continuant par une approche psychologique.  Nous commencerons ensuite
+par élaborer les prémisses d'une nouvelle méthode d'analyse de la
+perception visuelle des espaces ouverts urbains le long de parcours.
+Pour terminer, nous détaillerons le plan du mémoire.
+
+
+\section{Notion d'espace ouvert urbain}
+\label{sec:intro:uos}
+
+Il existe plusieurs manières de percevoir et d'analyser les espaces
+urbains.  Par exemple, nous pouvons distinguer le mobile de
+l'immobile, l'environnement urbain global de ses objets, le dominant
+du résiduel, etc.  Pour tout ce qui concerne la perception des objets,
+il est possible d'étudier l'espace en termes de distance, de
+profondeur, de taille ou de mouvement perçu des objets isolés.  Selon
+Benedikt, pour comprendre la perception de l'environnement urbain,
+celui-ci doit être vu comme \cite{benedikt:1979}:
+
+\begin{itemize}
+\item un élément substantiel plutôt que comme un élément vide,
+\item étant défini par des surfaces visibles,
+\item ayant des qualités topologiques et formelles, normalement
+  appréciées pendant le mouvement continu à travers l'espace par un
+  observateur constamment immergé dans l'environnement.
+\end{itemize}
+
+Pour Sitte, les espaces urbains peuvent être divisés en plusieurs
+ensembles complémentaires \cite{sitte:1996}: le sol, le «~plafond~» et
+les éléments pleins.  Le sol est un élément sur lequel repose les
+éléments pleins.  Il est représenté par plusieurs caractéristiques
+comme sa hauteur, sa couleur et sa texture.  Le <<~plafond~>> est un
+autre nom pour désigner le ciel: c'est un objet uniforme, homogène.
+Les éléments pleins représentent tous les obstacles du monde visuel
+autres que le sol qui cachent le reste de la ville et découpent le
+ciel.  Les éléments pleins sont divers et variés, puisqu'il peut
+s'agir de bâtiments, de monuments, de végétation, de tous les éléments
+constituant un écran à la lumière.  Tous ces objets ont la
+particularité de pouvoir être représentés par des volumes, des
+primitives géométriques.  Néanmoins, ces trois éléments de base
+permettent d'en définir un quatrième entièrement complémentaire:
+l'espace ouvert urbain.
+
+La notion d'espace ouvert urbain est définie par Teller en ces termes
+\cite{teller-phd:2001}:
+
+\begin{quotation}\em
+\begin{otherlanguage}{english}
+  ``Urban open spaces can be understood in a variety of ways depending
+  on the scientific approach to define and describe them.  [...] From a
+  morphological point of view, [these] are usually defined as the empty
+  space, or the void, separating the built volumes and surfaces.
+  Obviously, the shape of such spaces is characterised by a relation of
+  strict duality with the `filled elements' that surround them, like the
+  buildings, the vegetation or
+  fences.''\footnote{\selectlanguage{francais} \og Les espaces ouverts
+    urbains peuvent être compris de différentes manières selon
+    l'approche scientifique les définissant ou les décrivant.  [...]
+    D'un point de vue morphologique, [ils] sont généralement définis
+    comme l'espace laissé, ou le vide, séparant les volumes construits
+    et les surfaces.  Bien sûr, la forme d'un tel espace est caractérisé
+    par une relation de strict dualité avec les \emph{éléments pleins}
+    qui les entourent, comme les bâtiments, la végétation ou les
+    obstacles.\fg}
+\end{otherlanguage}
+\cite{teller:2003}
+\end{quotation}
+
+\noindent%
+Dans les environnements urbains, les espaces ouverts comprennent tous
+les espaces tels que les places, les rues, les zones de recul devant
+les bâtiments exceptionnels, les espaces verts, ainsi que les espaces
+naturels comme les berges des fleuves, etc.  Ils constituent le lieu
+privilégié de la vie urbaine, que ce soit en termes d'espace public,
+d'espaces de rencontre ou simplement de lieux de détente.  Ainsi, ils
+doivent être considérés comme des éléments de la composition urbaine à
+part entière plutôt que comme un <<~espace résiduaire
+d'aménagement~>>.  La prise de conscience de ce phénomène a amené une
+recrudescence d'intérêt pour les espaces ouverts en tant que tels
+auprès des acteurs de terrain.
+
+%\subsection{Intérêt de l'étude des espaces ouverts urbains}
+\label{sec:intro:app}
+
+L'aménagement de l'environnement urbain est au c{\oe}ur des
+discussions sur le développement urbain durable en Europe.  Près de
+80\,\% de la population de l'Union Européenne vit dans des villes.
+L'espace urbain est par conséquent le lieu où les problèmes sur
+l'environnement affectent le plus la qualité de vie des
+citoyens\footnote{EUROPA: The European Union On-Line.
+  http\string://europa.eu.int/comm/environment/urban/home\_en.htm.
+  [ON-LINE] 7 octobre 2003.}.  Un outil d'analyse de la perception
+visuelle des espaces urbains permet de réaliser différentes analyses
+ayant pour but l'étude de la perception d'un projet, l'étude de
+l'histoire d'un espace, l'étude de l'organisation sociale d'un
+quartier ou, pour rentrer dans le cadre du développement durable, la
+protection du patrimoine urbain.  Un outil d'analyse de la perception
+visuelle le long de parcours urbains permettrait d'apporter des
+résultats complémentaires en proposant une analyse au plus près de
+l'observateur et de l'expérience qu'il pourrait avoir des espaces
+urbains.
+
+Un outil d'analyse des espaces ouverts urbains le long de parcours
+pourrait avoir de multiples applications.  L'une d'entre-elles serait
+d'analyser des parcours, mais aussi de proposer des études d'espaces
+urbains.  En effet, les variations perceptibles des espaces ouverts ne
+sont pas véritablement analysées par les méthodes actuelles.  Ces
+variations permettraient de mettre en avant un ensemble de
+suppositions sur l'expérience.  Par la suite, notre outil peut être
+utilisé pour étudier l'impact environnemental des projets urbains.  Ce
+type d'étude est un sujet très sensible en Europe depuis les années
+soixantes-dix \cite{bond:2001}.  Dans un tel cadre, il semble
+nécessaire de mettre au point des outils pour vérifier que les projets
+urbains, comme la nouvelle gare de Liège ou le nouveau musée de
+Bilbao, n'altèrent pas le patrimoine.  Les problèmes liés à la
+protection du patrimoine urbain ont été étudiés dans le cadre du
+programme SUIT \emph{(Sustainable development of Urban historical
+  areas through an active Integration within Towns)} supporté par le
+programme européen sur l'environnement et le développement durable.
+Nos travaux développés entre le \textsc{Cerma} et le \textsc{Lema} ont
+notamment été possibles grâce à ce projet.
+
+
+\section{Caractérisation de la perception dynamique des espaces ouverts urbains}
+\label{sec:intro:psycho}
+
+Notre projet s'intéresse à la perception visuelle humaine en milieu
+urbain.  Dans cette section, nous allons examiner le système visuel
+humain selon deux approches.  Nous commencerons par l'approche
+biologique qui analyse les différents éléments du système visuel et
+tente de comprendre son fonctionnement\footnote{Il existe sur le Web
+  deux sites sur le système visuel régulièrement mis à jour par des
+  spécialistes et proposant chacun un état de l'art complet.  Pour
+  cela, voir \cite{kolb:2004} et \cite{fulton:2004}}.  Ensuite, nous
+examinerons une deuxième fois le système visuel mais cette fois selon
+une approche psychologique.
+
+\subsection{Approche biologique}
+
+Le système visuel humain est principalement composé des deux yeux, du
+cortex visuel et d'un ensemble de nerfs faisant le lien.  Un schéma de
+l'{\oe}il est donné dans la figure~\ref{fig:intro:eye}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.5\linewidth]{img/intro/eye.ps}
+  \caption[Schéma de l'{\oe}il humain]%
+  {Schéma de l'{\oe}il humain.}
+  \label{fig:intro:eye}
+\end{figure}
+
+Lorsque la lumière arrive à l'{\oe}il, elle subit un vaste ensemble de
+traitements avant d'être transformée en information intelligible.  Les
+seules modifications optiques ont lieu au niveau de l'{\oe}il
+lui-même, où la lumière est filtrée et déviée par l'iris et le
+cristallin.  C'est aussi dans l'{\oe}il que l'information lumineuse
+est convertie en stimulus, grâce aux photorécepteurs de la rétine.
+Les photorécepteurs se dénombrent à environ 130~millions et se
+divisent en deux classes:
+
+\begin{itemize}
+\item les bâtonnets qui fournissent une image en noir et blanc sont
+  sensibles aux informations lumineuses mêmes faibles,
+\item les cônes qui fournissent des informations dans les gammes du
+  rouge, du vert et du bleu, ont besoin de beaucoup de luminosité pour
+  être excités.
+\end{itemize}
+
+\noindent%
+Les cônes sont principalement concentrés au centre de l'{\oe}il dans
+une petite dépression appelée la \emph{macula} ou tâche jaune.  C'est
+en cet endroit que se trouve la \emph{fovéa} où se forme la vision la
+plus précise en éclairage diurne.  Elle mesure 1300 à 1500~$\mu$m et
+contient 400\,000 cônes.  En dehors de cette zone, les cônes sont de
+plus en plus absents et les bâtonnets de plus en plus présents. Cette
+partie de l'{\oe}il permet la vision latérale et la vision nocturne.
+Elle fournit des images plus floues que la fovéa.
+
+Par la suite, les informations sont concentrées dans le nerf optique
+qui les achemine vers le cortex visuel situé à l'arrière du cerveau.
+Le nerf optique est composé de 1,2~millions de fibres ou \emph{axones}
+et 10~\% d'entre-eux proviennent de la fovéa.  Une partie de ces
+informations sont acheminées vers le cervelet, qui gère la position
+des yeux de la tête et du corps.  Au niveau du cortex visuel, les
+informations sont décomposées, filtrées et analysées selon différents
+critères tels que la couleur, la forme, la position ou la direction
+des objets perçus.  Ainsi, cette seule partie du système visuel
+possède des mécanismes innés qui agissent sur notre interprétation du
+monde visuel.  Il faut noter que bien souvent, le mouvement est
+analysé de manière élémentaire par des parties distinctes du système
+visuel.
+
+La précision de l'{\oe}il permet de percevoir des mouvements jusqu'à
+5/100\up{e} de seconde.  Pourtant, il semble que nous ne comprenions
+naturellement que les images statiques.  En fait, nous possédons deux
+visions \cite{ninio:1991}.  La région centrale de la rétine avec un
+angle 10 à 15~degrés est le lieu de la vision détaillée et en couleur.
+Les formes y sont appréciées dans toute leur richesse, mais seuls les
+mouvements lents y sont correctement interprétés.  Cette région est le
+lieu de la vision statique.  La région périphérique est peu concernée
+par l'identification des formes et est capable d'analyser les
+mouvements rapides.  C'est le lieu de la vision dynamique.  Il semble
+que ces deux types de vision (dynamique et statique) se complètent: la
+zone périphérique détecte des éléments en mouvement et un mécanisme
+tourne les yeux de sorte que l'élément apparaisse dans la fovéa pour y
+être identifié et suivi éventuellement.  De cette façon, il semble
+évident que le mouvement attire le regard.
+
+Si nous faisons une comparaison avec le monde animal, notre système
+visuel est proche de celui des animaux grimpeurs ou chasseurs
+\cite{mueller:1966}.  En effet, nos yeux sont tournés vers l'avant,
+ils permettent une perception en relief parfaitement nette et sont
+capables d'une mise au point rapide.  En ce qui concerne la vision en
+relief, étant donné que nos analyses se font dans des espaces urbains,
+nous considérons que la vision en relief a très peu d'effet.  On peut
+alors supposer que le système visuel n'est composé que d'un seul
+{\oe}il.  Les distances, les formes, les mouvements sont détectés par
+des indices monoculaires (ombrage, densité de texture, parallaxe du
+mouvement, etc.).
+
+L'anatomie du système visuel humain nous apporte quelques informations
+sur la perception visuelle elle-même.  En particulier, elle semble
+indiquer que notre vision du monde est façonnée par un ensemble de \og
+filtres \fg qui modifient et quantifient, un peu à la manière des
+outils mathématiques d'analyse d'images, les informations lumineuses.
+Cette anatomie nous révèle aussi que le mouvement y est analysé de
+manière attentive, à la fois dynamiquement et statiquement.  Mais la
+perception en mouvement reste un sujet encore mystérieux dans le
+domaine de la biologie.  Plus généralement, les connaissances
+actuelles ne permettent pas de comprendre les fonctionnalités qui se
+cachent derrière le système neuronal le plus simple.
+
+
+\subsection{Approche psychologique}
+\label{subsec:intro:visual-psy}
+
+Que voyons-nous exactement?  Certains affirment que nous ne voyons que
+ce que nous voulons voir.  D'autres prétendent que nous voyons plus
+que ce que nous voulons.  Si nous tournons la tête pour regarder
+l'heure un instant, nous verrons que l'heure est affichée dans une
+pendule, que cette pendule est analogique ou numérique, qu'elle est
+posée devant un mur tapissé de papier peint, etc.  Mais, nous
+concentrons notre attention sur l'heure, au point d'oublier presque le
+reste.  Ainsi, la question de savoir ce que nous voyons est
+ambitieuse.  Toutefois, par rapport à la précédente conclusion,
+puisque le système visuel modifie les informations lumineuses, nous
+pouvons faire ici l'hypothèse que la perception visuelle humaine est
+subjective.  Autrement dit, le monde tel que nous le voyons est
+façonné par notre système visuel et ne correspond pas au monde
+physique \cite{lehar:1999}.  Cette théorie de la perception visuelle
+rejoint celle proposée par Kant au
+%
+\textsc{\letterspace to .8\naturalwidth{xvi}}\up{e}~siècle
+%
+\cite{kant:1781}.  Selon Kant, deux mondes visuels peuvent être
+distingués:
+
+\begin{itemize}
+\item \emph{le monde substantiel} est l'univers qui nous entoure,
+\item \emph{le monde phénoménal} est la réalité telle qu'elle est
+  construite au sein de notre cerveau.
+\end{itemize}
+
+\noindent%
+Dans la perception visuelle humaine, le monde substantiel ne peut être
+vu qu'au travers du monde phénoménal.  Autrement dit, nous
+construisons une représentation du monde physique, qui nous entoure,
+et nous considérons cette représentation comme une réalité.  Cette
+théorie de la perception visuelle est bien entendu hypothétique, car
+personne n'a pu prouver que notre cerveau construisait un monde
+complet représentant le monde physique.  Cependant, cette hypothèse
+est celle qui explique le mieux les illusions d'optique.
+
+Les illusions d'optique sont dues à des particularités de notre
+système visuel qui provoquent des déformations des informations
+lumineuses.  Elles nous fournissent une première interprétation
+inconsciente du monde qui nous entoure.  Les illusions permettent de
+comprendre la manière dont notre système visuel organise les
+informations qui arrivent à l'{\oe}il.  Par exemple, sur la
+figure~\ref{fig:intro:illusion} nous voyons deux illusions
+différentes.  Celle de gauche est appelée l'illusion du triangle de
+Kanizsa \cite{ninio:1998}.  Elle laisse apparaître un triangle
+pourtant invisible qui recouvre partiellement trois disques noires et
+un second triangle.  Ce triangle illusoire semble plus clair que le
+fond du schéma.  La raison de cette illusion reste encore sans
+explication satisfaisante.  À droite de la
+figure~\ref{fig:intro:illusion}, nous voyons apparaître l'illusion de
+la grille scintillante de Schrauf \emph{et al.} \cite{schrauf:1997}.
+Le schéma est composé d'un fond noir sur lequel est dessiné un
+ensemble de traits gris de façon à former un quadrillage.  À chaque
+intersection du quadrillage est dessiné un petit disque blanc.
+Lorsque nous observons ce schéma, nous voyons apparaître des disques
+gris dans les disques blancs, provoquant l'illusion d'un
+scintillement.  Van Rullen et Dong ont démontré que le processus de
+scintillement n'est pas vraiment aléatoire et qu'il dépend à la fois
+de la position des yeux et de la distribution de l'attention
+\cite{rullen:2003}.  D'autres illusions permettent de montrer que nous
+pouvons distinguer les profondeurs avec un seul {\oe}il, que notre
+{\oe}il est sans cesse en mouvement ou qu'une partie de notre {\oe}il
+est parfaitement insensible (tâche aveugle)
+\cite{ninio:1991,ninio:1998}.  Il est intéressant de constater que
+certains philosophes considèrent le mouvement comme une illusion
+\cite{alain:1941}.  Zénon d'Élée ainsi prétendait que le mobile n'est
+jamais en mouvement car à chaque instant il est exactement à un seul
+endroit et non en plusieurs.  Dans le cadre de la perception du
+mouvement, il existe une illusion bien connue qui consiste produire la
+sensation de mouvement continu à partir d'une succession d'images
+fixes.  Nous rencontrons cette illusion avec le cinéma et la
+télévision.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.35\linewidth]{img/intro/gestalt.eps}
+  \quad
+  \includegraphics[width=.35\linewidth]{img/intro/hermann-grid.eps}
+  \caption[Deux illusions]%
+  {Deux illusions.  À gauche: l'illusion du triangle de Kanizsa.  Sur
+    le schéma, nous voyons apparaître un triangle qui semble être plus
+    clair que le fond.  À droite: la grille scintillante
+    \cite{schrauf:1997}.  L'illusion apparaît lorsque nous regardons
+    les points blancs du dessin.  Nous y voyons en effet scintiller
+    des points gris.}
+  \label{fig:intro:illusion}
+\end{figure}
+
+Gibson aussi s'est intéressé de près à la perception visuelle et en
+particulier à la perception en mouvement.  Pour lui, la perception
+visuelle résulte d'une composition entre plusieurs images:
+
+\begin{quotation}
+  \begin{otherlanguage}{english}
+{\em    ``We are forced to conclude that the visual world cannot be
+    perceived all at once.  The  process of perception cannot rest
+    upon the image of a single fixation such as yields a momentary
+    visual field.  To see more than this takes time, and requires a
+    succession of images.  The product of these successive
+    impressions, however, is such that, paradoxically, all awareness
+    of the succession has been lost.  Unquestionably the panoramic
+    visual world depends on a temporal series of excitations and just
+    as unquestionably the succession of excitations is not represented
+    in the final experience.''}\footnote{\selectlanguage{francais} Nous
+    sommes forcés de conclure que le monde visuel ne peut être perçu
+    en une seule fois.  Le processus de perception ne peut se reposer
+    sur l'image d'une seule fixation comme celle produite par un champ
+    visuel momentané.  Voir plus que cela prend du temps et nécessite
+    une succession d'images.  Le produit de ces impressions
+    successives, cependant, est tel que, paradoxalement, toute
+    conscience de cette succession a été perdue.  Incontestablement,
+    le monde visuel panoramique dépend d'une série temporelle
+    d'excitations et tout aussi incontestablement la succession
+    d'excitations n'est pas représentée dans l'expérience finale.}
+    \cite{gibson:1950}
+  \end{otherlanguage}
+\end{quotation}
+
+\noindent%
+Ainsi, notre perception visuelle n'est pas réduite au seul champ
+visuel offert par les yeux.  Il semble que les informations du monde
+visuel soient constamment mises à jour par les informations récupérées
+dans le champ visuel.  Lorsque l'observateur se déplace, son point
+d'observation change, mais tout ne change pas dans son monde visuel.
+Le monde visuel est décomposé en une \emph{structure invariante} et
+une \emph{structure de perspective} \cite{gibson:1979}.  La structure
+de perspective change pour chaque déplacement de l'observateur
+contrairement à la structure invariante.  Dans un déplacement continu,
+la structure de perspective forme un flux optique dans lequel les
+informations visuelles <<~partent de l'avant~>>, <<~font le tour~>> de
+l'observateur et <<~repartent~>> derrière lui.  Le sens de ce flux
+optique varie selon le sens dans lequel se déplace l'observateur.
+Mais la manière dont agit le flux optique peut faire penser à un flux
+d'air passant près d'une sphère.  Pour certains chercheurs, une
+représentation sphérique explique le mieux notre façon de percevoir le
+monde.  Ainsi, Lehar et Heelan indiquent que le ciel apparaît comme un
+dôme et le sol comme un bol \cite{heelan:1983,lehar:2003}.  Dans le
+cadre de la perception en mouvement, Gibson parle de \emph{perspective
+  de mouvement} qui correspond à l'ensemble des variations qui
+apparaissent autour de nous lorsque nous nous déplaçons
+\cite{gibson:1979}.
+
+Notre vision peut être qualifiée de dynamique, dans le sens où nous
+sommes capables d'observer le monde même lorsque celui-ci évolue
+autour de nous.  Plus intéressant encore, nous sommes capables de
+distinguer les mouvements, dus à notre propre déplacement, des
+mouvements des éléments de notre environnement qui en sont
+indépendants \cite{gibson:1979,lynch:1966}.  Étant rarement immobiles
+en ville, nous parcourons les rues et récoltons des séries d'images de
+différents espaces urbains.  Ces images sont liées entre elles par les
+points du parcours que nous avons suivis.  De ces séries, nous
+retenons non seulement des formes, des couleurs, des textures des
+espaces traversés, mais aussi les effets, les changements, les
+variations dus à notre propre mouvement.  Ces effets visuels peuvent
+être l'apparition d'une grande place, la découverte d'un monument ou
+encore le passage dans une rue étroite servant de transition entre
+deux espaces plus vastes.  Les milieux urbains nous fournissent des
+images qui nous repoussent, qui parfois nous laissent indifférentes ou
+qui nous attirent.  Toutefois, influençant notre appréciation, les
+variations induites par notre mouvement dans notre monde visuel ne
+doivent pas être ignorées dans l'analyse des espaces ouverts urbains.
+
+\section{Élaboration d'une nouvelle méthode d'analyse des espaces
+  ouverts urbains}
+
+Pour réaliser une analyse des espaces ouverts urbains, les méthodes
+usuelles utilisent plusieurs niveaux de représentation de
+l'environnement urbain (figure~\ref{fig:survey:analysis}).  Celles-ci
+se basent par exemple sur un espace réel ou alors elles utilisent un
+modèle 3D de l'environnement urbain.  À partir de ces modèles, toutes
+ces méthodes utilisent une représentation de l'environnement visuel de
+l'observateur, comme nous le verrons dans les
+chapitres~\ref{chap:event} et~\ref{chap:uos}.  Il peut s'agir de
+dessins ou de photographies comme les séquences picturales de Cullen,
+Lynch \emph{et al.} et Bosselmann
+\cite{lynch:1966,bosselmann:1998,cullen:1971} ou les analyses
+séquentielles de Panerai \emph{et al.}  \cite{panerai:1999}
+(cf.~chapitre~\ref{chap:event}).  Il peut s'agir d'une modélisation 2D
+de l'environnement urbain comme c'est le cas pour les isovists
+\cite{benedikt:1979} (cf.~chapitre~\ref{chap:uos}), les graphes de
+visibilité de Turner \emph{et al.} \cite{turner:2001}
+(cf.~chapitre~\ref{chap:uos}), les partitionnements convexes
+\cite{peponis:1997} (cf.~chapitre~\ref{chap:event}), les complexes de
+visibilités 2D \cite{pocchiola:1996,riviere-phd:1997}
+(cf.~chapitre~\ref{chap:event}).  Enfin, il peut s'agir de tout autre
+représentation comme les projections sphériques de Teller
+\cite{teller:2003} ou le modèle d'élévation digitale utilisé par Ratti
+et Richens \cite{ratti:2004} (cf.~chapitre~\ref{chap:uos}).
+
+Ces méthodes réalisent des descriptions locales (i.e.~en des positions
+précises de l'espace) de l'environnement urbain.  Il peut s'agir de
+décrire le polygone de visibilité en utilisant l'aire des isovists, la
+convexité de l'espace avec les graphes de visibilité de Turner ou avec
+le rapport de masse en passant par les projections sphériques de
+Teller.  Mais l'espace peut être décrit selon les événements visuels
+ou les sensations liées au mouvement qui peuvent s'y produire, comme
+nous le verrons avec les e-partitionnements de Peponis \emph{et al.}
+\cite{peponis:1997}, les graphes d'aspects de Koenderink et van~Doorn
+\cite{koenderink:1976} ou les squelettes de visibilité de Durand
+\emph{et al.} \cite{durand:1997} pour le premier et les
+représentations de la sensation de mouvement de Thiel ou Lynch
+\emph{et al.} pour le second \cite{lynch:1966,thiel:1961}.  Le
+processus d'analyse des espaces ouverts urbains proposés par la
+plupart des chercheurs est représenté dans la partie supérieure de la
+figure~\ref{fig:survey:analysis}.  La partie inférieure et les
+éléments en gras indiquent nos choix et notre contribution.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.8\linewidth]{img/survey-ccl/analysis.eps}
+  \caption[Vers une analyse des variations morphologiques dans les
+  espaces ouverts urbains le long de parcours]%
+  {Vers une analyse des variations morphologiques dans les espaces
+    ouverts urbains le long de parcours.  Le schéma représente toutes
+    les étapes successives pour permettre une analyse des variations
+    morphologiques des espaces ouverts urbains le long de parcours.
+    Chaque cadre représente une étape et à côté des cadres sont
+    indiquées des méthodes permettant de réaliser l'étape.  Les méthodes
+    en gras sont celles que nous avons choisies pour réaliser notre
+    méthode d'analyse des variations.}
+  \label{fig:survey:analysis}
+\end{figure}
+
+Nous avons choisi de baser notre méthode d'analyse quantitative des
+variations morphologique des espaces ouverts urbains le long de
+parcours sur les projections hémisphériques du ciel proposées par
+Teller \cite{teller:2003}.  C'est une \emph{méthode orientée champ}
+qui offre en effet l'avantage de prendre en compte les théories de la
+perception visuelle selon lesquelles notre monde visuel ne se limite
+pas à notre champ visuel.  Le fait d'utiliser des projections du ciel
+nous fournit des indications sur l'ouverture d'un espace en une
+position donnée et sur sa morphologie.  Enfin, les projections
+sphériques sont rapides à calculer sachant que nous ne faisons pas
+intervenir la luminosité, les textures et les couleurs: nous nous
+basons simplement sur la forme du ciel.  La méthode que nous proposons
+utilise une représentation tridimensionnelle de l'environnement
+urbain.  Les éléments pleins de l'espace urbains sont représentés par
+des primitives telles que les points et les surfaces.  Les projections
+sphériques de la forme de ciel sont calculées en série le long de
+parcours urbains.
+
+L'hypothèse que nous faisons ici est que l'analyse de ce qui est perçu
+dynamiquement peut être réalisé au moyen d'une succession de
+représentations statiques de la perception visuelle humaine.  De tels
+travaux ont déjà été réalisés par le moyen d'une succession de
+photographies ou de peintures \cite{bosselmann:1998,lynch:1966}.
+Toutefois, au lieu d'utiliser des photographies ou des dessins, nous
+utilisons des projections sphériques du ciel afin de suivre
+l'évolution de la forme du ciel le long du parcours.  En partant de
+cette hypothèse, nous pensons qu'il est possible de réaliser des
+analyses quantitatives des variations morphologiques des espaces
+ouverts urbains le long de parcours.
+
+
+\section{Organisation du mémoire}
+\label{sec:intro:plan}
+
+Dans cette introduction, nous avons expliqué que les espaces ouverts
+urbains sont principalement appréhendés par la vue alors que
+l'observateur se déplace et que les méthodes d'analyse des espaces
+ouverts urbains devaient considérer ce fait.  Ainsi, nous nous
+proposons de réaliser une nouvelle méthode d'analyse de la perception
+visuelle des espaces ouverts urbains le long de parcours.  Ici, nous
+avons commencé par définir les espaces ouverts urbains pour poser les
+limites de notre champ d'étude et montrer l'intérêt de les étudier.
+Ensuite, nous nous sommes intéressés à deux approches du système
+visuel humain pour caractériser la perception visuelle dynamique: une
+approche biologique qui nous a permis d'appréhender les capacités de
+notre système visuel et une approche psychologique qui nous a permis
+de poser les hypothèses de base sur le comportement du système visuel
+en mouvement.  Enfin, nous avons commencé à élaborer les prémisses de
+notre nouvelle méthode d'analyse de la perception visuelle des espaces
+ouverts urbains le long de parcours.
+
+Afin de situer notre travail, nous proposons un état de l'art sur deux
+chapitres de différentes méthodes existantes d'analyse d'espaces.  Le
+chapitre~\ref{chap:event} décrit un ensemble de méthodes d'analyse des
+espaces architecturaux et urbains considérant directement soit un
+observateur en mouvement soit les changements qui peuvent apparaître
+dans son champ visuel.  Nous verrons ce que ces méthodes apportent et
+nous discuterons aussi de leurs défauts dans le cadre de ce projet.
+Dans le chapitre~\ref{chap:uos}, nous décrirons un ensemble de
+méthodes orientées champ qui considèrent l'espace comme un champ
+continu d'attributs.  Ces méthodes utilisent différentes
+représentations de l'espace.  Parmi elles, nous décrirons la méthode
+de Teller utilisant des projections sphériques et que nous utilisons
+dans notre projet.
+
+Les projections sphériques fournissent une représentation de
+l'environnement visuel de l'observateur.  Chaque image de ces
+projections donne des informations sur la morphologie locale de
+l'espace urbain au travers de la forme du ciel.  Pour exploiter la
+forme du ciel, nous nous sommes intéressés aux outils d'analyse de
+formes.  Au chapitre~\ref{chap:skeleton}, nous décrirons ce que sont
+les outils d'analyse de formes et nous nous attarderons en particulier
+sur un outil appelé squelettisation.  Celui-ci amincit une forme
+jusqu'à obtenir un ensemble de lignes centrées, appelé squelette.
+Dans le chapitre~\ref{chap:skeleton}, nous verrons les différentes
+propriétés des squelettes.  Comme il existe actuellement plusieurs
+méthodes de squelettisation, nous verrons dans le
+chapitre~\ref{chap:skel-cmp} trois d'entre-elles et nous expliquerons
+le choix que nous avons fait entre ces trois méthodes.
+
+Dans le chapitre~\ref{chap:measure}, nous aborderons les méthodes de
+mesure des espaces ouverts urbains le long de parcours, basées sur la
+squelettisation de formes de ciel obtenues par projections sphériques.
+Nous commencerons par les méthodes permettant d'analyser l'espace en
+une position donnée, puis nous décrirons celles permettant d'analyser
+l'espace le long de parcours.  Ces dernières sont basées sur les
+distances de similarité.  Nous verrons à cette occasion une nouvelle
+distance de similarité que nous avons développée pour mieux distinguer
+les configurations urbaines.  Dans le chapitre~\ref{chap:interp}, nous
+décrirons les tests que nous avons effectués sur les mesures.  Nous
+commencerons par détailler rapidement l'implémentation et nous
+énumérerons nos résultats en commençant par des exemples simples et en
+terminant par deux cas réels: la rue Xavier-Neujean à Liège en
+Belgique et un parcours au centre de Nantes en France.
+
+Pour terminer, nous conclurons ce mémoire en rappelant les principaux
+résultats que nous avons obtenus et nous détaillerons les voies
+possibles qui permettront par la suite d'améliorer la méthode que nous
+avons développée.
+
+% End

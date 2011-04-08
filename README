@@ -1,0 +1,10 @@
+Ce repertoire contient le code source LaTeX de la these de Francois Sarradin.
+
+Pour compiler:
+
+latex sarradin-these
+bibtex sarradin-these
+latex sarradin-these
+latex sarradin-these
+dvips sarradin-these -o
+dvipdf sarradin-these

@@ -1,0 +1,22 @@
+% stanislas.pst
+
+\psset{unit=3mm,xunit=3.5mm,linewidth=.2pt,dash=3pt 1pt}
+
+\pspicture(-1,0)(28.5,16)
+
+\psaxes[Ox=0,Dx=2,Oy=2,Dy=2,axesstyle=frame](0,2)(28,16)
+
+\readdata{\sthj}{sequence/stanislas-hj.data}
+\readdata{\stvor}{sequence/stanislas-vor.data}
+
+\dataplot{\sthj}
+\dataplot[linestyle=dashed]{\stvor}
+
+\rput[r](22,15){\small Hamilton-Jacobi}
+\psline(23,15)(26,15)
+\rput[r](22,13){\small Voronoï}
+\psline[linestyle=dashed](23,13)(26,13)
+
+\endpspicture
+
+% End

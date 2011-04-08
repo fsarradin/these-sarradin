@@ -1,0 +1,36 @@
+% sarradin-these.tex - thèse de doctorat
+%
+% Copyright (C) 2002, 2003, 2004 - FranÃ§ois Sarradin
+%
+% $Id$
+%
+
+\documentclass[12pt]{rapport}
+
+\usepackage[german,italian,french,english]{babel}
+\usepackage{xspace}
+\usepackage{times}
+\usepackage{mathptm}
+\usepackage{a4wide}
+\usepackage{letterspace}
+\usepackage{subfigure}
+
+\begin{document}
+
+\selectlanguage{french}
+%\renewcommand\Frlabelitemi{\textbullet}
+
+\sloppy
+
+\bibliographystyle{plain}
+%\bibliographystyle{abbrv}
+%\bibliographystyle{alpha}
+%\bibliographystyle{apalike}
+
+\include{part-measure/interp}
+
+\bibliography{biblio-these}
+
+\end{document}
+
+% End

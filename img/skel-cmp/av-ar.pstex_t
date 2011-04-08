@@ -1,0 +1,53 @@
+\begin{picture}(0,0)%
+\includegraphics{img/skel-cmp/av-ar.pstex}%
+\end{picture}%
+\setlength{\unitlength}{2960sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(3024,2169)(2389,-3373)
+\put(3451,-2986){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$11$}%
+}}}
+\put(4651,-2986){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$11$}%
+}}}
+\put(3751,-3286){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$11$}%
+}}}
+\put(4351,-3286){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$11$}%
+}}}
+\put(3751,-2986){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$7$}%
+}}}
+\put(4351,-2986){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$7$}%
+}}}
+\put(4351,-2686){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$5$}%
+}}}
+\put(4051,-2986){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$5$}%
+}}}
+\put(3901,-2536){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$O$}%
+}}}
+\put(3451,-1786){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$11$}%
+}}}
+\put(4051,-1786){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$11$}%
+}}}
+\put(3751,-2086){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$5$}%
+}}}
+\put(3451,-2086){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$7$}%
+}}}
+\put(3151,-2086){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$11$}%
+}}}
+\put(4351,-2086){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$11$}%
+}}}
+\put(4051,-2086){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$7$}%
+}}}
+\put(3451,-2386){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$5$}%
+}}}
+\put(2776,-1336){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$x$}%
+}}}
+\put(2626,-1786){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$y$}%
+}}}
+\put(5026,-2986){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\langle 5,7,11\rangle^h$}%
+}}}
+\end{picture}

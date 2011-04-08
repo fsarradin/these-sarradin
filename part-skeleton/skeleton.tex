@@ -1,0 +1,1476 @@
+% skeleton.tex - Rapport sur la squelettisation
+%
+% Copyright (C) 2004 - François Sarradin
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \title{Squelettisation}
+\author{François Sarradin}
+\laboratory{%
+  CNRS -- CERMA UMR 1563 \\
+  École d'Architecture de Nantes \\
+  Rue Massenet -- BP 81\,931 \\
+  44\,319 NANTES CEDEX 3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sloppy
+\makeheader
+
+\label{chap:skeleton}
+
+\begin{reflexion}
+  Et cependant, il était dans le vrai.  Le Parti se trompait et lui
+  était dans le vrai.  L'évidence, le sens commun, la vérité, devaient
+  être défendus.  Les truismes sont vrais.  Il fallait s'appuyer dessus.
+  Le monde matériel existe, ses lois ne changent pas.  Les pierres sont
+  dures, l'eau humide, et les objets qu'on laisse tomber se dirigent
+  vers le centre de la terre. \par
+  \raggedleft George Orwell, 1984 \par
+\end{reflexion}
+
+\begin{intropar}
+  {D}\textsc{ans} les chapitres précédents, nous avons décrit des
+  méthodes d'analyse des espaces architecturaux et urbains basées d'un
+  côté sur l'approche orientée champ et de l'autre sur des éléments
+  dynamiques ou induisant un dynamisme, tels que les événements visuels.
+  Le principal constat que nous faisons sur ces méthodes est soit
+  qu'elles ne considèrent pas la troisième dimension, soit qu'elles
+  ignorent les variations de la morphologie des espaces ouverts urbains
+  le long d'un parcours, soit que leur analyse de ces variations n'est
+  pas véritablement liée à une métrique.
+\end{intropar}
+
+La méthode des projections sphériques de Teller est une méthode orientée
+champ qui récupère la forme du ciel dans les espaces ouverts urbains
+et permet d'analyser la perception visuelle des espaces ouverts
+comme un flux continu d'attributs \cite{teller:2003}.  De cette manière,
+les espaces ouverts urbains sont considérés selon leur ouverture, leur
+étalement ou leur excentricité en différentes positions données.
+Cependant, la méthode de Teller et les autres méthodes d'analyse des
+espaces ouverts urbains ne permettent pas de suivre précisément les
+variations de la morphologie des espaces ouverts le long de parcours.
+Pour réaliser une telle étude, nous proposons de nous baser sur la
+méthode de Teller et de nous intéresser aux outils utilisés en analyse
+de formes pour pouvoir étudier les variations de la forme de ciel sur
+des parcours.
+
+Nous commencerons par décrire les principes et les méthodes existants en
+analyse de formes.  Nous nous intéresserons donc à la notion de forme et
+de descripteur de formes et nous étudierons un certain nombre de
+critères qui nous permettront de sélectionner un type de descripteur
+adapté à l'analyse de formes de ciel le long d'un parcours.  Nous
+aborderons ensuite un descripteur particulier, appelé squelette.  Nous
+verrons quelle est sa définition, quelles sont ses propriétés et ses
+applications.  Enfin, comme la méthode de Teller utilise un support
+discret, nous commencerons par discuter de l'intérêt à utiliser ce type
+de support, à la place d'un support vectoriel pour les images, et nous
+verrons quelles sont les particularités induites par le support discret
+sur la squelettisation et quelles sont les solutions qui permettent de
+les contourner.
+
+\section{Analyse de formes}
+\label{sec:skeleton:shape}
+
+La notion de forme est nécessaire pour comprendre notre monde visuel,
+car elle nous permet d'identifier les objets qui nous entourent.
+Cependant, il n'existe pas de définition universelle pour caractériser
+cette notion, ni dans le domaine de la vision par ordinateur ni dans le
+domaine de la psychologie \cite{kimia:1995,veltkamp:2001}.  Les
+sensations de forme peuvent être dues à des changements de couleur ou à
+des changements de densité d'une texture.  Ces contrastes sont souvent
+utilisés pour créer une représentation géométrique d'un objet.
+
+En nous basant sur la méthode de Teller \cite{teller:2003}, nous
+produisons des images de l'environnement urbain en des positions
+précises de l'espace.  Dans ces images se trouve un élément qui
+correspond à l'ouverture de ciel et que nous cherchons à décrire.  Dans
+le cas des modèles 3D, le ciel correspond à tout ce qui se trouve
+au-dessus de l'observateur et qui n'est pas une surface d'un objet
+urbain.  En attribuant au ciel une couleur différente de celle des
+surfaces des bâtiments, la distinction du ciel par rapport aux autres
+éléments est facile à obtenir.  Cependant, de cette manière la forme du
+ciel est perçue comme un ensemble de points et non comme un tout.
+C'est-à-dire que la forme est décrite selon son contenu, mais pas selon
+ses caractéristiques.  Pour cela, nous proposons ci-dessous une
+définition topologique de la notion de forme à partir d'ensembles de
+points, puis nous définirons des méthodes pour décrire les
+caractéristiques d'une forme à partir de cette notion.
+
+\subsection{Définition formelle de la notion de forme}
+
+La «~compréhension~» des formes, sur un plan formel, nécessite de
+définir certaines notions étudiées en topologie\footnote{Des compléments
+  de notions de topologie peuvent être obtenus dans le livre de Choquet
+  \cite{choquet:1978}}.  Ainsi, la notion de forme peut se définir au
+moyen de la notion de distance.
+%(cf.~§\ref{def:distance}).
+Bien que les formes que nous étudierons soient des éléments du plan
+discret (appartenant à $\mathbbm{Z}^2$), leurs modèles sont des éléments
+du plan continu (appartenant à $\mathbbm{R}^2$).  Cette remarque vaut
+aussi pour les formes de ciel de la méthode de Teller.
+
+Par la suite, il sera souvent question de distance.  Nous en donnons
+ci-dessous une définition générale.
+
+\begin{definition}[Distance]
+  \label{def:distance}
+  Soit $E$ un ensemble non vide et $F$ un sous-ensemble de
+  $\mathbbm{R}$.  Une distance $d$ sur $E$ à valeur dans $F$ est une
+  application $d: E\times E \rightarrow F$ vérifiant:
+
+  \begin{eqnarray}
+    \mbox{(positive)} \qquad & \forall p,q \in E,
+        \qquad & d(p,q) \geq 0~; \\
+    \mbox{(définie)} \qquad & \forall p,q \in E,
+        \qquad & d(p,q) = 0 \Leftrightarrow p=q~; \\
+    \mbox{(symétrique)} \qquad & \forall p,q \in E,
+        \qquad & d(p,q) = d(q,p)~; \\
+    \mbox{(inégalité triangulaire)} \qquad & \forall p,q,r \in E,
+        \qquad & d(p,q) \leq d(p,r) + d(r,q).
+  \end{eqnarray}
+\end{definition}
+
+\begin{nota}
+  Les distances $d$ vérifiant $d(p,q)<0$ ou $d(p,q) \neq d(q,p)$ pour
+  certaines valeurs de $p$ et de $q$ sont appelées \emph{distances
+    relatives}.  Les distances vérifiant $d(p,q) > d(p,r) + d(r,q)$ pour
+  certaines valeurs de $p$, $q$ et $r$ sont appelées
+  \emph{pseudo-distances}.
+\end{nota}
+
+Dans le plan continu, la distance entre les éléments se base
+généralement sur la norme euclidienne: pour tout point $p (x,y)$ de
+$\mathbbm{R}^2$, la norme euclidienne, notée $||\cdot||$ ou $L_2$, est
+une application de $\mathbbm{R}^2\rightarrow\mathbbm{R}$ définie par
+
+\begin{equation}
+||p|| = \sqrt{x^2+y^2}.
+\end{equation}
+
+\noindent%
+Pour tous points $p(x_p,y_p)$ et $q(x_q,y_q)$ de $\mathbbm{R}^2$, la
+distance (ou métrique) euclidienne est l'application
+$d_E(p,q):\mathbbm{R}^2\times\mathbbm{R}^2\rightarrow\mathbbm{R}$
+définie par
+
+\begin{equation}
+d_E(p,q) = ||q-p|| = \sqrt{(x_q - x_p)^2 + (y_q - y_p)^2},
+\end{equation}
+
+\noindent%
+où $q-p$ représente le vecteur de $p$ à $q$.  Si $\Omega$ est un
+ensemble de points de $\mathbbm{R}^2$ et $p$ un point de
+$\mathbbm{R}^2$, $d_E(p,\Omega)$ est la plus courte distance entre $p$
+et $\Omega$:
+
+\begin{equation}
+d_E(p,\Omega) = d_E(\Omega,p) = \min_{q\in\Omega}\, d_E (p,q).
+\end{equation}
+
+\begin{definition}[Boule ouverte]
+  Soient $p$ un point de $\mathbbm{R}^2$, $r$ un réel positif et $d$ une
+  distance.  La \emph{boule ouverte} $B^d(p,r)$ de centre $p$ et de
+  rayon $r$ est l'ensemble des points $q$ tel que la distance $d(p,q)$
+  soit inférieure à $r$:
+
+\begin{equation}
+B^d(p,r) = \left\{ q\in\mathbbm{R}^2 | d(p,q) < r \right\}.
+\end{equation}
+\end{definition}
+
+\begin{nota}
+\begin{enumerate}
+\item En dimension 2, une boule est appelée disque.
+\item Soient $p$ un point et $r$ un réel positif.  $\partial B^d(p,r) =
+  \left\{ q\in\mathbbm{R}^2 | d(p,q) = r \right\}$ est une sphère de
+  centre $p$ et de rayon $r$.  En dimension 2, une sphère est aussi
+  appelée cercle.
+\item La boule ouverte de rayon 0 $B^d(p,0)$ est égale à l'ensemble
+  vide.
+\end{enumerate}
+\end{nota}
+
+\noindent%
+Dans la suite de ce document, nous noterons la boule euclidienne $B^E$,
+définie par $B^E \equiv B^{d_E}$.
+
+\begin{definition}[Ouvert]
+  Un ensemble $\Omega$ de $\mathbbm{R}^2$ est dit \emph{ouvert} si pour
+  tout point $p$ de $\Omega$ il existe un réel positif $r$ tel que la
+  boule ouverte $B^E(p,r)$ soit entièrement contenue dans $\Omega$.
+\end{definition}
+
+Soit $\Omega$ un ensemble de $\mathbbm{R}^2$.  Le complémentaire de
+$\Omega$ dans $\mathbbm{R}^2$, noté $\Omega^C$, est l'ensemble des
+points $p$ de $\mathbbm{R}^2$ qui ne sont pas éléments de $\Omega$
+($\Omega^C = \left\{p\in\mathbbm{R}^2|p\not\in\Omega\right\}$).  Un
+ensemble $\Phi$ de $\mathbbm{R}^2$ est dit \emph{fermé} si son
+complémentaire est un ouvert.
+
+Un ensemble de points $\Omega$ de $\mathbbm{R}^2$ est dit \emph{borné}
+si et seulement si il existe un point $p$ de $\mathbbm{R}^2$ et un réel
+positif $r$ suffisamment grand pour que $\Omega$ soit un sous-ensemble
+de $B^E(p,r)$.
+
+\begin{definition}[Intérieur]
+  On appelle \emph{intérieur} d'un ensemble de points $\Omega$ de
+  $\mathbbm{R}^2$, l'ensemble $\mathrm{int}(\Omega)$ défini par l'union
+  de tous les ouverts contenus dans $\Omega$.
+\end{definition}
+
+La \emph{fermeture} d'un ensemble de points $\Omega$ de $\mathbbm{R}^2$
+est l'ensemble $\overline{\Omega}$ défini par l'intersection des fermés
+contenant $\Omega$.
+
+\begin{definition}[Contour]
+  Soit un ensemble $\Omega$ de $\mathbbm{R}^2$, le \emph{contour} de
+  $\Omega$, noté $\partial\Omega$, est défini par l'intersection entre
+  la fermeture de $\Omega$ et la fermeture de son complémentaire:
+
+\begin{equation}
+\partial\Omega = \overline{\Omega}\cap\overline{\Omega^C}.
+\end{equation}
+\end{definition}
+
+\begin{nota}
+\begin{enumerate}
+\item Une boule fermée est définie par $\overline{B^d}(p,r) = \{
+  q\in\mathbbm{R}^2 | d(p,q) \leq r \}$.
+\item La boule fermée de rayon 0 $\overline{B^d}(p,0)$ est égale au
+  singleton $\{p\}$.
+\item Le contour d'une boule est une sphère.
+\item La sphère de rayon 0 $\partial B^d(p,0)$ est égale au singleton
+  $\{p\}$.  En effet, $\partial B^d(p,0) =
+  \overline{B^d}(p,0)\cap\overline{{B^d}^C(p,0)} = \{ p \}
+  \cap\mathbbm{R}^2 = \{ p \}$.
+\end{enumerate}
+\end{nota}
+
+La différence entre les notions d'intérieur, de fermeture et de contour
+est illustrée dans la figure~\ref{fig:ske-shape}.  L'intérieur
+représente seulement la zone grisée, le contour représente seulement la
+courbe fermée en noir et la fermeture correspond à la fois à la zone
+grisée et au contour noir.  À cela, nous pouvons ajouter que le
+complémentaire de l'intérieur correspond au reste du plan, le contour
+inclus, le complémentaire de la fermeture correspond au reste du plan,
+le contour exclu, et le complémentaire du contour correspond à l'union
+entre le reste du plan et l'intérieur.
+
+\begin{figure}[ht]
+  \begin{center}
+    \input{img/skeleton/ske-shape.pstex_t}
+  \end{center}
+  \caption[Différence entre $\mathrm{int}(S)$, $\overline{S}$ et
+           $\partial S$]%
+          {Différence entre $\mathrm{int}(S)$, $\overline{S}$ et
+           $\partial S$.}
+  \label{fig:ske-shape}
+\end{figure}
+
+\begin{definition}[Forme]
+  \label{def:shape}
+  Un ensemble de points $\Omega$ de $\mathbbm{R}^2$ est une \emph{forme}
+  s'il possède les deux caractéristiques suivantes:
+\begin{enumerate}
+\item $\Omega$ est la fermeture d'un sous-ensemble de $\mathbbm{R}^2$
+  ouvert et borné ($\Omega=\overline{\mathrm{int}(\Omega)}$);
+\item le contour $\partial\Omega$ de $\Omega$ consiste en un nombre
+  fini de courbes fermées.
+\end{enumerate}
+\end{definition}
+
+Cette définition de la forme est relativement simple et permet de
+discerner distinctement cette notion à partir d'un ensemble de points.
+Mais l'étude d'une forme nécessite de considérer sa nature
+multidimensionnelle, dans le sens où celle-ci peut être caractérisée par
+plusieurs éléments comme l'intérieur, le contour, les concavités, etc.
+Toutes ces caractéristiques sont plus ou moins reconnues par notre
+système visuel.
+
+\subsection{Descripteur de formes}
+\label{subsec:skeleton:criterion}
+
+Quelque soit la manière par laquelle une forme est modélisée (par
+l'intérieur, par le contour, etc.), nous devons nous baser sur des
+caractéristiques de la forme pour analyser celle-ci dans un contexte
+donné.  Par exemple, Teller se base sur l'aire de la forme du ciel pour
+décrire le rapport de masse et estimer la sensation d'ouverture dans une
+position donnée de l'espace urbain.  Quant au moment d'inertie, il
+permet de calculer l'étirement et l'excentricité.  Les outils
+mathématiques tels que l'aire ou le moment d'inertie qui permettent
+d'extraire les caractéristiques d'une forme sont appelés
+\emph{descripteurs} de formes.
+
+Le domaine de l'analyse de formes contient une multitude de descripteurs
+pour analyser les formes en fonction de leur surface, de leur contour,
+de leur orientation, etc.  Actuellement, la quantité de ces outils est
+telle et les applications sont à ce point diversifiées (reconnaissance
+de motifs, enregistrement d'images, comparaison, etc.)  qu'il paraît
+important de les classer selon des critères et des caractéristiques
+communes.  Il existe actuellement plusieurs critères pour évaluer un
+descripteur de forme ainsi que des classifications
+\cite{kimia:1995,loncaric:1998,ogniewicz-phd:1993}.  Dans ce projet,
+nous souhaitons avoir un descripteur de forme adapté aux séries de
+projections sphériques dans les espaces ouverts urbains obtenues le long
+d'un parcours. Pour cela, nous proposons que ce descripteur respecte les
+critères ci-dessous.
+
+\begin{enumerate}
+\item \emph{Invariance} --- Une forme peut apparaître de différentes
+  manières et à des échelles différentes, le système visuel humain
+  reconnaîtra presque toujours la même forme.  De la même manière, le
+  descripteur de forme doit être invariant par transformations
+  géométriques (rotation, translation et homothétie).
+\item \emph{Tolérance par rapport au bruit} --- Le bruit, tel qu'il est
+  défini en théorie du signal, produit des déformations indésirables
+  dans la forme.  Il intervient constamment dans les images discrètes.
+  Une fois que le bruit apparaît, il est difficile de décider si un pic
+  est causé par le bruit ou s'il provient de la forme d'origine.  Le
+  descripteur de forme doit être le moins sensible possible au bruit.
+\item \emph{Unicité} --- L'algorithme correspondant au descripteur de
+  forme produit pour chaque forme une description unique.  L'unicité
+  peut être en conflit avec le critère de tolérance au bruit, car ce
+  dernier implique qu'une forme avec ou sans perturbations, a la même
+  description.  Nous préférerons donc ajouter que deux formes peuvent
+  produire une même valeur du descripteur, à condition qu'il n'y ait que
+  peu de différences «~visibles~» entre ces deux formes.
+\item \emph{Conservation de l'information} --- Il doit être possible de
+  reconstruire la forme d'origine à partir de sa description.  Les
+  descripteurs vérifiant ce critère fournissent une représentation
+  complète de la forme.
+\item \emph{Métrique} --- Les résultats du descripteur doivent permettre
+  de définir une métrique afin de vérifier, par exemple, la similarité
+  entre des formes.
+\end{enumerate}
+
+D'autres critères peuvent s'appliquer pour les descripteurs de formes.
+Par exemple, un descripteur doit-il se baser sur le contour d'une forme
+ou sur son contenu?  Comme Kimia \emph{et al.}, nous pensons que les
+deux approches sont conceptuellement équivalentes, puisque le contour
+d'une forme peut être retrouvé à partir de son intérieur et,
+inversement, l'intérieur d'une forme peut être défini par son contour
+\cite{kimia:1995}.
+
+Une autre question concerne la «~globalité~» d'un descripteur de forme.
+Un descripteur est global s'il caractérise l'ensemble de la forme en une
+seule information «~atomique~».  Par exemple, l'aire, les moments ou
+l'appréciation de la taille d'une forme sont des descripteurs globaux.
+En effet, les deux premiers fournissent une valeur numérique pour chaque
+forme et le dernier des valeurs comme \emph{grand}, \emph{petit} ou
+\emph{moyen}.  Le principal inconvénient de ces descripteurs est qu'ils
+ne permettent pas de détecter des particularités dans la forme.  À
+l'opposé, il y a les descripteurs locaux.  Cependant, un descripteur
+local n'a pas vraiment de sens pour les formes de ciel obtenues par les
+projections sphériques de Teller, puisque ce type de descripteur ne
+s'intéresse qu'à une partie de la forme du ciel tout en étant
+indifférent au reste.  En fait, l'idéal serait de posséder un
+descripteur «~semi-global~» capable de relever l'aspect général d'un
+objet sans en perdre ses caractéristiques partielles \cite{kimia:1995}.
+
+\subsection{Exemples de descripteurs de formes}
+\label{subsec:skeleton:descriptor}
+
+À titre d'exemple, nous donnons ci-dessous quelques descripteurs de
+formes connus dans le domaine de l'analyse d'images.
+
+\paragraph{Rapport $\mathcal{A}/\mathcal{P}^2$}
+Le rapport entre l'aire et le carré du périmètre a déjà été utilisé pour
+l'analyse d'isovists \cite{benedikt:1979} ou de projections sphériques
+de la forme de ciel \cite{teller:2003}.  Ce descripteur est invariant
+par transformation géométrique.  Par contre, il n'est pas unique et ne
+conserve pas l'information.  Plusieurs formes distinctes peuvent avoir
+le même rapport $\mathcal{A}/\mathcal{P}^2$.  Ainsi, il est difficile de
+distinguer certaines formes en utilisant ce rapport.
+
+\paragraph{Descripteur de moment}
+Les descripteurs de moment ont aussi été utilisés par Benedikt et Teller
+\cite{benedikt:1979,teller:2003}.  Ces descripteurs sont capables de
+convertir une forme sous un format numérique (nombre ou vecteur).
+Cependant, l'unicité n'est pas respectée puisque plusieurs formes
+distinctes peuvent avoir le même moment.
+
+\paragraph{Descripteur de Fourier}
+Ce descripteur se base sur le contour qu'il considère comme une
+fonction.  Par transformée de Fourier, le descripteur recherche les
+fréquences des harmoniques qui composent la fonction.  Cependant, ce
+descripteur n'est pas invariant par transformation géométrique et est
+sensible aux perturbations du contour.  De plus, il ne gère pas les
+trous.
+
+\paragraph{Descripteurs utilisés dans le domaine de l'architecture et
+  l'urbanisme} Les méthodes orientées champs caractérisant des plans
+d'architecture ou des espaces urbains en 2D, comme les isovists
+\cite{benedikt:1979}, les graphes de visibilité \cite{turner:2001} ou
+les e-partitionnements \cite{peponis:1997}, sont des descripteurs de
+formes.  En effet, ces méthodes étudient la forme des espaces
+architecturaux et urbains.  De leur côté, Ratti et Richens se sont
+concentrés sur quelques méthodes de traitement des images pour améliorer
+les méthodes d'analyse des environnements urbains \cite{ratti:2004}.
+Les mesures qu'ils ont développées permettent de déduire des
+caractéristiques comme le volume d'espace construit ou le facteur de vue
+du ciel.
+
+Pour analyser les projections sphériques de Teller, nous proposons
+d'utiliser une méthode assez réputée dans le domaine de l'analyse
+d'images: il s'agit de la squelettisation.  Ce descripteur de formes est
+décrit et étudié dans le reste de ce chapitre.
+
+
+\section{Squelettisation}
+\label{sec:skeleton:def}
+
+La notion de \emph{squelette} a été introduite par Blum
+\cite{blum:1967} durant les années soixante, dans le but de constituer
+un nouveau descripteur de formes.  Ce type d'objet devait permettre de
+décrire des objets rencontrés en biologie et en biomédecine
+(chromosomes, os, etc.).  Dès 1978, Blum et Nagel proposent d'utiliser
+les squelettes pour segmenter des formes, en déterminer des
+caractéristiques et les classer \cite{blum:1978}.
+
+La squelettisation, le processus permettant d'obtenir des squelettes de
+formes, consiste à convertir une forme en un ensemble de lignes centrées
+à l'intérieur et à l'extérieur du contour de la forme, possédant une
+structure en branches liée à la topologie de la forme
+\cite{fol-phd:2003}.  Connu aussi sous le nom \emph{d'axe médian}, le
+squelette possède des propriétés intéressantes dans le cadre de
+l'analyse des formes.
+
+\subsection{Définition}
+\label{ssec:skeleton:skeleton}
+
+Il existe plusieurs définitions équivalentes du squelette dans l'espace
+continu.  Nous les découvrirons au fur et à mesure.  La définition
+ci-dessous est connue sous le nom \emph{d'analogie du feu de prairie}
+\cite{blum:1967,dimitrov-msc:2003,ogniewicz:1994}. Elle offre une
+définition intuitive des squelettes tels que Blum les a conçus.
+
+\begin{quotation}
+  Soit un plan couvert de manière homogène par de l'herbe sèche et
+  $\Omega$ un ensemble de points de ce plan.  \`A l'instant initial
+  $t_0$, tous les points du contour de $\Omega$ sont enflammés
+  simultanément.  Le feu se propage de manière homogène et s'étend à
+  travers l'herbe à vitesse constante.  Le \emph{squelette} de
+  l'ensemble de points $\Omega$ (noté $\mathbf{MA}(\Omega)$) est défini
+  comme le lieu des points où les fronts enflammés se sont rencontrés.
+\end{quotation}
+
+\begin{nota}
+  La définition de Blum ne se limite pas aux formes fermées, elle
+  s'étend aux éléments ouverts comme nous pouvons le voir sur le schéma
+  à droite de la figure~\ref{fig:ske-ex}.  Il y a deux types de
+  squelettes: les \emph{endosquelettes} qui se trouve à l'intérieur
+  d'une forme et les \emph{exosquelettes} qui représentent le reste des
+  squelettes.  Dans ce document, par abus de langage, nous parlerons de
+  squelette pour désigner exclusivement les endosquelettes.
+\end{nota}
+
+Sur le plan formel, la notion de squelette est souvent définie en termes
+de boules maximales \cite{choi:2002,schmitt:1993,thiel-phd:1994}.  La
+preuve de l'équivalence entre cette définition et celle de Blum a été
+donnée par Calabi et Hartnet \cite{calabi:1968}.  Soient $p$ un point de
+$\mathbbm{R}^2$ et $r$ un réel positif, une boule $B^d(p,r)$ est dite
+\emph{inscrite} dans la forme $S$ de $\mathbbm{R}^2$ si et seulement si
+elle est entièrement contenue dans $S$ (si et seulement si
+$B^d(p,r)\subseteq S$).  La boule $B^d(p,r)$ est dite \emph{maximale}
+dans $S$ (ou inscrite et maximale) si elle est inscrite dans $S$ et si
+elle n'est pas entièrement contenue dans une autre boule inscrite dans
+$S$.
+
+\begin{definition}[Squelette]\label{def:ske-ma}
+  Le \emph{squelette}, ou axe médian, $\mathbf{MA}(S)$ d'une forme $S$
+  de $\mathbbm{R}^2$ est le lieu des centres des boules maximales de
+  $S$.  Autrement dit, un point $p$ de $S$ appartient à $\mathbf{MA}(S)$
+  si et seulement si $p$ est le centre d'une boule maximale de $S$.
+\end{definition}
+
+La figure~\ref{fig:fire-front} montre les différentes étapes de
+l'analogie du feu de pairie pour un rectangle.
+
+\begin{figure}[ht]
+  \begin{center}
+    \input{img/skeleton/fire-front.pstex_t}
+  \end{center}
+  \caption[Squelettisation d'un rectangle selon l'analogie du feu de
+           prairie.]%
+           {Squelettisation d'un rectangle selon l'analogie du feu de
+             prairie \cite{blum:1967}.  \`A l'état initial (a), la forme
+             contient de l'herbe sèche sur sa surface et le feu est
+             allumé sur tout le contour.  Lorsque le feu est allumé
+             (b), il se propage vers l'intérieur de la forme.  \`A
+             certains endroits, deux fronts se rencontrent et
+             s'éteignent en laissant une trace.  \`A la fin du processus
+             (c), le feu s'éteint et il ne reste plus que les traces des
+             fronts qui se sont rencontrés, formant ainsi le squelette.}
+  \label{fig:fire-front}
+\end{figure}
+
+En quelque sorte, dans le cas de formes fermées, un squelette est le
+résultat de l'amincissement d'une forme jusqu'à l'obtention d'un
+ensemble de lignes centrées dans cette forme.  La
+figure~\ref{fig:ske-ex} montre, à gauche, trois formes fermées et leur
+squelette respectif.  Il est intéressant de noter le cas du cercle dont
+le squelette est réduit à un point en son centre.
+
+\begin{figure}[ht]
+  \begin{center}
+    \input{img/skeleton/ske-ex.pstex_t}
+  \end{center}
+  \caption[Quelques exemples de squelettes.]%
+  {Quelques exemples de squelettes.  En partant de la gauche, les trois
+    premiers exemples sont des endosquelettes, alors que le dernier est
+    un exosquelette.}
+  \label{fig:ske-ex}
+\end{figure}
+
+\subsubsection{Carte de distances}
+\label{sec:skeleton:dm}
+
+Dans la figure~\ref{fig:fire-front}, nous pouvons imaginer que les
+points à l'intérieur de la forme sont progressivement atteints par un
+front enflammé au cours du temps, en commençant par le périmètre et en
+s'avançant vers le centre de la forme.  Si nous associons à chaque point
+de l'intérieur de la forme le moment auquel il a été atteint par le
+front, nous obtenons sa distance par rapport au point du périmètre qui
+lui est le plus proche.  Cette association est appelée \emph{carte de
+  distances}.
+
+\begin{definition}[Carte de distances]
+  Soit une forme $S$ et $d$ une distance.  \`A chaque point $p$ de $S$
+  nous associons la valeur $\mathrm{DM}_S(p)$ définie par
+  \begin{equation}
+  \mathrm{DM}^d_S(p) = \min_{q\not\in S}\, d(p,q),
+  \label{eq:skeleton:map}
+  \end{equation}
+  où $d$ est une distance.  L'ensemble de tous les $\mathrm{DM}_S(p)$
+  est appelé la \emph{carte de distances} $\mathrm{DM}_S$ de $S$.
+\end{definition}
+
+\noindent%
+$\mathrm{DM}$ est aussi appelée \emph{fonction d'étanchéité}.
+
+La carte de distances peut être définie en terme de boules maximales.
+Soient $S$ une forme, $p$ un point de $S$ et $r$ un réel positif.  La
+boule $B^d(p,r)$ est dite \emph{maximale dans $S$ pour $p$} si elle
+n'est pas entièrement contenue dans une boule inscrite dans $S$ et
+centrée en $p$.  Si $B^d(p,r)$ est maximale dans $S$ pour $p$, alors
+$\mathrm{DM}^d_S(p) = r$.
+
+La figure~\ref{fig:skeleton:dm-sq} montre deux cartes de distances pour
+deux formes.  Ces cartes de distances se basent sur la distance
+euclidienne quadratique $d_E^2$ (cf~§\ref{sec:skeleton:discrete-space}).
+Pour la coloration, nous avons utilisé la fonction sinus.  Sachant que
+les distances varient entre 0 et $M_S = \max_{p\in S} \left\{
+  \mathrm{DM}^{d_E^2}_S (p) \right\}$, où $S$ est une forme, la couleur
+des points des formes de la figure~\ref{fig:skeleton:dm-sq} est obtenue
+par application de $p \mapsto \left(\sin
+  \left(32\pi\cdot\mathrm{DM}^{d_E^2}_S(p)/M_S\right) + 1\right)/2$,
+pour tout $p$ de $S$.  Le dégradé sinusoïdal permet de retrouver dans
+chaque forme les positions du front enflammé à des instants précis à
+partir de la carte de distances.  Les positions du front enflammé sont
+représentées alternativement par les courbes noires et les courbes
+blanches.  Si à partir de ces courbes, nous repérons la formation de
+coins, nous pouvons alors tracer le squelette.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.3\linewidth]{img/skeleton/fire-sablier.eps}
+  \quad
+  \includegraphics[width=.6\linewidth]{img/skeleton/fire-0001.eps}
+  \caption[Carte de distances de deux formes en utilisant la distance
+  euclidienne quadratique]%
+  {Carte de distances de deux formes en utilisant la distance
+    euclidienne quadratique.}
+  \label{fig:skeleton:dm-sq}
+\end{figure}
+
+La figure~\ref{fig:skeleton:dm} montre deux autres cartes de distances
+d'une forme réalisée à partir de la distance de Manhattan
+(cf~§\ref{sec:skeleton:discrete-space}) et d'une approximation de la
+distance euclidienne.  Dans ces cartes, nous voyons aussi se dessiner le
+squelette, si nous suivons les points les plus clairs.  Cependant, le
+fait d'utiliser des distances différentes produira des squelettes
+différents.  Ainsi, la précision de la distance utilisée influence la
+précision du squelette.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.4\linewidth]{img/skel-cmp/chamfer-dm/ex-dm1.eps}
+  \quad
+  \includegraphics[width=.4\linewidth]{img/skel-cmp/chamfer-dm/ex-dm5_7_11.eps}
+  \caption[Carte de distances d'une forme à partir des distances de
+  chanfrein]%
+  {Carte de distances d'une forme à partir de distances de chanfrein.
+    Ces images utilisent un dégradé parabolique (suivant l'application
+    $x\mapsto \sqrt{x}$).  Plus les points sont blancs, plus ils sont
+    distants du contour de la forme.}
+  \label{fig:skeleton:dm}
+\end{figure}
+
+\subsubsection{Squelette pondéré}
+
+Il est possible d'associer à chaque point $p$ d'un squelette la valeur
+$\mathrm{DM}_S(p)$.  Ceci forme un autre objet nommé \emph{squelette
+  pondéré}, noté $\mathbf{MAT}$, défini par
+
+\begin{equation}
+\mathbf{MAT}(S) = \left\{
+  (p,r) \in \mathbf{MA}(S)\times\mathbbm{R}^+ |
+   r = \mathrm{DM}_S(p) \right\}.
+\end{equation}
+
+Nous avons vu dans la définition~\ref{def:ske-ma} que le squelette
+pouvait être défini en fonction des disques maximaux.  De même, il est
+possible de définir les squelettes pondérés de cette manière, sachant
+que la distance $\mathrm{DM}_S(p)$ représente la rayon de la boule
+maximale en $p$.
+
+\begin{definition}[Squelette pondéré]\label{def:ske-mat}
+  Le \emph{squelette pondéré}, ou transformée de l'axe médian,
+  $\mathbf{MAT}(S)$ d'une forme $S$ de $\mathbbm{R}^2$ est l'ensemble
+  des couples formés par le centre des boules maximales de $S$ et leur
+  rayon.  Autrement dit, un couple $(p,r)$, avec $p$ point de $S$,
+  appartient à $\mathbf{MAT}(S)$ si et seulement si la boule $B^d(p,r)$
+  est maximale dans $S$.
+\end{definition}
+
+Nous verrons par la suite que le squelette pondéré permet de
+reconstruire la forme à partir de laquelle il a été généré, alors que le
+squelette simple ne le permet pas.
+
+\subsubsection{Points du squelette}
+
+Soit $S$ une forme et $p$ un point de cette forme.  La distance
+$d(p,\partial S)$ est obtenue par au moins un point appartenant à
+l'intersection entre la sphère maximale $\partial B^d_S(p)$ et le
+contour $\partial S$.  C'est-à-dire que nous avons
+
+\begin{equation}
+d(p,\partial S) = d(p,q)
+\label{eq:skeleton:dist-bound}
+\end{equation}
+
+\noindent%
+pour tout point $q$ de $\partial S\cap \partial B^d_S(p)$.  Les points
+$q$ vérifiant l'équation~(\ref{eq:skeleton:dist-bound}) sont appelés
+\emph{points de contact}.  Ceux-ci peuvent former un ensemble connexe ou
+non ou être réduis à un seul point selon la position de $p$ dans la
+forme.
+
+\begin{definition}[Ensemble des contacts]
+  Soient $S$ une forme et $p$ un point de $S$.  \emph{L'ensemble des
+    contacts} de $\partial S$ au point $p$, noté $C^d_S(p)$, est défini
+  par
+
+\begin{equation}
+C^d_S(p) = \partial B^d_S(p) \cap \partial S.
+\end{equation}
+\end{definition}
+
+Un point de $C^d_S(p)$ est un \emph{point de contact}.  Une composante
+connexe de $C^d_S(p)$ est une \emph{composante de contact}.  Une
+composante de contact est dite \emph{point de contact isolé} si
+elle est réduite à un point.
+
+Si nous adoptons la définition de la squelettisation donnée par Pavlidis
+\cite{pavlidis:1977} et basée sur le nombre de points de contact des
+points du squelette, alors pour chaque point $p$ d'une forme $S$, si
+$\left|C^d_S(p)\right|>1$, $p$ est un point squelettal.  Le nombre de
+composantes de contact permet de déduire des propriétés sur chacun des
+points du squelette.  Ainsi, un point squelettal $p$ d'une forme $S$
+pour lequel $C^d_S(p)$ contient une composante de contact est un
+\emph{point terminal}.  Si $C^d_S(p)$ contient au moins trois
+composantes de contact alors $p$ est un \emph{point multiple}, sinon $p$
+est un \emph{point générique}.
+
+Il est possible de déduire des propriétés équivalentes en nous basant
+sur la notion de point de coupure \cite{attali-phd:1995}.  Soit $\Omega$
+un ensemble de points connexes et $p$ un point de $\Omega$.  $p$ est un
+\emph{point de coupure} si $\Omega-\{p\}$ n'est plus connexe.  Le nombre
+de composantes connexes de $\Omega-\{p\}$ est appelé \emph{ordre} de
+$p$.  Un point \emph{terminal} est un point qui n'est pas un point de
+coupure.  Un \emph{point générique} est un point d'ordre 2.  Un
+\emph{point multiple} est un point d'ordre strictement supérieur à 2.
+Dans un squelette, un point simple est un point faisant partie d'une
+seule branche et un point multiple fait partie de plusieurs branches
+(figure~\ref{fig:skeleton:anatomy}).
+
+\begin{figure}[htbp]
+  \centering
+  \input{img/skeleton/anatomy.pstex_t}
+  \caption{Types de points d'un squelette}
+  \label{fig:skeleton:anatomy}
+\end{figure}
+
+Comme un squelette est un graphe \cite{schmitt:1993}, il est facile de
+comprendre qu'une branche de squelette est un ensemble de points
+génériques délimité par deux points non génériques.
+
+\subsubsection{Angle bissecteur}
+\label{sec:skeleton:bissector}
+
+Nous avons vu précédemment que les boules maximales associées aux points
+du squelette non terminaux possèdent au moins deux points de contact
+avec le contour de la forme.  Pour les points terminaux, nous pouvons
+considérer que ces points sont confondus.  Nous donnons ci-dessous la
+définition de la notion d'angle bissecteur qui est basée sur ces points
+\cite{attali:1996}.
+
+\begin{definition}[Angle bissecteur]
+  Soit $S$ une forme et $p$ un point simple du squelette
+  $\mathbf{MA}(S)$.  La boule maximale centrée en $p$ touche le contour
+  $\partial S$ en deux points de contact $q_1$ et $q_2$.  \emph{L'angle
+    bissecteur} $\alpha(p)$ est l'angle $\widehat{q_1pq_2}$ variant
+  entre 0 et $\pi$.  Si $p$ a plus de deux points de contact,
+  $\alpha(p)$ est égal au plus grand angle formé par $p$ et toute paire
+  de ses points de contact.
+\end{definition}
+
+La figure~\ref{fig:skeleton:bissector} montre un exemple d'angle
+bissecteur pour le point générique $p$ dont la boule maximale possède
+deux points de contact $q_1$ et $q_2$ avec le contour de la forme.
+L'angle bissecteur $\alpha(p)$ équivaut à l'angle $\widehat{q_1pq_2}$.
+Selon Attali, l'angle bissecteur vaut $\pi$ uniquement là où la carte de
+distances atteint un extrémum \cite{attali-phd:1995}.
+
+\begin{figure}[htbp]
+  \centering
+  \input{img/skeleton/bisector.pstex_t}
+  \caption{Angle bissecteur}
+  \label{fig:skeleton:bissector}
+\end{figure}
+
+
+\subsection{Propriétés des squelettes}
+\label{subsec:skeleton:properties}
+
+Nous allons énoncer dans cette section différentes propriétés communes
+aux squelettes
+\cite{attali-phd:1995,chassery:1991,dimitrov-msc:2003,fol-phd:2003,ogniewicz-phd:1993}.
+Nous comparerons ces propriétés aux critères énoncés dans le
+§\ref{subsec:skeleton:criterion}.
+
+\paragraph{Invariance}
+Le squelette est invariant par transformation géométrique (rotation,
+translation et homothétie).  Soit $\mathcal{T}:
+\mathbbm{Z}^2\rightarrow\mathbbm{Z}^2$ une transformation géométrique.
+Alors, $\mathcal{T}$ n'affecte pas la structure du squelette:
+
+\begin{equation}
+\mathcal{T}(\mathbf{MAT}(S)) = \mathbf{MAT}(\mathcal{T}(S)).
+\label{eq:skeleton:invariance}
+\end{equation}
+
+\paragraph{Unicité et réversibilité}
+La squelettisation est une transformation réversible, pour peu que
+chaque point $p$ du squelette soit associé à la valeur
+$\mathrm{DM}_S(p)$.  En effet, une forme $S$ peut être définie comme
+l'union de ses boules maximales:
+
+\begin{equation}
+S = \bigcup_{p\in S} B_S(p).
+\end{equation}
+
+\noindent%
+L'ensemble des points $p$ du squelette d'une forme $S$ est suffisant
+pour reconstruire $S$ \cite{serra:1982,schmitt:1993}:
+
+\begin{equation}
+S = \bigcup_{p\in\mathbf{MA}(S)} B_S(p)
+  = \bigcup_{p\in\mathbf{MA}(S)} B(p,\mathrm{DM}_S(p))
+  = \bigcup_{(p,r)\in\mathbf{MAT}(S)} B(p,r).
+\end{equation}
+
+Plus de détails pour reconstruire une forme à partir de son squelette
+sont donnés par Dimitrov \cite{dimitrov-msc:2003}.
+
+La réversibilité satisfait les critères d'unicité et de conservation de
+l'information.
+
+\paragraph{Description hiérarchique}
+La valeur des informations des points squelettaux dépend de la position
+du point dans la forme.  Plus le point squelettal est proche du contour
+de la forme, plus il représentera un information locale.  Inversement,
+plus un point squelettal est éloigné du contour, plus il représentera
+une information globale.  La squelettisation propose ainsi une
+description hiérarchique de la forme incluant à la fois des informations
+globales et locales à la forme.
+
+\paragraph{Épaisseur}
+Un squelette a une épaisseur d'un point.  Autrement dit, son intérieur
+est vide.  Soit $S$ une forme, alors
+
+\begin{equation}
+  \label{eq:thick}
+  \mathrm{int}(\mathbf{MA}(S)) = \emptyset.
+\end{equation}
+
+\noindent%
+Une preuve de cette propriété a été donnée par Dimitrov
+\cite{dimitrov-msc:2003}.
+
+\paragraph{Homotopie}
+Une \emph{homotopie} est une fonction continue qui permet de transformer
+une fonction en une autre fonction.
+
+\begin{definition}[Fonctions homotopes]
+  Soient deux fonctions $f_1:E\rightarrow F$ et $f_2: E\rightarrow F$.
+  Ces fonctions sont \emph{homotopes} si et seulement si il existe une
+  homotopie $H:[0,1]\times E\rightarrow F$ qui soit une fonction
+  continue et telle que $H(0, t) = f_1 (t)$ et $H(1, t) = f_2 (t)$.
+\end{definition}
+
+Les courbes sont des cas particuliers de fonctions et permettent de
+représenter le contour d'une forme et des squelettes.  L'une des
+propriétés du squelette est d'être homotope avec le contour d'une forme
+\cite{dimitrov-msc:2003}.  Soit $S$ une forme et $\mathbf{MA}(S)$ son
+squelette, alors $S$ et $\mathbf{MA}(S)$ ont le même type d'homotopie.
+
+\begin{figure}[htbp]
+  \centering
+  \input{img/skeleton/homotopy-def.pstex_t}
+  \caption[Nécessité de la condition~1 de la
+  définition~\ref{def:shape}]%
+  {Nécessité de la condition~1 de la définition~\ref{def:shape} (d'après
+  \cite{dimitrov-msc:2003}).  La forme considérée est composée de deux
+  disques qui se rencontrent en $p$.  Le squelette de cette forme est
+  représenté par les deux points $q_1$ et $q_2$.}
+  \label{fig:skeleton:homotopy-def}
+\end{figure}
+
+La propriété d'homotopie est importante car elle permet d'assurer qu'un
+squelette à le même nombre de composantes connexes et le même nombre de
+trous que la forme à partir de laquelle il a été généré.  Toutefois,
+comme semble le montrer la figure~\ref{fig:skeleton:homotopy-def}, bien
+que la forme possède une composante connexe, il existe des cas où le
+squelette peut en posséder plus.  Cependant, il faut bien faire
+attention au fait que l'intérieur de la forme de la
+figure~\ref{fig:skeleton:homotopy-def} contienne deux composantes
+connexes.  Si nous considérons la condition~1 de la
+définition~\ref{def:shape}, la propriété d'homotopie entre la forme et
+son squelette reste vraie.
+
+\paragraph{Semi-continuité}
+La squelettisation est une transformation semi-continue.  Le squelette
+est en effet sensible à la moindre perturbation dans le contour et le
+contenu de la forme.  Il est donc difficile de satisfaire le critère de
+tolérance au bruit.  Cependant, nous verrons qu'il existe certaines
+techniques pour minimiser l'effet du bruit.  Cette instabilité du
+squelette face aux perturbations du contour peut être caractérisée au
+moyen de la distance de Hausdorff, qui permet de mesurer la ressemblance
+entre deux ensembles de points.  Choi et Seidel rappellent en effet que
+si la distance de Hausdorff entre deux formes est faible malgré quelques
+perturbations sur le contour, la distance de Hausdorff entre les
+squelettes correspondants peut être élevée \cite{choi:2002}.
+
+La sensibilité du squelette face aux perturbations dépend de la distance
+des points par rapport au contour de la forme.  Plus les points
+squelettaux sont proches du contour, plus ils sont sensibles aux
+perturbations.
+
+\paragraph{Transition}
+La semi-continuité n'est pas la seule instabilité qui existe avec les
+squelettes.  Si nous considérons une forme subissant des transformations
+à travers le temps, aussi faibles soient-elles ces transformations
+peuvent à tout moment changer la topologie du squelette
+\cite{giblin:2002,kimia:2003}.
+
+\paragraph{Autres propriétés}
+Attali a montré qu'il est possible de calculer différents paramètres
+d'une forme faisant intervenir des intégrales doubles, comme l'aire, le
+barycentre et les moments d'inertie, simplement à partir de son
+squelette \cite{attali-phd:1995}.
+
+\subsection{Construction}
+
+De nombreuses méthodes ont été proposées pour construire un squelette à
+partir d'une forme quelconque
+\cite{attali-phd:1995,fol-phd:2003,ogniewicz-phd:1993,serra:1982,siddiqi:2002,thiel-phd:1994}.
+Il existe actuellement un grand nombre de références sur les méthodes de
+squelettisation \cite{fol-phd:2003,loncaric:1998,pizer:2003} et leur
+classement
+\cite{attali-phd:1995,fol-phd:2003,kimia:2003,ogniewicz-phd:1993,tek:1999a,thiel-phd:1994}.
+
+Dans la plupart des publications scientifiques, les méthodes de
+squelettisation sont réparties en quatre classes:
+
+\begin{enumerate}
+\item \emph{Amincissement topologique} --- Ces méthodes de
+  squelettisation se basent sur des images discrètes et utilisent un
+  outil des mathématiques morphologiques appelé \emph{érosion}.
+  L'érosion consiste à \og raboter \fg une forme à partir d'une autre
+  forme donnée.  Au fur et à mesure que des coins apparaissent, le
+  squelette se précise.  Toutefois, l'opération d'érosion ne permet pas
+  de préserver des invariants topologiques.  Pour corriger ce défaut,
+  plusieurs méthodes d'amincissement agissant dans $\mathbbm{Z}^2$ se
+  basent sur les notions définies dans le cadre de la topologie digitale
+  (\emph{digital topology} en anglais), initiée par Rosenfeld dans les
+  années soixante-dix \cite{kong:1989}.
+\item \emph{Extraction de la carte de distances} --- Ces méthodes de
+  squelettisation se basent sur la carte de distances d'une forme.
+  Elles recherchent par la suite les crêtes de la carte, qui
+  correspondent aux branches du squelettes.
+\item \emph{Simulation du front enflammé} --- Ces méthodes de
+  squelettisation se basent sur l'évolution du contour de la forme.  Ce
+  contour est assimilé à un ensemble de courbes se propageant à travers
+  le temps vers le centre de la forme.  Chaque fois qu'un \og choc \fg
+  se produit entre deux courbes, un point squelettal apparaît.
+\item \emph{Calcul analytique} --- La recherche du squelette est
+  rapportée à un problème géométrique.  Certaines méthodes utilisent une
+  polygonisation du contour, d'autres se basent sur le diagramme de
+  Voronoï du contour.
+\end{enumerate}
+
+Les méthodes peuvent ensuite être classées selon deux groupes: les
+méthodes discrètes et les méthodes analytiques
+\cite{attali-phd:1995,fol-phd:2003}.
+
+\subsection{Applications de la squelettisation}
+
+La squelettisation connaît beaucoup d'applications dans des domaines
+comme la reconnaissance d'objets, la modélisation de solides pour la
+conception et la manipulation de formes, l'organisation de nuages de
+points, la recherche de chemins, les animations, etc.  Il existe
+différentes raisons qui font que la squelettisation est une modélisation
+intéressante pour les formes \cite{fol-phd:2003,ogniewicz-phd:1993}:
+\emph{(i)} une représentation médiale est intuitive pour modéliser les
+objets allongés; \emph{(ii)} un squelette contient l'épaisseur de la
+forme en différents endroits par sa fonction d'étanchéité; \emph{(iii)}
+d'importantes caractéristiques du contour sont contenues dans le
+squelette, comme les pointes ou les extrema de courbure; \emph{(iv)} à
+la fois l'intérieur et l'extérieur de la forme sont décrits et segmentés
+en fonction de leur relative proximité du contour de la forme;
+\emph{(v)} la squelettisation permet un partitionnement des formes;
+\emph{(vi)} un squelette organise la forme selon une hiérarchie: les
+petits éléments du contour peuvent être distingués des caractéristiques
+principales du contour; \emph{(vii)} la modélisation par le squelette
+est complète, c'est-à-dire que toute la forme est représentée, de la
+plus petite bosse dans son contour aux coudes et aux trous dans sa
+structure; \emph{(viii)} la squelettisation offre le concept de \og
+réduction dimensionnelle \fg, c'est-à-dire que les formes sont
+transformées en un ensemble de branches qui représente un potentiel pour
+la compression de données et la concentration d'informations.
+
+La squelettisation est une transformation qui connaît un fort succès
+dans les domaines de la médecine et de la biologie depuis son existence
+\cite{attali-phd:1995,blum:1967,dokladal-phd:2000,ogniewicz:1993}, et de
+la minéralogie \cite{serra:1982,schmitt:1993,thiel-phd:1994}.
+Toutefois, nous avons relevé quelques utilisations de la squelettisation
+dans les domaines de l'architecture et de l'urbanisme.  Davis et
+Benedikt \cite{benedikt:1979a} partent d'une forme représentant le plan
+d'une architecture et utilisent la squelettisation pour calculer un
+chemin à l'intérieur de cette forme.  Ce chemin correspond au lieu
+suffisant des points d'observation qui permet de couvrir tout l'espace
+par les isovists.  Cependant, cet ensemble n'est pas minimal, car
+certains points fournissent à peu près les mêmes informations que leurs
+voisins.  Par exemple, si nous avons une pièce rectangulaire
+correspondant à la forme de gauche dans la figure~\ref{fig:ske-ex}, la
+squelettisation fournit un chemin possédant cinq branches, alors qu'un
+seul point pris au hasard dans la forme suffit à couvrir toute la pièce.
+Plus tard, Carvalho et Batty ont tenté de faire l'analogie entre les
+lignes axiales de Hillier et Hanson \cite{hillier:1984}, les isovists de
+Benedikt et les squelettes \cite{carvalho:2003}.  Enfin, alors que
+Kovács \emph{et al.}  ont montré que notre sensibilité inconsciente est
+maximale au niveau du squelette \cite{kovacs:1998}, van Tonder \emph{et
+  al.} ont tenté de trouver une corrélation entre la perception d'un
+jardin japonais et son squelette \cite{lyons:2002,tonder:2002}.
+
+En dehors de ces applications, la squelettisation semble n'avoir jamais
+été utilisée dans le domaine de l'urbanisme et encore moins pour
+analyser les variations apparaissant dans le champ visuel d'un
+observateur en mouvement.
+
+\section{Vers une application de la squelettisation des formes de ciel}
+
+\`A ce niveau, un dilemme se pose à nous: quel type d'image ou de forme
+de ciel devons-nous squelettiser?  Devons-nous nous baser sur des images
+discrètes ou alors sur des images vectorielles?  Pour tenter de répondre
+à cette question, nous allons observer les deux types d'images.
+Ensuite, nous expliquerons le choix que nous avons fait.
+
+\subsection{Image discrète}
+
+Les images discrètes ont la particularité d'être faciles et rapides à
+créer, puisqu'il suffit de décider pour chaque pixel, qui en est le
+composant de base, sa couleur.  De plus, les images discrètes permettent
+de ne traiter que des entiers et des coordonnées entières
+($\mathbbm{Z}^n$), qui sont plus faciles et plus rapides à traiter par
+les ordinateurs que les réels, sans perte de précision.
+
+Dans le cadre de la projection sphérique, les projections discrètes
+permettent en quelque sorte de classer les informations en fonction de
+leur distance et de leur taille, ou plus exactement en fonction de leur
+angle solide: les informations de petite taille ou lointaines sont
+floues, ambiguës et les informations de grande taille ou proches sont
+précises et distinctes.  Cette hiérarchie n'apparaît pas avec les images
+vectorielles où toutes les informations ont la même importance.  De
+plus, elle imite en quelque sorte notre façon de percevoir le monde.
+Avec la squelettisation, nous avons ainsi deux niveaux de classification
+hiérarchique des informations.
+
+Les images discrètes possèdent aussi un certain nombre de défauts.  Tout
+d'abord, la précision des images discrètes dépend entièrement de leur
+résolution, mais en général elle est moindre que celle des images
+vectorielles.  Pour ce qui concerne la squelettisation, il est difficile
+voire impossible de calculer le squelette exact d'une forme discrète
+\cite{thiel-phd:1994}.  La plupart des algorithmes ne fournissent qu'une
+approximation.  Toutefois, il semble que cette assertion deviennent
+fausse actuellement.  Il existe une définition discrète du squelette et
+des algorithmes efficaces, même pour la distance euclidienne
+\cite{coeurjolly:2003,thiel:2003}.
+
+
+\subsection{Image vectorielle}
+\label{subsec:skeleton:vector}
+
+Les images vectorielles possèdent beaucoup d'avantages puisqu'elles sont
+décrites mathématiquement, qu'elles sont indépendantes de toute
+résolution et qu'elles utilisent des coordonnées réelles
+($\mathbbm{R}^n$).  En réalité, la résolution est déterminée par la
+précision des calculs et de la représentation des nombres réels.  En
+conséquence, les images vectorielles sont apparemment plus précises que
+les images discrètes, au moins pour déterminer la frontière des éléments
+(par exemple, le contour d'une forme).  Par contre, les images
+vectorielles possèdent aussi un ensemble d'inconvénients qui ne peuvent
+être négligées.  Sur le plan pratique, la production d'images
+vectorielles nécessite des algorithmes sophistiqués et souvent des temps
+de traitement très long.  Des cas particuliers apparaissent couramment
+(recouvrement de segments, de côtés de polygones, paramètres infinis,
+etc.) et sont à l'origine d'erreurs dans certains algorithmes.  Enfin,
+les images vectorielles utilisent essentiellement des réels et, dans ce
+cas, tous les calculs sont dépendants de la précision de la machine.
+
+L'algorithme de projection sphérique utilisé par Teller et que nous
+avons vu au §\ref{subsec:survey:algo-sph} peut permettre de produire des
+\og projections vectorielles \fg.  En réalité, si nous analysons cet
+algorithme, il s'agit de fausses projections sphériques car les segments
+projetés sont obtenus par une approximation polygonale.  Cet algorithme
+est suffisant si nous souhaitons obtenir une image discrète par la
+suite.  Cependant, si nous partons de cette fausse projection pour
+transformer la forme du ciel et que nous en calculons le squelette
+celui-ci contiendra trop de branches par rapport à une véritable
+projection sphérique, comme nous pouvons le voir sur la
+figure~\ref{fig:skeleton:bad-proj}.  En effet, avec l'algorithme utilisé
+par Teller, un segment est projeté sous la forme d'une suite de petits
+segments connexes qui représente une approximation de la véritable
+projection sphérique du segment.  Cependant, chaque jonction entre deux
+petits segments successifs crée une nouvelle branche dans le squelette,
+qui n'apparaît pas dans le squelette de la véritable projection.  Pour
+résoudre ce problème il existe deux solutions: soit nous effectuons un
+\emph{élagage} qui consiste à retirer les branches en trop soit nous
+calculons la véritable projection sphérique de la forme du ciel.  Le
+problème de l'élagage est de déterminer les branches qu'il faut
+éliminer.  Ce problème n'est pas trivial et nécessite d'utiliser une
+heuristique, comme nous le verrons plus loin.  Nous risquons à la fois
+de retirer des branches que nous aurions dû garder et de garder des
+branches que nous aurions dû retirer.  Les problèmes liés à l'élagage
+n'apparaissent pas dans toutes méthodes de squelettisation dans les
+espaces discrets.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.5\linewidth]{img/skeleton/bad-proj.eps}
+  \caption[Squelettisation d'un segment projeté par la projection
+    sphérique utilisée par Teller]%
+    {Squelettisation d'un segment projeté par la projection sphérique
+      utilisée par Teller.  Le segment à gauche est projeté en un
+      ensemble de petits segments qui approxime un arc (au centre).
+      Lorsque nous calculons le squelette du segment projeté, chaque
+      jonction entre deux petits segments crée une branche dans le
+      squelette.}
+  \label{fig:skeleton:bad-proj}
+\end{figure}
+
+Il existe des algorithmes permettant de définir mathématiquement des
+projections sphériques.  Cependant, le problème de cette méthode est que
+les courbes générées par la projection sont de degré élevé: en général,
+ce ne sont pas des cercles, sauf dans le cas de la projection
+stéréographique.  Le calcul des paramètres de ces courbes repose sur de
+nombreuses fonctions trigonométriques qui sont lentes par rapport à des
+opérations de base comme l'addition ou la multiplication.  Le résultat
+est une structure très lourde en mémoire, très longue à générer et dont
+la précision n'est pas toujours optimale en raison de nombreuses
+transformations nécessaires (sauf si on travaille en double précision,
+mais alors les structures sont encore plus lourdes).  Les projections
+sphériques vectorielles paraissent très séduisantes.  Cependant, elles
+nécessitent beaucoup de ressources dans le cadre des espaces urbains
+denses.  De plus, le fait de travailler avec des images vectorielles
+n'élimine nullement le problème de la précision. Il le déplace au mieux
+en amont.
+
+\subsection{Squelettisation des formes de ciel: discret contre
+  vectoriel}
+
+Nous avons précédemment vu qu'il existe deux manières de représenter des
+projections sphériques: soit par des images discrètes soit par des
+images vectorielles.  Les images discrètes apportent une plus grande
+facilité de traitement, mais elles sont moins précises et sont
+susceptibles de posséder des perturbations.  Quant aux images
+vectorielles, leurs qualités sont séduisantes, mais en réalité leur
+précision n'est qu'apparente, puisque celle-ci ne dépend en pratique que
+de la précision des machines en calcul avec des nombres à virgule
+flottante.  Si bien que les images vectorielles semblent présenter
+autant d'intérêt que les images discrètes.
+
+Dans notre projet, nous avons choisi d'utiliser des images discrètes
+pour plusieurs raisons.  Tout d'abord, les images discrètes permettent
+de cacher un défaut de la méthode de projection sphérique utilisée par
+Teller: une image discrète obtenue par ce procédé donne l'illusion
+qu'elle a été produite par une véritable projection sphérique.
+Autrement dit, sur un support discret, une projection sphérique exacte
+et son approximation fine sont identiques.  Malgré les difficultés de la
+squelettisation dans les espaces discrets, il existe en ce moment une
+grande activité de recherche pour des méthodes de squelettisation de ce
+type.  Actuellement, nous pouvons espérer obtenir des méthodes plus
+rapides et plus robustes que celle existant actuellement.  Faire le
+choix des projections sphériques sur un support discret, c'est aussi
+permettre à notre méthode d'être appliquée à des photographies de
+parcours obtenues avec un objectif \og fisheye \fg en situation réelle.
+Ceci permet de nous délaisser des étapes de reconstitution 3D des
+espaces urbains et de calcul des projections sphériques.  Il resterait
+néanmoins à extraire le ciel d'une image fisheye et à étalonner
+l'objectif afin de se rapprocher d'une projection sphérique exacte.
+Pour continuer, le classement des informations selon leur distance lors
+de la discrétisation, nous a paru intéressant.  La discrétisation génère
+du bruit lors de la transformation, mais dans le cas des projections
+sphériques, il s'agit d'un bruit \og utile \fg.  Enfin, l'utilisation
+d'images vectorielles nécessite de passer par des opérations booléennes
+comme l'union et la différence pour obtenir la forme du ciel en
+projection sphérique.  Dans le cadre d'une scène urbaine, nous pouvons
+facilement nous retrouver avec des scènes de 10\,000 faces, où chaque
+face est représentée par une vingtaine de points en moyenne.
+L'application des opérations booléennes peut rapidement devenir
+laborieux (sans parler des problèmes de précision lors du calcul de ces
+opérations). L'intérêt des images discrètes est que ces opérations se
+font par superposition de pixels et que la précision est fixée par
+l'image discrète elle-même.
+
+
+\section{Squelettisation dans les espaces discrets}
+\label{sec:skeleton:digital}
+
+En utilisant la méthode des projections sphériques de Teller, nous
+obtenons des images discrètes représentant les projections sphériques de
+la forme de ciel.  Puis, nous réalisons une squelettisation de cette
+forme.  La figure~\ref{fig:skeleton:proj-skel} montre deux exemples de
+squelettisation de formes de ciel dans des modèles de scènes existantes.
+Cependant, la squelettisation de formes dans ce type d'image ne se fait
+pas sans difficultés.  Après avoir présenté la notion d'espace discret,
+nous détaillerons quelques ébauches de solutions pour calculer un
+squelette d'une forme discrète.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.4\linewidth]{img/skeleton/xn-proj.eps} \quad
+  \includegraphics[width=.4\linewidth]{img/skeleton/xn-skel.ps} \\[12pt]
+  \includegraphics[width=.4\linewidth]{img/skeleton/nantes-proj.eps} \quad
+  \includegraphics[width=.4\linewidth]{img/skeleton/nantes-skel.ps}
+  \caption[Projection sphérique et squelettisation dans des espaces
+  urbains]%
+  {Projection sphérique et squelettisation dans des espaces urbains.  La
+    première ligne représente la projection sphérique puis la
+    squelettisation de la vue du ciel (en noir) près de l'église dans la
+    rue Xavier-Neujean à Liège en Belgique (cf.~§\ref{sec:interp:xn}).
+    La pointe qui pénètre dans le ciel correspond au clocher de
+    l'église.  La seconde ligne représente la projection sphérique puis
+    la squelettisation de la vue du ciel dans le cours des Cinquante
+    Otages à Nantes en France (cf.~§\ref{sec:interp:nantes}).  L'élément
+    qui pénètre dans le ciel au bas de l'image correspond à la Tour de
+    Bretagne et la petite pointe qui apparaît plus haut correspond au
+    clocher de l'église Saint Nicolas.  La projection sphérique a été
+    réalisée en utilisant l'algorithme~\ref{algo:projseg-rec}
+    (cf.~\ref{subsec:survey:algo-sph}) et la squelettisation a été faite
+    en utilisant la méthode de Siddiqi \emph{et al.}
+    (cf.~§\ref{sec:skeleton:hamilton}).}
+  \label{fig:skeleton:proj-skel}
+\end{figure}
+
+\subsection{Espace discret}
+\label{sec:skeleton:discrete-space}
+
+Les support des images discrètes est l'espace discret 2D représenté par
+l'ensemble $\mathbbm{Z}^2$ des couples de coordonnées entières
+relatives.  Cet ensemble représente une approximation de
+$\mathbbm{R}^2$, car les objets y sont représentés par un ensemble fini
+de points.
+%
+Chaque point de $\mathbbm{Z}^2$ peut représenter ou être représenté par
+un \emph{pixel}.  Soit $p$ un point de $\mathbbm{Z^2}$, un pixel
+représente l'ensemble des points $q$ de $\mathbbm{R}^2$ plus proches de
+$p$, selon une distance donnée, que de n'importe quel autre point de
+$\mathbbm{R}^2$.  Cette définition du pixel se rapproche de la
+définition des diagrammes de Voronoï (cf.~§\ref{sec:skeleton:voro}).
+Elle centralise les points de $\mathbbm{Z}^2$ dans le pixel.  Nous
+considérons que les coordonnées d'un pixel sont données par les
+coordonnées du point central du pixel.
+%
+Comme chaque pixel recouvre un ensemble de points de $\mathbbm{R}^2$, il
+est possible d'utiliser un paramètre $\sigma$ qui représente à la fois
+la zone couverte par le pixel et la résolution de l'espace discret
+utilisé.  Ici, nous considérons que les pixels sont carrés.  Par
+conséquent, la distance qui sépare le point central $p$ des autres
+points $q$ du pixel vérifie $d_8(p,q) \leq \sigma/2$, où $d_8$ est la
+distance de Manhattan définie dans l'équation~\ref{eq:d8}.  La recherche
+des coordonnées du pixel qui recouvre un point $p(x,y)$ de
+$\mathbbm{R}^2$ se fait par la fonction
+$\mathrm{PN}_{\sigma}(x,y)=\left(\sigma\mathrm{E}(x/\sigma)+\sigma/2,
+  \sigma\mathrm{E}(y/\sigma)+\sigma/2\right)$, où $E: \mathbbm{R}^2
+\rightarrow \mathbbm{Z}^2$ est la fonction qui extrait la partie entière
+d'un nombre réel.  La fonction de discrétisation permettant de retrouver
+un pixel de résolution $\sigma$ à partir d'un point $p$ quelconque du
+plan $\mathbbm{R}^2$ est définie par
+
+\begin{equation}
+  L_{\sigma}(p) = \left\{ q\in\mathbb{R}^2
+    | d_8\left(\mathrm{PN}_{\sigma}(p),q\right) \leq \sigma/2 \right\}.
+\end{equation}
+
+Soit $S$ une forme de $\mathbbm{R}^2$, la représentation discrète de $S$
+est donnée par la fonction $L_{\sigma}$ définie par
+
+\begin{equation}
+  L_{\sigma}(S) = \bigcup_{p\in S} L_{\sigma}(p).
+\end{equation}
+
+\begin{figure}[htbp]
+  \centering
+  \input{img/skeleton/lattice.pstex_t}
+  \caption[Discrétisation d'une forme de $\mathbbm{R}^2$]%
+  {Discrétisation d'une forme de $\mathbbm{R}^2$.}
+  \label{fig:skeleton:lattice}
+\end{figure}
+
+Pour déterminer si des pixels appartiennent à un objet, on leur associe
+soit la valeur 0 soit la valeur 1.  En général, un objet dans l'espace
+discret est caractérisé par un ensemble de pixels de valeur 1 et le
+reste par tous les pixels de valeur 0.
+
+Dans un espace discret, il est possible d'utiliser des distances basées
+uniquement sur des opérations entières.  Le principal avantage de ce
+type de distances est de permettre une plus grande rapidité des calculs.
+Soient $p(x_p,y_p)$ et $q(x_q,y_p)$ deux points de $\mathbbm{Z}^2$.  Les
+distances discrètes les plus utilisées sont
+
+\begin{align}
+  d_4 (p,q) & = | x_q - x_p | + | y_q - y_p |, \\
+\label{eq:d8}  d_8 (p,q) & = \max (| x_q - x_p |, | y_q - y_p |), \\
+  d_E^2 (p,q) & = (x_q - x_p)^2 + (y_q - y_p)^2,
+\end{align}
+
+\noindent%
+où $d_E^2$ est appelée distance euclidienne quadratique, $d_4$ est
+appelée distance Manhattan ou distance $L_1$, $d_8$ distance échiquier
+ou distance $L_{\infty}$.  Il faut noter que la distance euclidienne
+quadratique n'est pas une distance au sens de la
+définition~\ref{def:distance}.  Les points $p$ et $q$ vérifiant
+$d_4(p,q) \leq 1$ sont dits 4-adjacents.  On dit aussi que $q$ est dans
+le 4-voisinage de $p$.  De la même manière, les points $p$ et $q$
+vérifiant $d_8(p,q) \leq 1$ sont dits 8-adjacents et $q$ est dans le
+8-voisinage de $p$.  Les voisinage induis par les distances $d_4$ et
+$d_8$ apparaissent dans la figure~\ref{fig:skeleton:48-voisinage}.
+
+\begin{figure}[ht]
+  \begin{center}
+  \input{img/skel-cmp/48-voisinage.pstex_t}
+  \end{center}
+  \caption[Représentation du (a) 4-voisinage et du (b) 8-voisinage]%
+  {Représentation du (a) 4-voisinage et du (b) 8-voisinage d'un point
+    sur un quadrillage.}
+  \label{fig:skeleton:48-voisinage}
+\end{figure}
+
+\subsection{Particularités de la squelettisation dans les espaces
+  discrets}
+
+La stabilité d'une méthode de squelettisation face aux transformations
+géométriques, comme la translation, la rotation et le changement
+d'échelle, est essentielle pour assurer la fidélité de la méthode.
+Toutefois, ces qualités ont parfois tendance à disparaître avec les
+formes discrètes.  Dans ce type de formes, chaque couple de traits
+vertical et horizontal dus aux contours des pixels forme un pic.
+Difficilement visible à l'{\oe}il nu pour des résolutions élevées, les
+pics ont pour effet d'ajouter des branches dans le squelette et parfois
+ils modifient sa géométrie.  Nous pouvons observer cet effet dans la
+figure~\ref{fig:skeleton-num}.  Dans le cas des espaces discrets, le
+critère de tolérance au bruit (cf.~§\ref{subsec:skeleton:criterion})
+n'est plus respecté, pas plus que le critère d'invariance sous
+transformations géométriques.  Dans l'espace discret, la squelettisation
+est invariante par translation, par contre elle ne l'est pas par
+rotation et homothétie (figure~\ref{fig:skeleton-rot}).  Ces deux
+transformations peuvent faire apparaître, disparaître, voire modifier
+une grande partie des branches dans les squelettes.
+
+\begin{figure}[htbp]
+  \begin{center}
+  \input{img/skeleton/skeleton-num.pstex_t}
+  \end{center}
+  \caption[Influence de la discrétisation sur le squelette]%
+  {Influence de la discrétisation sur le squelette.  Dans la figure de
+    gauche nous voyons le squelette généré par le contour continu en
+    gras.  Après discrétisation (à droite), un ensemble de pics
+    apparaissent dans le contour.  Ces pics changent la forme du
+    squelette qui rejoint le contour en plusieurs endroits.}
+  \label{fig:skeleton-num}
+\end{figure}
+
+\begin{figure}[htbp]
+  \begin{center}
+  \includegraphics[width=.5\linewidth]{img/skeleton/skeleton-rot.eps}
+  \end{center}
+  \caption[Squelette d'une forme discrète après une rotation]%
+  {Squelette d'une forme discrète après une rotation.  Sur la figure,
+    nous voyons deux formes discrètes: l'une est un rectangle, l'autre
+    est ce même rectangle ayant subi une rotation de 30°.  Nous voyons
+    qu'entre ces deux formes, la rotation dans l'espace discret modifie
+    profondément le squelette.}
+  \label{fig:skeleton-rot}
+\end{figure}
+
+\subsection{Réduction du bruit dans les squelettes des formes discrètes}
+
+Pour éliminer le bruit qui influe sur les branches du squelette, il
+existe diverses solutions.  Comme nous l'avons vu au
+§\ref{subsec:skeleton:vector}, une première solution consiste à
+effectuer une approximation polygonale ou curviligne du contour de la
+forme.  Ici, l'approximation consiste à retrouver les points de
+$\mathbbm{R}^2$ qui correspondent au contour.  Cette solution est
+intéressante car elle permet de rechercher le squelette dans un espace
+continu.  Par contre, la forme n'est traitée qu'à partir d'une
+approximation de la forme discrète.  En plus des défauts rencontrés au
+§\ref{subsec:skeleton:vector}, d'autres défauts peuvent apparaître soit
+dans le squelette soit lors de l'approximation provoquant des erreurs au
+niveau des branches sur leur longueur, sur la position de leurs points
+et même sur leur existence.
+
+Une autre solution consiste à déterminer quelles sont les branches qui
+ont été générées par le bruit.  Cette opération qui porte le nom
+\emph{d'élagage} et que nous avons déjà vu au
+§\ref{subsec:skeleton:vector} se base sur une heuristique pour
+déterminer les branches ou les points qui seront retirés du squelette.
+Par exemple, Attali a utilisé le rapport entre l'angle bissecteur et le
+rayon des points squelettaux \cite{attali:1996}.  La
+figure~\ref{fig:skeleton:att-ratio} représente ce rapport pour un
+squelette simple.  En modélisant l'effet du bruit dans la
+squelettisation selon ce rapport, nous pouvons détecter les couples de
+valeurs angle bissecteur et rayon qui correspondent à des points
+squelettaux générés par les perturbations, comme le montre la
+figure~\ref{fig:skeleton:att-ratio-app}.  En retirant ces points, nous
+obtenons un squelette simplifié.  Ogniewicz se base sur d'autres
+rapports pour éliminer des points ou des branches
+\cite{ogniewicz-phd:1993}.  Toutefois, l'élagage d'un squelette d'une
+forme discrète suppose que la solution se trouve dans ce squelette.
+Ceci n'est pas certain car les perturbations peuvent influencer la
+position des points squelettaux.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.35\linewidth]{img/skeleton/attali/sk0_patate600.eps}
+  \quad
+  \includegraphics[width=.6\linewidth]{img/skeleton/attali/gr_patate600.eps}
+  \caption[Rapport angle bissecteur et rayon d'un squelette]%
+  {Rapport angle bissecteur et rayon d'un squelette
+    (d'après~\cite{attali:1996}).  La figure montre à gauche une forme
+    et son squelette et à droite le rapport angle bissecteur et rayon
+    pour des points de chacune des branches.  La fonction d'étanchéité
+    calcule pour chaque point du squelette sa distance par rapport au
+    point du contour le plus proche.}
+  \label{fig:skeleton:att-ratio}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.4\linewidth]{img/skeleton/attali/sk0_patate600B.eps}
+  \includegraphics[width=.4\linewidth]{img/skeleton/attali/sk1_patate600B.eps}
+  \includegraphics[width=.6\linewidth]{img/skeleton/attali/gr_patate600B.eps}
+  \caption[Simplification d'un squelette par le rapport angle bissecteur
+  et rayon d'un squelette]%
+  {Simplification d'un squelette par le rapport angle bissecteur et
+    rayon (d'après~\cite{attali:1996}).  Dans le graphique en bas de la
+    figure, si nous ne gardons que les points situés à l'intérieur du
+    carré, le squelette est simplifié et nous obtenons le squelette de
+    droite dans la figure.  Le carré est une zone supérieure à
+    $\frac{2\pi}{5}$ en abscisse et supérieure à 0,2 en ordonnée.}
+  \label{fig:skeleton:att-ratio-app}
+\end{figure}
+
+Une troisième solution consiste à utiliser la carte de distances de la
+forme discrète basée sur la distance euclidienne ou une approximation.
+Comme nous l'avons vu dans le §\ref{sec:skeleton:dm}, il est possible de
+suivre dans cette carte les crêtes, qui représentent à la fois les
+maxima locaux et les lieux où un coin apparaît dans le front enflammé.
+Dans cette solution, il existe deux issues: soit la carte de distances
+est utilisée pour retrouver les lieux où des coins se sont formés
+(recherche par les chocs), soit la carte de distances est utilisée pour
+retrouver les points de la forme qui appartiennent au squelette.  Dans
+ce dernier cas, les méthodes constituent un squelette discret.
+
+Dans le cas des squelettes discrets, un défaut peut apparaître: il
+s'agit de l'existence de solutions équivalentes.  Comme le montre la
+figure~\ref{fig:ske-disc-def}, si la forme présente une zone où
+l'épaisseur en pixel est paire, plusieurs solutions peuvent apparaître.
+Certaines méthodes résolvent le problème en forçant l'algorithme à
+choisir les pixels qui seront éliminés.  Le résultat de cette solution
+apparaît dans les deux schémas de gauche de la
+figure~\ref{fig:ske-disc-def}.  Certains algorithmes proposent de
+permettre que des portions de branche aient deux pixels d'épaisseur.  Le
+résultat de cette solution apparaît dans le schéma de droite de la
+figure~\ref{fig:ske-disc-def}.  Dans ce dernier cas, il est possible
+d'affiner la définition du quadrillage afin d'assurer que le squelette
+ait une épaisseur d'un pixel pour toutes ses branches.
+
+\begin{figure}[ht]
+  \begin{center}
+  \includegraphics[width=.75\linewidth]{img/skeleton/ske-disc-def.eps}
+  \end{center}
+  \caption[Solutions équivalentes]%
+    {Solutions équivalentes.}
+  \label{fig:ske-disc-def}
+\end{figure}
+
+D'une manière générale, la recherche des crêtes introduit d'inévitables
+erreurs et nécessite toujours un post-traitement \cite{tek:1999a}.
+L'une des difficultés auxquelles se heurtent ces méthodes est de ne pas
+calculer avec exactitude la carte des distances euclidiennes.  Les
+squelettes résultants sont généralement incongrus, c'est-à-dire que le
+descripteur de forme n'est pas robuste sous certaines transformations
+géométriques \cite{ogniewicz:1995}.
+
+\section{Conclusion}
+
+Nous nous sommes intéressés, dans ce chapitre, à la recherche d'une
+méthode permettant d'analyser les formes de ciel dans les espaces
+ouverts urbains.  Il est important que cette méthode permette une
+description, à la fois globale et détaillée, de chaque forme de ciel
+observée le long des parcours dans le but de décrire les variations qui
+se sont produites en passant d'une observation à la suivante.  Pour
+analyser les formes de ciel de la méthode de Teller, la squelettisation
+a attiré notre attention car elle conserve les informations de la forme
+qu'elle transforme et permet de la décrire de manière hiérarchique: du
+moindre détail apparaissant dans son contour ou son intérieur jusqu'à
+son aspect global.  De plus, elle satisfait les critères d'invariance
+par transformation géométrique, d'unicité et de conservation de
+l'information.
+
+Après avoir discuté sur le type de support sur lequel la squelettisation
+pouvait s'appliquer (vectorielle ou discrète), nous avons remarqué que
+le support discret est mieux adapté aux études de formes de ciel dans
+les environnements urbains.  Les formes que nous cherchons à analyser
+sont donc des formes intégrées dans des images discrètes.  Cependant, la
+squelettisation est une transformation qui est particulièrement sensible
+au bruit des images discrètes.  En particulier, la squelettisation est
+assez instable avec les formes discrètes telles les projections
+sphériques de Teller.  Bien qu'il existe des solutions pour réduire
+l'effet du bruit sur les squelettes, il ne semble pas exister
+actuellement de méthode permettant de calculer le squelette exact d'une
+forme discrète.  Malgré ce constat, différentes méthodes sont proposées
+pour calculer le plus précisément possible des squelettes stables à
+partir de formes discrètes.  Dans le chapitre suivant, nous examinerons
+quelques unes de ces méthodes et nous décrirons comment nous avons
+choisi la méthode de squelettisation que nous avons utilisée dans cette
+recherche.
+
+% Local Variables:
+% mode: latex
+% fill-column: 72
+% End:

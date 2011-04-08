@@ -1,0 +1,41 @@
+\begin{picture}(0,0)%
+\includegraphics{img/skel-impl/branch-sch.pstex}%
+\end{picture}%
+\setlength{\unitlength}{2960sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(5124,3898)(1339,-3898)
+\put(1801,-3136){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}squelette}%
+}}}
+\put(1801,-3436){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}point squeletal}%
+}}}
+\put(1801,-3736){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}extr\'emit\'e de branche}%
+}}}
+\put(4501,-586){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$p_h$}%
+}}}
+\put(4576,-2161){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$p_h$}%
+}}}
+\put(4276,-1561){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$p_h$}%
+}}}
+\put(2251,-1711){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$p_t$}%
+}}}
+\put(4726,-3511){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\mathbf{b_1}$}%
+}}}
+\put(6301,-961){\makebox(0,0)[rb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\mathbf{b_2}$}%
+}}}
+\put(3001,-1111){\makebox(0,0)[b]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\mathbf{b_0}$}%
+}}}
+\put(2026,-1261){\makebox(0,0)[rb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\textsf{tail}}%
+}}}
+\put(4276,-2461){\makebox(0,0)[rb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\textsf{head}}%
+}}}
+\put(4276,-211){\makebox(0,0)[rb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\textsf{tail}}%
+}}}
+\put(4351,-1111){\makebox(0,0)[lb]{\smash{\SetFigFont{9}{10.8}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}\textsf{head}}%
+}}}
+\end{picture}

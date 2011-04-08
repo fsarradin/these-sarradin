@@ -1,0 +1,253 @@
+% conclu.tex - conclusion
+%
+% Copyright (C) 2003 - François Sarradin
+%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \title{Conclusion}
+\author{François Sarradin}
+\laboratory{
+  CNRS -- CERMA UMR 1563 \\
+  \'Ecole d'Architecture de Nantes \\
+  Rue Massenet -- BP 81\,931 \\
+  44\,319 NANTES CEDEX 3}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\sloppy
+\makeheader
+
+\label{chap:conclu}
+
+\begin{reflexion}
+\begin{otherlanguage}{english}\emph{
+  I've seen things you people wouldn't believe. Attack ships on fire
+  off the shoulder of Orion. I watched c-beams... glitter in the dark
+  near Tanhauser Gate. All those... moments will be lost... in time,
+  like tears... in rain. Time... to die.}\par
+\raggedleft Ridley Scott, \emph{Blade Runner}\par
+\end{otherlanguage}
+\end{reflexion}
+
+\begin{intropar}
+  {D}\textsc{ans} cette recherche, nous nous sommes posés la question
+  de savoir s'il est possible d'analyser les variations morphologiques
+  des espaces ouverts urbains le long de parcours.  Pour cela, d'un
+  côté, nous avons commencé par explorer les méthodes existantes pour
+  permettre de réaliser ce type d'analyse ---~nous avons relevé des
+  méthodes aussi bien dans le domaine de l'architecture que dans le
+  domaine de l'infographie.  Cependant, nous avons remarqué que ces
+  méthodes n'étaient pas adaptées ni à l'analyse quantitative ni à des
+  espaces aussi volumineux et denses que les espaces urbains.  Enfin,
+  certaines de ces méthodes sont capables de traîter les variations
+  apparaissant le long d'un parcours, mais elles les traitent de
+  manière binaire (il y a des variations ou il n'y en a pas).  D'un
+  autre côté, nous nous sommes intéressés aux méthodes quantitatives
+  d'analyse des espaces ouverts urbains se basant sur une approche
+  orientée champ.  Dans cette partie, nous avons eu l'occasion de
+  tester nos propres implémentations des méthodes d'analyses par
+  isovists, graphes de visibilité et par projections sphériques.  Nous
+  nous sommes apperçu que ces méthodes ne considèrent pas la troisième
+  dimension, qu'elles ne sont pas réellement adaptées aux espaces
+  urbains ou plus généralement qu'elles ne permettent pas l'analyse
+  des variations morphologiques le long d'un parcours.  Mais, parmi
+  ces méthodes, la méthode des projections sphériques de Teller offre
+  un certain nombre d'avantages intéressants dans notre cas: c'est une
+  méthode reconnaissant les trois dimensions de l'espace, adaptée aux
+  espaces urbains et rapide.  Nous avons donc choisi de nous baser sur
+  cette méthode pour analyser les variations morphologiques des
+  espaces ouverts urbains le long de parcours.  L'idée que nous avons
+  développée est donc de calculer une série de projections
+  hémisphériques, orientées vers le zénith, le long d'un parcours afin
+  de suivre les variations de la forme du ciel.  De ces projections
+  sphériques de la forme du ciel, nous en déduisons les variations de
+  la morphologie des espaces ouverts urbains autour de l'observateur
+  sur le parcours sélectionné.
+\end{intropar}
+
+
+\section{Synthèse des résultats}
+
+Afin d'analyser les formes de ciel, pour que d'une série de
+projections sphériques nous puissions analyser les variations
+morphologiques des espaces ouverts urbains, nous avons exploré les
+descripteurs utilisés en analyse de formes.  Nous nous sommes
+intéressés en particulier à la squelettisation qui transforme une
+forme en un ensemble de lignes centrées dans la forme.  Associée à
+l'information de distance entre les points squelettaux et les points
+du bord de la forme les plus proches, la squelettisation est une
+transformation réversible, homotope et qui conserve une description
+hiérarchisée de la forme.  Dans ce cas, les squelettes sont appelés
+squelettes pondérés.  Bien que la squelettisation soit
+particulièrement sensible aux perturbations des formes discrètes que
+fournissent les projections sphériques de Teller, nous avons choisi de
+conserver le support discret.  Le support continu présente en effet
+une solution précise mais bien trop lourde à manipuler ou, si nous
+considérons l'algorithme de projection sphérique utilisé, difficile à
+réaliser.  Il existe actuellement un grand nombre de méthodes de
+squelettisation dans les espaces discrets.  Dans cette recherche, nous
+avons examiné trois de ces méthodes: la méthode de Thiel utilisant les
+distances de chanfrein, la méthode d'Ogniewicz utilisant les
+diagrammes de Voronoï et la méthode de Siddiqi \emph{et al.} se basant
+sur le processus de feu de prairie.  Pour comparer ces méthodes, nous
+avons élaboré une série de tests basés sur la forme perçue d'une forme
+discrète.  La principale propriété que nous avons définie d'une forme
+perçue est d'être invariante par transformation géométrique alors que
+la forme discrète correspondante ne l'est pas forcément.  De la même
+manière, nous pensons qu'une méthode de squelettisation discrète doit
+se baser sur cette forme perçue et non sur la forme discrète.  Comme
+la forme perçue, les squelettes produits par une méthode de
+squelettisation doivent donc être invariants par transformations
+géométriques.  La méthode de test doit ainsi se concentrer sur les
+extrémités du squelette souvent plus sensibles aux perturbations que
+le reste du squelette.  Ainsi, en plus des formes de base, nous avons
+procédé à des tests utilisant la rotation sur les méthodes rencontrées
+et à des tests utilisant des images visuellement presque identiques.
+Ces tests nous ont semblé suffisants pour notre champ d'étude.  Après
+avoir effectué une série de tests, nous nous sommes aperçu que la
+méthode de Siddiqi \emph{et al.} était celle qui offrait une meilleure
+stabilité.  Nous avons donc choisi cette méthode de squelettisation
+pour l'élaboration de l'implémentation de notre méthode d'analyse des
+espaces urbains le long de parcours.
+
+Pour mettre en {\oe}uvre notre méthode d'analyse des espaces urbains
+basée sur des projections sphériques le long de parcours, il nous a
+fallu développer de nouvelles mesures des squelettes de la forme du
+ciel.  Nous avons commencé par rechercher des mesures basées sur des
+particularités du squelette comme le nombre de terminaisons ou la
+longueur moyenne des branches.  Cependant, nous avons remarqué que
+certaines de ces mesures sont très sensibles aux perturbations de la
+forme et qu'il vallait mieux ne pas les utiliser.  Nous avons donc
+développé une nouvelle mesure que nous avons appelé le plus grand
+disque maximal \og visible \fg, noté $\mathbf{GMD_V}$, qui recherche
+dans le squelette le point le plus éloigné du contour de la forme qui
+soit face à l'observateur.  Ce point est le point le moins sensible du
+squelette aux perturbations.  Pour nous orienter vers l'analyse des
+variations morphologiques des espaces ouverts urbains, nous nous
+sommes plutôt intéressés aux distances de similarité pour calculer la
+ressemblance entre deux squelettes successifs pris le long d'un
+parcours.  Ainsi, la distance de Hausdorff hyperbolique permet de
+calculer la différence entre deux squelettes pondérés en recherchant
+le plus grand éloignement.  Dans notre méthode d'analyse, cette
+distance recherche la plus grande variation qui apparaît autour de
+l'observateur.  Cependant, nous avons constaté que cette distance ne
+permet pas de distinguer certaines scènes.  Aussi, pour corriger ce
+défaut, nous avons développé une autre distance de similarité appelée
+distance de Hausdorff modifiée et basée sur les variations
+morphologiques globales apparaissant autour de l'observateur.  Nous
+considérons que nos analyses peuvent se baser sur quatre mesures: la
+taille du $\mathbf{GMD_V}$, la position relative du $\mathbf{GMD_V}$
+par rapport à l'observateur, la distance de Hausdorff hyperbolique et
+la distance de Hausdorff modifiée.
+
+Nous avons effectué un ensemble de tests sur notre méthode d'analyse,
+tout d'abord sur des exemples simples, puis sur deux cas réels: un à
+Liège et un autre à Nantes.  Les exemples simples, nous ont révélé le
+comportement de nos mesures.  Quant aux cas réels, ils nous ont à la
+fois permis de tester notre méthode sur des espaces vastes et
+réalistes et ils nous ont montrés d'autres comportements.  Ainsi, nous
+avons pu mettre en évidence que les mesures que nous avons développées
+permettent de mesurer différents types de variations le long d'un
+parcours, comme la traversée d'espaces homogènes, d'espaces de
+transitions, d'espaces à grandes ouvertures, etc.  Nous pouvons alors
+diviser le parcours selon des séquences définies selon le type
+d'espace traversé et caractériser ainsi à la fois les espaces ouverts
+explorés et le parcours lui-même.
+
+
+\section{Discussion}
+
+Au vu des résultats que nous obtenons avec la méthode qui a été
+développée au cours de cette thèse, un ensemble d'applications
+nouvelles apparaissent.  En nous basant sur la notion de perspective
+de mouvement et en concevant des outils pour l'analyser, nous avons
+proposé une méthode qui permet de réaliser des analyses des espaces
+urbains et des parcours.  Nous voyons maintenant que la méthode est
+capable de localiser les principales variations morphologiques le long
+d'un parcours urbain et de donner l'amplitude de ces variations.  En
+distinguant les différentes variations morphologiques, nous sommes
+capable de repérer des espaces de passage, des espaces à grande
+ouverture, des espaces de transition, etc.  Il apparaît que nous avons
+la possibilité de découper les parcours en séquences et de
+caractériser ainsi ces parcours.  Une typologie de dix séquences a été
+proposée en interprétant les différentes mesures.  Cette typologie
+parmet de séparer des séquences comme les ouvertures, les fermetures,
+les transitions et les stabilités morphologiques.
+%
+D'un autre point de vue, il est possible de caractériser des espaces
+urbains et d'observer leur intégration dans la ville ou de
+caractériser des tissus urbains en fonction de séquences de parcours
+types.  Il suffit ainsi de sélectionner un ou plusieurs parcours qui
+commencent hors de l'espace étudié, qui traversent cet espace et qui
+se terminent à nouveau en dehors de l'espace.  Nous avions réalisé une
+étude similaire avec le parcours dans la rue Xavier-Neujean à Liège en
+Belgique (cf.~§\ref{sec:interp:xn}).  Il est donc possible d'utiliser
+la méthode que nous avons développée ici pour, par exemple, l'analyse
+de parcours touristiques, l'analyse d'espaces urbains, l'étude de
+projets urbains influençant la morphologie de l'espace, etc.
+
+
+\section{Perspectives}
+
+Un certain nombre d'améliorations pourraient être réalisées par
+l'avenir.  L'implémentation actuelle de la méthode décrite dans ce
+mémoire est entièrement expérimentale: il n'existe pas de logiciel
+destiné à l'utilisateur final.  L'ensemble du code n'est quasiment pas
+optimisé et utilise en grande partie un langage multi plate-formes qui
+n'est pas reconnu pour sa rapidité.  Toutefois, les performances que
+nous obtenons sur les projections sphériques et sur les mesures des
+squelettes des formes de ciel avec des modèles d'espaces aussi vastes
+que le modèle du centre de Nantes (cf.~\ref{sec:interp:nantes}) sont
+assez prometteuses pour des applications opérationnelles.  Il peut
+être envisagé d'intégrer notre méthode dans système d'information
+géographique (SIG) 3D pour des analyses de parcours en \og temps réels
+\fg.
+%
+Sur la méthode de squelettisation employée, nous avons été un peu déçu
+par sa lenteur, ainsi que par le fait qu'elle ne fonctionne pas sur
+des images comportant plusieurs formes ou des formes à trou.
+Toutefois, nous avons constaté que Couprie et Zrour ont développé une
+nouvelle méthode, que nous avons décrite dans le
+§\ref{sec:skeleton:de2} et qui semble proposer la même précision que
+celle que nous avons employée, avec des temps de calcul nettement plus
+rapides et la possibilité de traîter des images contenant plusieurs
+formes et des formes à trou \cite{couprie:2004,zrour-dea:2004}.  Dans
+ce cas, des tests avec les autres méthodes que nous avons décrites
+seraient nécessaires.
+
+Pour compléter nos études, la méthode que nous avons décrite nécessite
+d'être testée à nouveau sur d'autres exemples du plus simple au plus
+complexe, que ce soit des cas de base ou d'autres cas réels organisés
+selon des thèmes tels que les quartiers historiques, les espaces
+commerciaux, les zones d'habitation, etc.  Ces tests permettraient de
+mieux percevoir le comportement de nos mesures et d'avoir un ensemble
+de références qui pourraient être comparées avec d'autres cas d'étude.
+\`A l'occasion, d'autres mesures pourraient être développées afin
+d'obtenir des valeurs qui soient plus précises par rapport à ce que
+peut ressentir un observateur lorsqu'il explore certains espaces.  La
+squelettisation des projections sphériques des formes de ciel semble
+être une bonne base pour réaliser ces nouvelles mesures.
+%
+La typologie des espaces ouverts urbains parcourus que nous avons
+détaillée au §\ref{sec:interp:discuss} pourrait être affinée pour
+pouvoir être appliquée à un maximum d'espaces urbains.  Par la suite,
+des mesures des divers cas de la typologie pourront être réalisées sur
+différents parcours.  Ces mesures donneraient par exemple le nombre de
+transitions dans une partie du parcours, leur longueur moyenne ou la
+longueur des différents cas dans une séquence.  Cela permettra de
+déterminer des séquences types et de caractériser des parcours selon
+ces séquences.
+%
+Le champ d'applications de notre méthode d'analyse pourrait être
+étendu en réalisant des tests sur des villes de pays hors de l'Europe,
+au niveau des entrées de ville ou dans des paysages très ouverts.
+%
+Mais, pour terminer sur des développements plus imminents, il serait
+intéressant de réaliser une méthode mettant en {\oe}uvre
+automatiquement un séquençage des parcours ou des qualifications des
+espaces ouverts urbains par les parcours.
+
+
+% End

@@ -1,0 +1,320 @@
+%!PS-Adobe-2.0 EPSF-2.0
+%%Title: tmp.data
+%%BoundingBox: 0 0 565 380
+%%Magnification: 1.0
+%%EndComments
+save
+/reencdict 12 dict def /ReEncode { reencdict begin
+/newcodesandnames exch def /newfontname exch def /basefontname exch def
+/basefontdict basefontname findfont def /newfont basefontdict maxlength dict def
+basefontdict { exch dup /FID ne { dup /Encoding eq
+{ exch dup length array copy newfont 3 1 roll put }
+{ exch newfont 3 1 roll put } ifelse } { pop pop } ifelse } forall
+newfont /FontName newfontname put newcodesandnames aload pop
+128 1 255 { newfont /Encoding get exch /.notdef put } for
+newcodesandnames length 2 idiv { newfont /Encoding get 3 1 roll put } repeat
+newfontname newfont definefont pop end } def
+/isovec [
+8#055 /minus 8#200 /grave 8#201 /acute 8#202 /circumflex 8#203 /tilde
+8#204 /macron 8#205 /breve 8#206 /dotaccent 8#207 /dieresis
+8#210 /ring 8#211 /cedilla 8#212 /hungarumlaut 8#213 /ogonek 8#214 /caron
+8#220 /dotlessi 8#230 /oe 8#231 /OE
+8#240 /space 8#241 /exclamdown 8#242 /cent 8#243 /sterling
+8#244 /currency 8#245 /yen 8#246 /brokenbar 8#247 /section 8#250 /dieresis
+8#251 /copyright 8#252 /ordfeminine 8#253 /guillemotleft 8#254 /logicalnot
+8#255 /hyphen 8#256 /registered 8#257 /macron 8#260 /degree 8#261 /plusminus
+8#262 /twosuperior 8#263 /threesuperior 8#264 /acute 8#265 /mu 8#266 /paragraph
+8#267 /periodcentered 8#270 /cedilla 8#271 /onesuperior 8#272 /ordmasculine
+8#273 /guillemotright 8#274 /onequarter 8#275 /onehalf
+8#276 /threequarters 8#277 /questiondown 8#300 /Agrave 8#301 /Aacute
+8#302 /Acircumflex 8#303 /Atilde 8#304 /Adieresis 8#305 /Aring
+8#306 /AE 8#307 /Ccedilla 8#310 /Egrave 8#311 /Eacute
+8#312 /Ecircumflex 8#313 /Edieresis 8#314 /Igrave 8#315 /Iacute
+8#316 /Icircumflex 8#317 /Idieresis 8#320 /Eth 8#321 /Ntilde 8#322 /Ograve
+8#323 /Oacute 8#324 /Ocircumflex 8#325 /Otilde 8#326 /Odieresis 8#327 /multiply
+8#330 /Oslash 8#331 /Ugrave 8#332 /Uacute 8#333 /Ucircumflex
+8#334 /Udieresis 8#335 /Yacute 8#336 /Thorn 8#337 /germandbls 8#340 /agrave
+8#341 /aacute 8#342 /acircumflex 8#343 /atilde 8#344 /adieresis 8#345 /aring
+8#346 /ae 8#347 /ccedilla 8#350 /egrave 8#351 /eacute
+8#352 /ecircumflex 8#353 /edieresis 8#354 /igrave 8#355 /iacute
+8#356 /icircumflex 8#357 /idieresis 8#360 /eth 8#361 /ntilde 8#362 /ograve
+8#363 /oacute 8#364 /ocircumflex 8#365 /otilde 8#366 /odieresis 8#367 /divide
+8#370 /oslash 8#371 /ugrave 8#372 /uacute 8#373 /ucircumflex
+8#374 /udieresis 8#375 /yacute 8#376 /thorn 8#377 /ydieresis ] def
+/Helvetica /Helvetica-iso isovec ReEncode
+/Helvetica-Bold /Helvetica-Bold-iso isovec ReEncode
+
+/nstr 7 string def
+/Helvetica-iso findfont 12 scalefont setfont
+/cshowint {
+  nstr cvs
+  dup stringwidth pop 2 div
+  currentpoint 3 1 roll exch sub exch moveto
+  show
+} def
+/rshowint {
+  nstr cvs
+  dup stringwidth pop
+  currentpoint 3 1 roll exch sub exch moveto
+  show
+} def
+
+/mkBox {
+  /yparam exch def
+  /xparam exch def
+
+  /scx xparam 3 get def
+  /xmin xparam 0 get 0 min scx mul def
+  /xmax xparam 1 get scx mul def
+  /xstep xparam 2 get scx mul def
+
+  /scy yparam 3 get def
+  /ymin yparam 0 get 0 min scy mul def
+  /ymax yparam 1 get scy mul def
+  /ystep yparam 2 get scy mul def
+
+  /drawLine {
+    % dx, dy, x, y
+    newpath
+    moveto
+    rlineto
+    stroke
+  } def
+
+  currentlinewidth currentdash
+%  2 setlinewidth
+%  newpath
+%  xmin ymin moveto
+%  xmin ymax lineto
+%  xmax ymax lineto
+%  xmax ymin lineto
+%  closepath stroke
+
+  0.5 setlinewidth
+  [2 2] 0 setdash
+
+  xparam 0 get 0 min  % min
+  xparam 2 get        % step
+  xparam 1 get {      % max
+    dup 0 eq /org exch def
+    dup scx mul
+      dup                              % x
+      0 exch                           % dx
+      ymax ymin sub 5 scy mul add exch % dy
+      -3 scy mul                       % y
+    org {
+      1 setlinewidth [] 0 setdash
+      drawLine
+      0.5 setlinewidth [2 2] 0 setdash
+     } {
+       drawLine
+     } ifelse
+    -25 moveto cshowint
+  } for
+
+  yparam 0 get 0 min  % min
+  yparam 2 get        % step
+  yparam 1 get {      % max
+    dup 0 eq /org exch def
+    dup scy mul 0 0 ymin min sub add
+      dup                      % y
+      xmax xmin sub 5 add exch % dx
+      0 exch                   % dy
+      -5 exch                  % x
+     org {
+      1 setlinewidth [] 0 setdash
+      drawLine
+      0.5 setlinewidth [2 2] 0 setdash
+     } {
+       drawLine
+     } ifelse
+    3 sub xmin 10 sub exch moveto rshowint
+  } for
+
+  currentfont
+  /Helvetica-Bold-iso findfont 14 scalefont setfont
+  xparam 4 get dup stringwidth pop 2 div
+  xmax xmin sub 2 div xmin add exch sub
+  -42 moveto
+  show
+
+  yparam 4 get dup stringwidth pop 2 div
+  ymax ymin add 2 div 0 0 ymin min sub add exch sub
+  xmin 40 sub exch moveto
+  gsave 90 rotate show grestore
+  setfont
+
+  setdash setlinewidth
+} def
+
+60 50 translate
+1 setlinewidth
+[0 110 10 4.5 (Num\351ro d'\351tape)]
+[-40 40 8 4 (Horizon \%)]
+mkBox
+1 setlinewidth
+currentgray currentdash
+0.0 setgray
+[] 0 setdash
+newpath
+0 67 moveto
+4.5 62 lineto
+9 57 lineto
+13.5 51 lineto
+18 47 lineto
+22.5 42 lineto
+27 37 lineto
+31.5 33 lineto
+36 28 lineto
+40.5 25 lineto
+45 21 lineto
+49.5 18 lineto
+54 14 lineto
+58.5 143 lineto
+63 155 lineto
+67.5 142 lineto
+72 138 lineto
+76.5 161 lineto
+81 135 lineto
+85.5 158 lineto
+90 162 lineto
+94.5 139 lineto
+99 157 lineto
+103.5 137 lineto
+108 159 lineto
+112.5 159 lineto
+117 156 lineto
+121.5 138 lineto
+126 160 lineto
+130.5 161 lineto
+135 155 lineto
+139.5 158 lineto
+144 138 lineto
+148.5 156 lineto
+153 143 lineto
+157.5 137 lineto
+162 158 lineto
+166.5 147 lineto
+171 156 lineto
+175.5 159 lineto
+180 136 lineto
+184.5 161 lineto
+189 161 lineto
+193.5 158 lineto
+198 156 lineto
+202.5 155 lineto
+207 139 lineto
+211.5 219 lineto
+216 212 lineto
+220.5 206 lineto
+225 198 lineto
+229.5 190 lineto
+234 183 lineto
+238.5 175 lineto
+243 167 lineto
+247.5 159 lineto
+252 150 lineto
+256.5 142 lineto
+261 134 lineto
+265.5 127 lineto
+270 119 lineto
+274.5 111 lineto
+279 105 lineto
+283.5 98 lineto
+288 178 lineto
+292.5 163 lineto
+297 161 lineto
+301.5 160 lineto
+306 156 lineto
+310.5 157 lineto
+315 181 lineto
+319.5 158 lineto
+324 162 lineto
+328.5 170 lineto
+333 157 lineto
+337.5 180 lineto
+342 174 lineto
+346.5 161 lineto
+351 179 lineto
+355.5 160 lineto
+360 162 lineto
+364.5 157 lineto
+369 157 lineto
+373.5 179 lineto
+378 162 lineto
+382.5 159 lineto
+387 159 lineto
+391.5 180 lineto
+396 160 lineto
+400.5 178 lineto
+405 155 lineto
+409.5 161 lineto
+414 182 lineto
+418.5 156 lineto
+423 179 lineto
+427.5 173 lineto
+432 158 lineto
+436.5 170 lineto
+441 303 lineto
+445.5 300 lineto
+450 296 lineto
+454.5 292 lineto
+459 289 lineto
+463.5 284 lineto
+468 280 lineto
+472.5 275 lineto
+477 271 lineto
+481.5 266 lineto
+486 260 lineto
+490.5 255 lineto
+495 250 lineto
+stroke
+setdash setgray
+1 setlinewidth
+/Helvetica-iso findfont 10 scalefont setfont
+
+/t1Width (abscisse du GMD) stringwidth pop def
+/boxWidth
+  t1Width
+def
+
+currentgray
+newpath
+110 4.5 mul 20 sub
+40 4 mul 15 4 mul sub moveto
+boxWidth 40 add neg 0 rlineto
+0 -20 rlineto
+boxWidth 40 add 0 rlineto
+closepath
+gsave 1.0 setgray fill grestore
+0.0 setgray stroke
+setgray
+
+110 4.5 mul 50 sub t1Width sub
+40 4 mul 18 4 mul sub
+moveto (abscisse du GMD) show
+currentgray currentdash newpath
+110 4.5 mul 45 sub 40 4 mul 17.5 4 mul sub moveto
+20 0 rlineto
+0.5 setgray [] 0 setdash stroke setdash setgray
+
+% graph box
+currentlinewidth currentdash
+2 setlinewidth [] 0 setdash
+/xmin 0 4.5 mul def
+/xmax 110 4.5 mul def
+/ymin -40 4 mul def
+/ymax 40 4 mul def
+/dx xmax xmin sub abs def
+/dy ymax ymin sub abs 4 4 mul add def
+newpath
+0 -2 4 mul moveto
+0 dy rlineto
+dx 0 rlineto
+0 dy neg rlineto
+closepath stroke
+setdash setlinewidth
+
+restore
+showpage
+

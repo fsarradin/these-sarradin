@@ -1,0 +1,20 @@
+\begin{picture}(0,0)%
+\includegraphics{vgraph.pstex}%
+\end{picture}%
+\setlength{\unitlength}{1973sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFont\undefined%
+\gdef\SetFigFont#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(7522,6044)(579,-5483)
+\put(8101,-136){\makebox(0,0)[lb]{\smash{\SetFigFont{8}{9.6}{\rmdefault}{\mddefault}{\updefault}point d'observation}}}
+\put(8101,-736){\makebox(0,0)[lb]{\smash{\SetFigFont{8}{9.6}{\rmdefault}{\mddefault}{\updefault}sommet visible}}}
+\put(8101,-1336){\makebox(0,0)[lb]{\smash{\SetFigFont{8}{9.6}{\rmdefault}{\mddefault}{\updefault}sommet invisible}}}
+\put(8101,-1936){\makebox(0,0)[lb]{\smash{\SetFigFont{8}{9.6}{\rmdefault}{\mddefault}{\updefault}ar\^ete depuis le point d'observation}}}
+\put(8101,-2536){\makebox(0,0)[lb]{\smash{\SetFigFont{8}{9.6}{\rmdefault}{\mddefault}{\updefault}ar\^ete depuis un sommet visible}}}
+\put(8101,-3136){\makebox(0,0)[lb]{\smash{\SetFigFont{8}{9.6}{\rmdefault}{\mddefault}{\updefault}ar\^ete entre deux sommets invisibles}}}
+\put(8101,-3736){\makebox(0,0)[lb]{\smash{\SetFigFont{8}{9.6}{\rmdefault}{\mddefault}{\updefault}isovist du point d'observation}}}
+\end{picture}
